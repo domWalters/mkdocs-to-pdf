@@ -42,6 +42,7 @@ class Options(object):
         ('two_columns_level', config_options.Type(int, default=0)),
 
         ('render_js', config_options.Type(bool, default=False)),
+        ('mermaid_args', config_options.Type(str, default="-b transparent -t dark --scale 4 --quiet")),
         ('headless_chrome_path',
             config_options.Type(str, default='chromium-browser')),
         ('relaxedjs_path',
@@ -96,7 +97,7 @@ class Options(object):
         self.js_renderer = None
         if local_config['render_js']:
             self.js_renderer = HeadlessChromeDriver.setup(
-                local_config['headless_chrome_path'], logger)
+                local_config['headless_chrome_path'], local_config['mermaid_args'], logger)
 
         self.relaxed_js = RelaxedJSRenderer.setup(
             local_config['relaxedjs_path'], logger)
