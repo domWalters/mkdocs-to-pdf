@@ -25,7 +25,7 @@ class HeadlessChromeDriver(object):
 
     def render(self, html: str, temporary_directory: pathlib.Path) -> str:
         try:
-            mermaid_regex = re.compile(r'<(\w*?[^>]*)(><[^>]*?|[^>]*?)class="(language-)?mermaid">(<[^>]*?>)?(?P<code>.*?)(<\/[^>]*?>)?<\/\1>', flags=re.DOTALL)
+            mermaid_regex = re.compile(r'<(\w*?[^>]*)(><[^>]*?|[^>]*?)class="[^>\"]*(language-)?mermaid[^>\"]*">(<[^>]*?>)?(?P<code>.*?)(<\/[^>]*?>)?<\/\1>', flags=re.DOTALL)
             mermaid_matches = mermaid_regex.finditer(html)
 
             i = 0
