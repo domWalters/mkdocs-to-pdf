@@ -11,16 +11,27 @@ class HeadlessChromeDriver(object):
     """ 'Headless Chrome' executor """
 
     @classmethod
-    def setup(self, program_path: str, mermaid_args: str, logger: Logger):
+    def setup(self,
+              program_path: str,
+              mermaid_args: str,
+              mermaid_img_scale_reduction: int,
+              logger: Logger):
         if not which(program_path):
             raise RuntimeError(
                 'No such `Headless Chrome` program or not executable'
                 + f': "{program_path}".')
-        return self(program_path, mermaid_args, logger)
+        return self(program_path,
+                    mermaid_args,
+                    mermaid_img_scale_reduction,
+                    logger)
 
-    def __init__(self, program_path: str, mermaid_args: str, logger: Logger):
+    def __init__(self, program_path: str,
+                 mermaid_args: str,
+                 mermaid_img_scale_reduction: int,
+                 logger: Logger):
         self._program_path = program_path
         self.mermaid_args = mermaid_args
+        self.mermaid_img_scale_reduction = mermaid_img_scale_reduction
         self._logger = logger
 
     def render(self, html: str, temporary_directory: pathlib.Path) -> str:
@@ -56,10 +67,16 @@ class HeadlessChromeDriver(object):
                 if not os.path.exists(image_file_path):
                     self._logger.warning(f"Error: Failed to generate mermaid diagram {i}")
                 else:
-                    # Replace the Mermaid code with the image in the HTML string.
-                    image_html = f'<img src="file://{image_file_path}" alt="Mermaid diagram {i}">'
-                    html = html.replace(mermaid_block.group(0),
-                                        mermaid_block.group(0).replace(mermaid_code, image_html))
+                    from PIL import Image
+
+                    with Image.open(image_file_path) as im:
+                        height = im.height // self.mermaid_img_scale_reduction
+                        width = im.width // self.mermaid_img_scale_reduction
+
+                        # Replace the Mermaid code with the image in the HTML string.
+                        image_html = f'<img src="file://{image_file_path}" alt="Mermaid diagram {i}" style="width:{width}px; height:{height}px;">'
+                        html = html.replace(mermaid_block.group(0),
+                                            mermaid_block.group(0).replace(mermaid_code, image_html))
 
             self._logger.debug(f"Post mermaid translation: {html}")
             with open(temporary_directory / "post_mermaid_translation.html", "wb") as temp:
@@ -78,7 +95,7 @@ class HeadlessChromeDriver(object):
                         '--dump-dom',
                         temp.name], stdout=PIPE) as chrome:
                 chrome_output = chrome.stdout.read().decode('utf-8')
-                self._logger.debug(f"Post chrome translation: {chrome_output}")
+                self._logger.info(f"Post chrome translation: {chrome_output}")
                 return chrome_output
 
         except Exception as e:
