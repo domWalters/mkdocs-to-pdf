@@ -93,6 +93,8 @@ plugins:
         #
         #render_js: true
         #headless_chrome_path: headless-chromium
+        #mermaid_args: '-b transparent -t dark --scale 4 --quiet'
+        #mermaid_img_scale_reduction: 4
         #
         #output_path: any-place/document.pdf
         #enabled_if_env: ENABLE_PDF_EXPORT
@@ -244,6 +246,17 @@ plugins:
 >    --dump-dom \
 >    <ANY_SITE_URL(eg. 'https://google.com')>
 > ```
+
+* `mermaid_args`
+
+    Arguments to use when calling `mmdc` to generate mermaid diagrams
+
+    **default**: '-b transparent -t dark --scale 4 --quiet'
+
+* `mermaid_img_scale_reduction`
+
+    Visual scale to reduce visual size of diagrams when using `--scale` greater than 1 in `mermaid_args`.
+    This allows higher resolution diagram renders at the native visual size.
 
 * `relaxedjs_path`
 
