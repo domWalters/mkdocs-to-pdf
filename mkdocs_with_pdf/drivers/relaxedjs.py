@@ -1,7 +1,6 @@
 import os
 from ..utils.mermaid_util import render_mermaid
 from logging import Logger
-import shutil
 from shutil import which
 from subprocess import PIPE, Popen
 from tempfile import TemporaryDirectory
