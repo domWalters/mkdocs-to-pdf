@@ -49,11 +49,14 @@ def render_mermaid(html: str,
             from PIL import Image
 
             with Image.open(image_file_path) as im:
-                height = im.height // mermaid_img_scale_reduction
-                width = im.width // mermaid_img_scale_reduction
-
                 # Replace the Mermaid code with the image in the HTML string.
-                image_html = f'<img src="file://{image_file_path}" alt="Mermaid diagram {i}" style="width:{width}px; height:{height}px;">'
+                image_html = f'<img src="file://{image_file_path}" alt="Mermaid diagram {i}">'
+
+                if mermaid_img_scale_reduction != 1:
+                    height = im.height // mermaid_img_scale_reduction
+                    width = im.width // mermaid_img_scale_reduction
+                    image_html = image_html.replace('">', f'" style="max-width:{width}px; max-height:{height}px;">')
+
                 html = html.replace(mermaid_block.group(0),
                                     mermaid_block.group(0).replace(mermaid_code, image_html))
 
