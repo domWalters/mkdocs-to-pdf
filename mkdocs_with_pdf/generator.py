@@ -5,6 +5,7 @@ from typing import Pattern
 from importlib import import_module
 from importlib.util import module_from_spec, spec_from_file_location
 import pathlib
+import shutil
 
 from bs4 import BeautifulSoup, PageElement
 from weasyprint import HTML, urls
