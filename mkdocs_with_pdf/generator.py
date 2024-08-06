@@ -163,7 +163,7 @@ class Generator(object):
 
         if self._options.relaxed_js:
             self._options.relaxed_js.write_pdf(
-                html_string, abs_pdf_path)
+                html_string, abs_pdf_path, temporary_directory)
         else:
             html = HTML(string=html_string)
             render = html.render()
@@ -397,7 +397,6 @@ class Generator(object):
                     body.append(tag)
                 for src in scripts:
                     body.append(soup.new_tag('script', src=f'file://{src}'))
-
         return self._options.js_renderer.render(str(soup), temporary_directory)
 
     def _scrap_scripts(self, soup):

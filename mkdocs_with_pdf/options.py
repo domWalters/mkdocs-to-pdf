@@ -42,6 +42,8 @@ class Options(object):
         ('two_columns_level', config_options.Type(int, default=0)),
 
         ('render_js', config_options.Type(bool, default=False)),
+        ('mermaid_args', config_options.Type(str, default="-b transparent -t dark --scale 4 --quiet")),
+        ('mermaid_img_scale_reduction', config_options.Type((float, int), default=1)),
         ('headless_chrome_path',
             config_options.Type(str, default='chromium-browser')),
         ('relaxedjs_path',
@@ -96,10 +98,16 @@ class Options(object):
         self.js_renderer = None
         if local_config['render_js']:
             self.js_renderer = HeadlessChromeDriver.setup(
-                local_config['headless_chrome_path'], logger)
+                local_config['headless_chrome_path'],
+                local_config['mermaid_args'],
+                local_config['mermaid_img_scale_reduction'],
+                logger)
 
         self.relaxed_js = RelaxedJSRenderer.setup(
-            local_config['relaxedjs_path'], logger)
+            local_config['relaxedjs_path'],
+            local_config['mermaid_args'],
+            local_config['mermaid_img_scale_reduction'],
+            logger)
 
         # Theming
         self.theme_name = config['theme'].name
