@@ -42,3 +42,7 @@ class RelaxedJSRenderer(object):
                         self._logger.info(f"  {log}")
                     if proc.poll() is not None:
                         break
+                    # workaround for '--build-once' not working
+                    if log.find("Now idle and waiting for file changes") > -1:
+                        proc.kill()
+                        break
