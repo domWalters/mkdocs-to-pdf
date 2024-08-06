@@ -15,6 +15,11 @@ def fix_image_alignment(soup: PageElement, logger: Logger = None):
             if img.has_attr('class') and 'twemoji' in img['class']:
                 continue
 
+            if not (img.has_attr('align')
+                    or img.has_attr('width')
+                    or img.has_attr('height')):
+                continue
+
             styles = _parse_style(img.get('style', ''))
 
             logger.debug(f'  | {img}')
