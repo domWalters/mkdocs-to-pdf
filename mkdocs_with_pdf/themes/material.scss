@@ -1,4 +1,5 @@
-.md-typeset > ul {
+.md-typeset > ul,
+.md-typeset > ol {
   margin-left: 0rem !important;
 }
 .md-typeset ul li,
@@ -127,5 +128,10 @@
         display: inline-block;
       }
     }
+  }
+
+  // Task lists
+  .task-list-indicator:before {
+    left: -1.5em
   }
 }
