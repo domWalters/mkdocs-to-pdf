@@ -4,4 +4,4 @@ theme:
   name: material
 
 plugins:
-  - with-pdf:
+  - to-pdf:

@@ -15,7 +15,7 @@ RUN set -ex \
     && SYSTEM_SASS=1 pip install --no-cache-dir \
         mkdocs mkdocs-material \
         mdx-gh-links mkdocs-redirects mkdocs-minify-plugin \
-        mkdocs-with-pdf \
+        mkdocs-to-pdf \
     && apk del .build-deps
 
 # Headless Chrome
