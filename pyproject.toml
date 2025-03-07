@@ -140,11 +140,19 @@ Repository = "https://github.com/domWalters/mkdocs-to-pdf"
 
 [tool.hatch.build]
 include = [
+    "CONTRIBUTING.md",
+    "CHANGELOG",
+    "src/mkdocs_to_pdf/**/*.css",
+    "src/mkdocs_to_pdf/**/*.html",
+    "src/mkdocs_to_pdf/**/*.j2",
+    "src/mkdocs_to_pdf/**/*.js",
+    "src/mkdocs_to_pdf/**/*.map",
+    "src/mkdocs_to_pdf/**/*.scss",
     "src/mkdocs_to_pdf/**/*.py",
     "src/mkdocs_to_pdf/**/py.typed",
 ]
 exclude = [
-  "/.*",
+    "samples",
 ]
 
 [tool.hatch.build.targets.wheel]
