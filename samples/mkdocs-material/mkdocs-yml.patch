@@ -1,0 +1,12 @@
+diff --git a/mkdocs.yml b/mkdocs.yml
+index 23cec8d57..96d3b5d02 100755
+--- a/mkdocs.yml
++++ b/mkdocs.yml
+@@ -98,6 +98,7 @@ plugins:
+       separator: '[\s\u200b\-_,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
+   - minify:
+       minify_html: true
++  - to-pdf
+ 
+ # Hooks
+ hooks:

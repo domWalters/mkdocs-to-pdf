@@ -1,0 +1,12 @@
+diff --git a/mkdocs.yml b/mkdocs.yml
+index 7246e148..61d90bb9 100644
+--- a/mkdocs.yml
++++ b/mkdocs.yml
+@@ -74,6 +74,7 @@ plugins:
+             show_root_heading: true
+             show_source: false
+             show_signature_annotations: true
++  - to-pdf
+ 
+ watch:
+   - mkdocs
