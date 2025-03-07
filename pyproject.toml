@@ -129,7 +129,7 @@ dev = [
 ]
 
 [project.entry-points."mkdocs.plugins"]
-with-pdf = "mkdocs_with_pdf.plugin:WithPdfPlugin"
+to-pdf = "mkdocs_to_pdf.plugin:WithPdfPlugin"
 
 [project.urls]
 Repository = "https://github.com/domWalters/mkdocs-to-pdf"
@@ -140,14 +140,12 @@ Repository = "https://github.com/domWalters/mkdocs-to-pdf"
 
 [tool.hatch.build]
 include = [
-    "mkdocs_with_pdf/**/*.py",
-    "mkdocs_with_pdf/**/py.typed",
+    "src/mkdocs_to_pdf/**/*.py",
+    "src/mkdocs_to_pdf/**/py.typed",
 ]
-
-[tool.hatch.build.targets.sdist]
 exclude = [
   "/.*",
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["mkdocs_with_pdf"]
+packages = ["src/mkdocs_to_pdf"]
