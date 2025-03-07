@@ -502,7 +502,7 @@ sdist = { url = "https://files.pythonhosted.org/packages/df/e1/40b2ba5575dad7407
 
 [[package]]
 name = "mkdocs-to-pdf"
-version = "0.9.5"
+version = "0.10.0"
 source = { editable = "." }
 dependencies = [
     { name = "beautifulsoup4" },
