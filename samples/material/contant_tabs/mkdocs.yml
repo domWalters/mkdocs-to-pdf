@@ -1,0 +1,12 @@
+---
+site_name: Content tabs
+theme:
+  name: material
+
+markdown_extensions:
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+
+plugins:
+  - to-pdf:
