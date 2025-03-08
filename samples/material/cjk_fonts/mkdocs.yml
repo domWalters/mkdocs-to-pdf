@@ -1,0 +1,7 @@
+---
+site_name: Basics
+theme:
+  name: material
+
+plugins:
+  - to-pdf:

@@ -1,0 +1,12 @@
+---
+site_name: Admonitions
+theme:
+  name: material
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+
+plugins:
+  - to-pdf:

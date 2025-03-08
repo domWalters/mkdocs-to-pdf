@@ -1,0 +1,10 @@
+---
+site_name: Footnotes
+theme:
+  name: material
+
+markdown_extensions:
+  - footnotes
+
+plugins:
+  - to-pdf:
