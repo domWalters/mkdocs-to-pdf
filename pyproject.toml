@@ -52,9 +52,6 @@ samples-mkdocs-material = [
 [project.entry-points."mkdocs.plugins"]
 to-pdf = "mkdocs_to_pdf.plugin:WithPdfPlugin"
 
-[project.scripts]
-merge-yaml = "mkdocs_to_pdf.local.merge_yaml:main"
-
 [project.urls]
 Repository = "https://github.com/domWalters/mkdocs-to-pdf"
 
