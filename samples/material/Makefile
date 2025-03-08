@@ -1,6 +1,8 @@
 at ?= @
 makefile_dir := $(realpath $(patsubst %/,%,$(dir $(firstword $(MAKEFILE_LIST)))))
 
+SHELL=/bin/bash
+
 .PHONY: help
 help:
 	@echo "Usage:"
