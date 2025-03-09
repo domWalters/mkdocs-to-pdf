@@ -21,11 +21,11 @@ mkdocs ?= $(abspath $(makefile_dir)/../../.venv/bin/mkdocs)
 samples ?= $(notdir $(shell find $(makefile_dir) -mindepth 1 -maxdepth 1 -type d ! -path "*/\.*"))
 
 .PHONY: build
-build: $(makefile_dir)/.venv/bin/mkdocs
-	$(at)if [ ! -f $(mkdocs) ]; then \
+build:
+	$(at)if [ ! -f "$(mkdocs)" ]; then \
 		echo "$(mkdocs) is not available"; \
 		exit 2; \
 	fi;
-	$(at)while IFS= read -d $$'\0' -r file; do \
-		cd $$file && $(mkdocs) build; \
-	done < <(find $(makefile_dir) -mindepth 1 -maxdepth 1 -type d ! -path "*/\.*" -print0)
+	$(at)find "$(makefile_dir)" -mindepth 1 -maxdepth 1 -type d -print0 | xargs -0 -I {} sh -c " \
+		cd {} && "$(mkdocs)" build; \
+	"
