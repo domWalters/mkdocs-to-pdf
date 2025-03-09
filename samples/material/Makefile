@@ -21,7 +21,7 @@ mkdocs ?= $(abspath $(makefile_dir)/../../.venv/bin/mkdocs)
 samples ?= $(notdir $(shell find $(makefile_dir) -mindepth 1 -maxdepth 1 -type d ! -path "*/\.*"))
 
 .PHONY: build
-build: $(makefile_dir)/.venv/bin/mkdocs
+build:
 	$(at)if [ ! -f "$(mkdocs)" ]; then \
 		echo "$(mkdocs) is not available"; \
 		exit 2; \
