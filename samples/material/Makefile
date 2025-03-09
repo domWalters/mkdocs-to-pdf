@@ -36,6 +36,6 @@ samples ?= $(notdir $(shell find $(makefile_dir) -mindepth 1 -maxdepth 1 -type d
 
 .PHONY: build
 build: $(makefile_dir)/.venv/bin/mkdocs
-	$(at)while IFS= read -d $$'\0' -r file; do \
-		cd $$file && $(makefile_dir)/.venv/bin/mkdocs build; \
-	done < <(find $(makefile_dir) -mindepth 1 -maxdepth 1 -type d ! -path "*/\.*" -print0)
+	$(at)find "$(makefile_dir)" -mindepth 1 -maxdepth 1 -type d ! -path "*/\.*" -print0 | xargs -0 -I {} sh -c " \
+		cd {} && $(makefile_dir)/.venv/bin/mkdocs build; \
+	"
