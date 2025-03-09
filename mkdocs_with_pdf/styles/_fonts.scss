@@ -1,12 +1,12 @@
 @media print {
   html {
     font-size: 95%;
-    font-family: 'Kelmscott Roman NF', 'Noto Serif JP', serif;
+    font-family: 'Roboto', 'Noto Sans CJK JP', sans-serif;
   }
 
   body {
     font-size: 10.5pt;
-    font-family: 'Classico URW T OT', 'Noto Serif JP', serif;
+    font-family: 'Roboto', 'Noto Sans CJK JP', sans-serif;
   }
 
   article {
@@ -21,7 +21,7 @@
   h5,
   h6,
   label {
-    font-family: 'Gentium Book Basic', 'Helvetica Neue', Helvetica, Arial, 'Noto Sans JP', 'Roboto', sans-serif;
+    font-family: 'Roboto', 'Noto Sans CJK JP', sans-serif;
   }
 
   pre,
@@ -30,7 +30,7 @@
   samp,
   kbd,
   tt {
-    font-family: 'Noto Sans Mono CJK JP', 'Courier New', monospace, serif;
+    font-family: 'Roboto Mono', 'Noto Sans Mono CJK JP', monospace, sans-serif;
     font-size: 0.8em;
   }
 
