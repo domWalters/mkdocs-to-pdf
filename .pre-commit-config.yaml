@@ -3,9 +3,9 @@ repos:
   - repo: https://github.com/astral-sh/uv-pre-commit
     rev: 0.6.4
     hooks:
+      - id: uv-lock
       - id: uv-export
         args: ["--frozen", "--output-file=requirements.txt", "--no-hashes", "--no-emit-project"]
-      - id: uv-lock
       - id: uv-export
         args: ["--frozen", "--output-file=requirements-dev.txt", "--no-hashes", "--no-emit-project", "--all-extras"]
 
