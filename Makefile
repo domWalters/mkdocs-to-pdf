@@ -30,7 +30,8 @@ sync: setup
 	@echo "########"
 	@echo "# sync #"
 	@echo "########"
-	$(at)uv --directory $(makefile_directory) sync --all-extras
+	$(at)uv --directory $(makefile_directory) lock \
+	    && uv --directory $(makefile_directory) sync --all-extras
 	@echo ""
 
 .PHONY: check
