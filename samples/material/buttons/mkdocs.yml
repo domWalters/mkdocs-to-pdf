@@ -1,0 +1,10 @@
+---
+site_name: Buttons
+theme:
+  name: material
+
+markdown_extensions:
+  - attr_list
+
+plugins:
+  - to-pdf:

@@ -1,0 +1,10 @@
+---
+site_name: Data tables
+theme:
+  name: material
+
+markdown_extensions:
+  - tables
+
+plugins:
+  - to-pdf:

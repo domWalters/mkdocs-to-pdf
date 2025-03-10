@@ -1,0 +1,7 @@
+---
+site_name: CJK Fonts
+theme:
+  name: material
+
+plugins:
+  - to-pdf:
