@@ -15,17 +15,22 @@ clean:
 
 .PHONY: distclean
 distclean: clean
+	$(at)if [ -f $(makefile_dir)/gen/patched ]; then \
+	    patch -R $(makefile_dir)/mkdocs/mkdocs.yml < $(makefile_dir)/mkdocs-yml.patch; \
+	    rm -rf $(makefile_dir)/gen; \
+	fi
 
 mkdocs ?= $(abspath $(makefile_dir)/../../.venv/bin/mkdocs)
 
-samples ?= $(notdir $(shell find $(makefile_dir) -mindepth 1 -maxdepth 1 -type d ! -path "*/\.*"))
+$(makefile_dir)/gen/patched:
+	$(at)mkdir -p $(makefile_dir)/gen
+	$(at)patch $(makefile_dir)/mkdocs/mkdocs.yml < $(makefile_dir)/mkdocs-yml.patch
+	$(at)touch $@
 
 .PHONY: build
-build:
-	$(at)if [ ! -f "$(mkdocs)" ]; then \
+build: $(makefile_dir)/gen/patched
+	$(at)if [ ! -f $(mkdocs) ]; then \
 		echo "$(mkdocs) is not available"; \
 		exit 2; \
 	fi;
-	$(at)find "$(makefile_dir)" -mindepth 1 -maxdepth 1 -type d -print0 | xargs -0 -I {} sh -c " \
-		cd {} && "$(mkdocs)" build; \
-	"
+	$(at)cd $(makefile_dir)/mkdocs && $(mkdocs) build
