@@ -3,3 +3,4 @@ __pycache__/
 gen/
 site/
 .aider*
+.token

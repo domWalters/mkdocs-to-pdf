@@ -776,7 +776,7 @@ requires-dist = [
     { name = "mkdocs-minify-plugin", marker = "extra == 'samples-mkdocs-material'", specifier = "==0.8.0" },
     { name = "mkdocs-redirects", marker = "extra == 'samples-mkdocs'", specifier = "==1.2.2" },
     { name = "mkdocstrings-python", marker = "extra == 'samples-mkdocs'" },
-    { name = "pymdown-extensions", marker = "extra == 'samples-mkdocs'", specifier = "==10.4" },
+    { name = "pymdown-extensions", marker = "extra == 'samples-mkdocs'", specifier = "==10.14.3" },
     { name = "weasyprint", specifier = "==64.1" },
 ]
 provides-extras = ["samples-mkdocs", "samples-mkdocs-material"]
@@ -958,15 +958,15 @@ wheels = [
 
 [[package]]
 name = "pymdown-extensions"
-version = "10.4"
+version = "10.14.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "markdown" },
     { name = "pyyaml" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/85/71/5f48080bde77b07ca1eba6d7cb5c5598ac6c8f2a399846159b3c8b45e171/pymdown_extensions-10.4.tar.gz", hash = "sha256:bc46f11749ecd4d6b71cf62396104b4a200bad3498cb0f5dad1b8502fe461a35", size = 785151 }
+sdist = { url = "https://files.pythonhosted.org/packages/7c/44/e6de2fdc880ad0ec7547ca2e087212be815efbc9a425a8d5ba9ede602cbb/pymdown_extensions-10.14.3.tar.gz", hash = "sha256:41e576ce3f5d650be59e900e4ceff231e0aed2a88cf30acaee41e02f063a061b", size = 846846 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/98/2d/2929de81618c7213176899dd6372d6ec9c8f24337841dd74634fb69864ae/pymdown_extensions-10.4-py3-none-any.whl", hash = "sha256:cfc28d6a09d19448bcbf8eee3ce098c7d17ff99f7bd3069db4819af181212037", size = 240838 },
+    { url = "https://files.pythonhosted.org/packages/eb/f5/b9e2a42aa8f9e34d52d66de87941ecd236570c7ed2e87775ed23bbe4e224/pymdown_extensions-10.14.3-py3-none-any.whl", hash = "sha256:05e0bee73d64b9c71a4ae17c72abc2f700e8bc8403755a00580b49a4e9f189e9", size = 264467 },
 ]
 
 [[package]]

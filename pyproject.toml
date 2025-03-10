@@ -41,7 +41,7 @@ samples-mkdocs = [
     "mkdocs-click==0.5.0",
     "mkdocs-literate-nav==0.6.1",
     "mkdocs-redirects==1.2.2",
-    "pymdown-extensions==10.4",
+    "pymdown-extensions==10.14.3",
 ]
 samples-mkdocs-material = [
     "mkdocs-material==9.6.7",
