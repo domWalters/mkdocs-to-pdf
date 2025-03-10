@@ -1,0 +1,6 @@
+[submodule "mkdocs"]
+	path = samples/mkdocs/mkdocs
+	url = https://github.com/mkdocs/mkdocs
+[submodule "mkdocs-material"]
+	path = samples/mkdocs-material/mkdocs-material
+	url = https://github.com/squidfunk/mkdocs-material
