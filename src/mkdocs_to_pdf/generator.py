@@ -312,7 +312,7 @@ class Generator(object):
                 pass
 
         try:
-            return import_module(module_name, 'mkdocs_with_pdf.themes')
+            return import_module(module_name, 'mkdocs_to_pdf.themes')
         except ImportError as e:
             self.logger.error(f'Could not load theme handler {theme}: {e}')
             return generic_theme

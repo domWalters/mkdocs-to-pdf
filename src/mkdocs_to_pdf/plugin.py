@@ -46,7 +46,7 @@ class WithPdfPlugin(BasePlugin):
     config_scheme = Options.config_scheme
 
     def __init__(self):
-        self._logger = logging.getLogger('mkdocs.with-pdf')
+        self._logger = logging.getLogger('mkdocs.to-pdf')
         self._logger.setLevel(logging.INFO)
 
         self.generator = None

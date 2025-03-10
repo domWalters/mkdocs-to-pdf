@@ -13,7 +13,7 @@ RUN set -ex \
     && apk add --no-cache --virtual .build-deps \
         musl-dev g++ jpeg-dev zlib-dev libffi-dev libsass-dev \
     && SYSTEM_SASS=1 pip install --no-cache-dir \
-        mkdocs mkdocs-material mkdocs-with-pdf \
+        mkdocs mkdocs-material mkdocs-to-pdf \
     && apk del .build-deps
 
 RUN apk --update --upgrade --no-cache add fontconfig ttf-freefont terminus-font \

@@ -1,3 +1,53 @@
+mkdocs-to-pdf 0.10.0 (UNRELEASED)
+
+  * Fix custom checkbox and ordered list overlap. #18
+  * Add tests for #18. #22
+  * Migrate to `pyproject.toml`.
+    * Move minimum versions as little as possible to get Python 3.8 to work.
+  * Change package name to `mkdocs-to-pdf`.
+
+mkdocs-with-pdf 0.9.4 (2024-28-01)
+
+  * Fix missing PDF download link with `mkdocs-material` 8
+    * https://github.com/orzih/mkdocs-with-pdf/issues/88
+    * https://github.com/orzih/mkdocs-with-pdf/pull/95
+    * Thanks to @nicolasb29
+
+  * Increase the upper range of `toc_level` from 3 to 6.
+    * https://github.com/orzih/mkdocs-with-pdf/pull/101
+    * Thanks to @Sergey-Orlov
+
+  * Modify log message used for `enabled_if_env` so that return code is still 0 in `--strict` mode
+    * https://github.com/orzih/mkdocs-with-pdf/issues/99
+    * https://github.com/orzih/mkdocs-with-pdf/pull/105
+    * Thanks to @js94x
+
+  * Fix `AttributeError` when `render_js` is `true`
+    * https://github.com/orzih/mkdocs-with-pdf/issues/114
+    * https://github.com/orzih/mkdocs-with-pdf/pull/115
+    * Thanks to @samuel-cavalcanti
+
+  * Fix logo page not displaying on Windows
+    * https://github.com/orzih/mkdocs-with-pdf/issues/86
+    * https://github.com/orzih/mkdocs-with-pdf/pull/121
+    * Thanks to @flavienbwk
+
+  * Fix two related list alignment issues
+    * https://github.com/orzih/mkdocs-with-pdf/issues/94
+    * https://github.com/orzih/mkdocs-with-pdf/issues/145
+    * https://github.com/orzih/mkdocs-with-pdf/pull/96
+    * https://github.com/orzih/mkdocs-with-pdf/pull/146
+    * Thanks to @DanielFichtner and @ThibaudBrrd
+
+  * Add support to render `mermaid.js` diagrams
+    * https://github.com/orzih/mkdocs-with-pdf/issues/34
+    * https://github.com/orzih/mkdocs-with-pdf/pull/35
+    * Thanks @pawelsikora and @orzih
+
+  * Fix admonitions in `mkdocs-material` 8. #89
+    * https://github.com/orzih/mkdocs-with-pdf/issues/89
+    * Thanks to @cmaurer and @santaimpersonator
+
 mkdocs-with-pdf 0.9.3 (2021-07-03)
 
   * Fixed a bug with number-only page titles. #67

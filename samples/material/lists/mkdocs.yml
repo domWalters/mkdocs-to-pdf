@@ -8,4 +8,4 @@ markdown_extensions:
       custom_checkbox: true
 
 plugins:
-  - with-pdf:
+  - to-pdf:

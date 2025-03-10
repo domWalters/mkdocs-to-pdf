@@ -1,7 +1,7 @@
 # PDF Generate Plugin for MkDocs
 
-[![PyPI version](https://img.shields.io/pypi/v/mkdocs-with-pdf.svg)](https://pypi.org/project/mkdocs-with-pdf)
-[![PyPI downloads](https://img.shields.io/pypi/dm/mkdocs-with-pdf.svg)](https://pypi.org/project/mkdocs-with-pdf)
+[![PyPI version](https://img.shields.io/pypi/v/mkdocs-to-pdf.svg)](https://pypi.org/project/mkdocs-to-pdf)
+[![PyPI downloads](https://img.shields.io/pypi/dm/mkdocs-to-pdf.svg)](https://pypi.org/project/mkdocs-to-pdf)
 
 ---
 
@@ -20,8 +20,8 @@ This plugin is inspired by [MkDocs PDF Export Plugin][mkdocs-pdf-export-plugin].
 * [PDF of _'MkDocs' docs_][sample_mkdocs]
 * [PDF of _'Material for MkDocs' docs_][sample_mkdocs-material]
 
-[sample_mkdocs]: https://github.com/orzih/mkdocs-with-pdf/blob/master/samples/mkdocs/README.md
-[sample_mkdocs-material]: https://github.com/orzih/mkdocs-with-pdf/blob/master/samples/mkdocs-material/README.md
+[sample_mkdocs]: https://github.com/domWalters/mkdocs-to-pdf/blob/master/samples/mkdocs/README.md
+[sample_mkdocs-material]: https://github.com/domWalters/mkdocs-to-pdf/blob/master/samples/mkdocs-material/README.md
 
 ## Requirements
 
@@ -39,14 +39,14 @@ This plugin is inspired by [MkDocs PDF Export Plugin][mkdocs-pdf-export-plugin].
 1. Install the package with pip:
 
     ```bash
-    pip install mkdocs-with-pdf
+    pip install mkdocs-to-pdf
     ```
 
 2. Enable the plugin in your `mkdocs.yml`:
 
     ```yaml
     plugins:
-        - with-pdf
+        - to-pdf
     ```
 
     More information about plugins in the [MkDocs documentation][mkdocs-plugins].
@@ -63,7 +63,7 @@ You may customize the plugin by passing options in `mkdocs.yml`:
 
 ```yaml
 plugins:
-    - with-pdf:
+    - to-pdf:
         #author: WHO
         #copyright: ANY TEXT
         #
@@ -208,7 +208,7 @@ plugins:
     **default**: `[]`  
     _**since**: `v0.6.0`_
 
-    @see [Sample of _MkDocs Material_](https://github.com/orzih/mkdocs-with-pdf/blob/master/samples/mkdocs-material/)
+    @see [Sample of _MkDocs Material_](https://github.com/domWalters/mkdocs-to-pdf/blob/master/samples/mkdocs-material/)
 
 * `two_columns_level` (Experimental)
 
@@ -217,7 +217,7 @@ plugins:
     **default**: `0`  
     _**since**: `v0.7.0`_
 
-    @see [Sample of _MkDocs Material_](https://github.com/orzih/mkdocs-with-pdf/blob/master/samples/mkdocs-material/)
+    @see [Sample of _MkDocs Material_](https://github.com/domWalters/mkdocs-to-pdf/blob/master/samples/mkdocs-material/)
 
 ##### Renderer for JavaScript
 
@@ -251,7 +251,7 @@ plugins:
     Require "ReLaXed" Javascript PDF renderer to be installed on your system. See: '[ReLaXed](https://github.com/RelaxedJS/ReLaXed)'.
 
     Please use 'theme_handler_path' option to specify custom JS sources and CSS Stylesheets which covers your needs. E.g. for Material
-    theme it would be **material.py**. See: **mkdocs-with-pdf/mkdocs_with_pdf/themes/material.py** for implementation details.
+    theme it would be **material.py**. See: **mkdocs-to-pdf/src/mkdocs_to_pdf/themes/material.py** for implementation details.
     **default**: `None`
     _**since**: `v0.7.0`_
 
@@ -281,7 +281,7 @@ plugins:
 
     PDF generation can take significantly longer than HTML generation which can slow down mkdocs's built-in dev-server.
 
-    Adding `enabled_if_env: ENABLE_PDF_EXPORT` under `- with-pdf:` disables PDF generation during development.  Run the dev-server normally:
+    Adding `enabled_if_env: ENABLE_PDF_EXPORT` under `- to-pdf:` disables PDF generation during development.  Run the dev-server normally:
 
     ```sh
     $ mkdocs serve
@@ -344,7 +344,7 @@ E.g. use `{{ author }}` to get the author from your `mkdocs.yml` that looks like
 
 ```yaml
 plugins:
-    - with-pdf:
+    - to-pdf:
         author: WHO
 ```
 
@@ -454,5 +454,5 @@ If you want to contribute to the code of this project, please read the [Contribu
 [mkdocs-plugins]: http://www.mkdocs.org/user-guide/plugins/
 [mkdocs-material]: https://github.com/squidfunk/mkdocs-material
 
-[contributing]: https://github.com/orzih/mkdocs-with-pdf/blob/master/CONTRIBUTING.md
-[github-issues]: https://github.com/orzih/mkdocs-with-pdf/issues
+[contributing]: https://github.com/domWalters/mkdocs-to-pdf/blob/master/CONTRIBUTING.md
+[github-issues]: https://github.com/domWalters/mkdocs-to-pdf/issues

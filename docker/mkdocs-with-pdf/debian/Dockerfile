@@ -6,7 +6,7 @@ RUN apt-get update -y && apt-get upgrade -y \
     && pip3 install --no-cache-dir \
         mkdocs mkdocs-material \
         mdx-gh-links mkdocs-redirects mkdocs-minify-plugin \
-        weasyprint mkdocs-with-pdf
+        weasyprint mkdocs-to-pdf
 
 # Headless Chrome
 RUN apt-get install --no-install-recommends -y curl gnupg \
