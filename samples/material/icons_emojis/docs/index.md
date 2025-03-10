@@ -31,6 +31,6 @@
 
 ### with colors
 
-**XXX: Styles are not applied in the PDF output.**
+**XXX: Applying CSS requires the `render_js` and `headless_chrome_path` options.**
 
 :fontawesome-brands-youtube:{ .youtube }
