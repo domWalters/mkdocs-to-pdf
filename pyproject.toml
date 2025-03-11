@@ -12,7 +12,8 @@ dependencies = [
     "beautifulsoup4 == 4.9.3",
     "libsass == 0.23.0",
     "mkdocs == 1.6.1",
-    "weasyprint == 64.1",
+    "weasyprint == 62.3",
+    "pydyf == 0.10.0",
 ]
 maintainers = [
     { name = "Dom Walters" },
