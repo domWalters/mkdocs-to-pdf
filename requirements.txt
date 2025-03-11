@@ -9,6 +9,7 @@ colorama==0.4.6 ; sys_platform == 'win32'
 cssselect2==0.8.0
 fonttools==4.56.0
 ghp-import==2.1.0
+html5lib==1.1
 importlib-metadata==8.6.1 ; python_full_version < '3.10'
 jinja2==3.1.6
 libsass==0.23.0
@@ -22,7 +23,7 @@ pathspec==0.12.1
 pillow==11.1.0
 platformdirs==4.3.6
 pycparser==2.22
-pydyf==0.11.0
+pydyf==0.10.0
 pyphen==0.17.2
 python-dateutil==2.9.0.post0
 pyyaml==6.0.2
@@ -30,9 +31,8 @@ pyyaml-env-tag==0.1
 six==1.17.0
 soupsieve==2.6
 tinycss2==1.4.0
-tinyhtml5==2.0.0
 watchdog==6.0.0
-weasyprint==64.1
+weasyprint==62.3
 webencodings==0.5.1
 zipp==3.21.0 ; python_full_version < '3.10'
 zopfli==0.2.3.post1

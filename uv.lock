@@ -422,6 +422,19 @@ wheels = [
 ]
 
 [[package]]
+name = "html5lib"
+version = "1.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "six" },
+    { name = "webencodings" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/ac/b6/b55c3f49042f1df3dcd422b7f224f939892ee94f22abcf503a9b7339eaf2/html5lib-1.1.tar.gz", hash = "sha256:b2e5b40261e20f354d198eae92afc10d750afb487ed5e50f9c4eaf07c184146f", size = 272215 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/6c/dd/a834df6482147d48e225a49515aabc28974ad5a4ca3215c18a882565b028/html5lib-1.1-py2.py3-none-any.whl", hash = "sha256:0d78f8fde1c230e99fe37986a60526d7049ed4bf8a9fadbad5f00e22e58e041d", size = 112173 },
+]
+
+[[package]]
 name = "htmlmin2"
 version = "0.1.13"
 source = { registry = "https://pypi.org/simple" }
@@ -739,6 +752,7 @@ dependencies = [
     { name = "beautifulsoup4" },
     { name = "libsass" },
     { name = "mkdocs" },
+    { name = "pydyf" },
     { name = "weasyprint" },
 ]
 
@@ -776,8 +790,9 @@ requires-dist = [
     { name = "mkdocs-minify-plugin", marker = "extra == 'samples-mkdocs-material'", specifier = "==0.8.0" },
     { name = "mkdocs-redirects", marker = "extra == 'samples-mkdocs'", specifier = "==1.2.2" },
     { name = "mkdocstrings-python", marker = "extra == 'samples-mkdocs'" },
+    { name = "pydyf", specifier = "==0.10.0" },
     { name = "pymdown-extensions", marker = "extra == 'samples-mkdocs'", specifier = "==10.14.3" },
-    { name = "weasyprint", specifier = "==64.1" },
+    { name = "weasyprint", specifier = "==62.3" },
 ]
 provides-extras = ["samples-mkdocs", "samples-mkdocs-material"]
 
@@ -940,11 +955,11 @@ wheels = [
 
 [[package]]
 name = "pydyf"
-version = "0.11.0"
+version = "0.10.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/2e/c2/97fc6ce4ce0045080dc99446def812081b57750ed8aa67bfdfafa4561fe5/pydyf-0.11.0.tar.gz", hash = "sha256:394dddf619cca9d0c55715e3c55ea121a9bf9cbc780cdc1201a2427917b86b64", size = 17769 }
+sdist = { url = "https://files.pythonhosted.org/packages/59/0b/389051bbc9decfa057a617c0a676883a674c2ecc2c0cef875e5502e35b77/pydyf-0.10.0.tar.gz", hash = "sha256:357194593efaf61d7b48ab97c3d59722114934967c3df3d7878ca6dd25b04c30", size = 17615 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/c9/ac/d5db977deaf28c6ecbc61bbca269eb3e8f0b3a1f55c8549e5333e606e005/pydyf-0.11.0-py3-none-any.whl", hash = "sha256:0aaf9e2ebbe786ec7a78ec3fbffa4cdcecde53fd6f563221d53c6bc1328848a3", size = 8104 },
+    { url = "https://files.pythonhosted.org/packages/f1/b3/4b87b0edaa7f2f94c131d01697f936748fc7f74c1ca9622ada372f7256e8/pydyf-0.10.0-py3-none-any.whl", hash = "sha256:ef76b6c0976a091a9e15827fb5800e5e37e7cd1a3ca4d4bd19d10a14ea8c0ae3", size = 8115 },
 ]
 
 [[package]]
@@ -1101,18 +1116,6 @@ wheels = [
 ]
 
 [[package]]
-name = "tinyhtml5"
-version = "2.0.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "webencodings" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/fd/03/6111ed99e9bf7dfa1c30baeef0e0fb7e0bd387bd07f8e5b270776fe1de3f/tinyhtml5-2.0.0.tar.gz", hash = "sha256:086f998833da24c300c414d9fe81d9b368fd04cb9d2596a008421cbc705fcfcc", size = 179507 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/5c/de/27c57899297163a4a84104d5cec0af3b1ac5faf62f44667e506373c6b8ce/tinyhtml5-2.0.0-py3-none-any.whl", hash = "sha256:13683277c5b176d070f82d099d977194b7a1e26815b016114f581a74bbfbf47e", size = 39793 },
-]
-
-[[package]]
 name = "typing-extensions"
 version = "4.12.2"
 source = { registry = "https://pypi.org/simple" }
@@ -1169,21 +1172,21 @@ wheels = [
 
 [[package]]
 name = "weasyprint"
-version = "64.1"
+version = "62.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "cffi" },
     { name = "cssselect2" },
     { name = "fonttools", extra = ["woff"] },
+    { name = "html5lib" },
     { name = "pillow" },
     { name = "pydyf" },
     { name = "pyphen" },
     { name = "tinycss2" },
-    { name = "tinyhtml5" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/6c/a0/f6b3ef688e747488b17b3b39d27fe7438d3ec88d1b79d5524485a5458020/weasyprint-64.1.tar.gz", hash = "sha256:28b02f2c6409bafce1b1220d9d76a7345875bd3bd08c4f6dfbf510bb92a94757", size = 498647 }
+sdist = { url = "https://files.pythonhosted.org/packages/fd/22/2d76310cd2ea5bbf03c691a08d48626f49853b7261a51bbdc0f834d746ca/weasyprint-62.3.tar.gz", hash = "sha256:8d8680d732f7fa0fcbc587692a5a5cb095c3525627066918d6e203cbf42b7fcd", size = 477181 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/42/95/bf333fbbaf73c1c211b6b801b9ac2563db8e2225f69902d1ba8b25c70e9c/weasyprint-64.1-py3-none-any.whl", hash = "sha256:f7c88ea8ce0ce0c527cbb9c802689e035fae50016d7efc5dfdaba4b75abf68f4", size = 302025 },
+    { url = "https://files.pythonhosted.org/packages/1c/d1/10f4225bec3450e7c0aa5813697ce76eb2dfa1f3c5e530510253b6b276b2/weasyprint-62.3-py3-none-any.whl", hash = "sha256:d31048646ce15084e135b33e334a61f526aa68d2f679fcc109ed0e0f5edaed21", size = 289333 },
 ]
 
 [[package]]
