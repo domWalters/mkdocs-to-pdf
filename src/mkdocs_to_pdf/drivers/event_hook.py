@@ -51,7 +51,8 @@ class EventHookHandler(object):
         if self._module and hasattr(self._module, 'inject_link'):
             return self._module.inject_link(
                 output_content, pdf_path, page, self._logger)
-        return theme_handler.inject_link(output_content, pdf_path)
+        return theme_handler.inject_link(output_content, pdf_path,
+                                         page, self._logger, self._options)
 
     def pre_js_render(self, soup: BeautifulSoup) -> BeautifulSoup:
         if self._module and hasattr(self._module, 'pre_js_render'):
