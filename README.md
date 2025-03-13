@@ -1,82 +1,208 @@
-# PDF Generate Plugin for MkDocs
+# Mkdocs to PDF
 
-[![PyPI version](https://img.shields.io/pypi/v/mkdocs-to-pdf.svg)](https://pypi.org/project/mkdocs-to-pdf)
-[![PyPI downloads](https://img.shields.io/pypi/dm/mkdocs-to-pdf.svg)](https://pypi.org/project/mkdocs-to-pdf)
+[![PyPi version](https://img.shields.io/pypi/v/mkdocs-to-pdf.svg)](https://pypi.org/project/mkdocs-to-pdf)
+[![PyPi downloads](https://img.shields.io/pypi/dm/mkdocs-to-pdf.svg)](https://pypi.org/project/mkdocs-to-pdf)
 
 ---
 
-This plugin will generate a single PDF file from your MkDocs repository.
-This plugin is inspired by [MkDocs PDF Export Plugin][mkdocs-pdf-export-plugin].
+An `mkdocs` plugin to generate a PDF from an `mkdocs` repository.
+
+This repository is a fork of [`mkdocs-with-pdf`][mkdocs-with-pdf], which itself
+was inspired by [MkDocs PDF Export Plugin][mkdocs-pdf-export-plugin].
+
+[mkdocs-with-pdf]: https://github.com/orzih/mkdocs-with-pdf
+[mkdocs-pdf-export-plugin]: https://github.com/zhaoterryy/mkdocs-pdf-export-plugin
 
 ## Features
 
-* Cover and Table of Contents integrated in the PDF
-* Automatically numbers on heading (h1-h6).
-* Shift down sub-page headings level.
-* using [WeasyPrint][weasyprint].
+- Supports `mkdocs-material`.
+- Supports `pymarkdown-extensions`.
+- Automatically generated cover page and table of contents.
+- Automatically numbered headings from h1 to h6.
 
 ## Samples
 
-* [PDF of _'MkDocs' docs_][sample_mkdocs]
-* [PDF of _'Material for MkDocs' docs_][sample_mkdocs-material]
+See the [`samples` directory](./samples) for easily generated example PDF files
+showcasing standard Markdown syntax as PDF.
 
-[sample_mkdocs]: https://github.com/domWalters/mkdocs-to-pdf/blob/master/samples/mkdocs/README.md
-[sample_mkdocs-material]: https://github.com/domWalters/mkdocs-to-pdf/blob/master/samples/mkdocs-material/README.md
+## Installation
 
-## Requirements
+`mkdocs-to-pdf` is available on PyPi:
 
-1. This package requires MkDocs version 1.0 or higher (0.17 works as well)
-1. Python 3.6 or higher
-1. WeasyPrint depends on cairo, Pango and GDK-PixBuf which need to be installed separately. Please follow the installation instructions for your platform carefully:
-    * [Linux][weasyprint-linux]
-    * [MacOS][weasyprint-macos]
-    * [Windows][weasyprint-windows]
+```bash
+pip install mkdocs-to-pdf
+```
 
-## How to use
+The `[dev]` extras supply the dependencies for the examples in the
+[`samples` directory](./samples):
 
-### Installation
+```bash
+pip install mkdocs-to-pdf[dev]
+```
 
-1. Install the package with pip:
+### WeasyPrint
 
-    ```bash
-    pip install mkdocs-to-pdf
-    ```
+`mkdocs-to-pdf` depends on [`weasyprint`][weasyprint].
 
-2. Enable the plugin in your `mkdocs.yml`:
+`weasyprint` has OS specific dependencies. Follow the guidance in the
+[`weasyprint` documentation][weasyprint-install].
 
-    ```yaml
-    plugins:
-        - to-pdf
-    ```
+[weasyprint]: http://weasyprint.org/
+[weasyprint-install]: https://doc.courtbouillon.org/weasyprint/stable/first_steps.html#installation
 
-    More information about plugins in the [MkDocs documentation][mkdocs-plugins].
+## Usage
 
-#### Testing
+Enable the plugin in your `mkdocs.yml`:
 
-When building your repository with `mkdocs build`, you should now see the following message at the end of your build output:
+```yaml
+plugins:
+    - to-pdf
+```
 
-> Converting 10 articles to PDF took 7.1s
+For more information on plugins within `mkdocs`, see the
+[official `mkdocs` documentation][mkdocs-plugins].
+
+[mkdocs-plugins]: http://www.mkdocs.org/user-guide/plugins
+
+When building your repository with `mkdocs build`, you will now see the
+following message at the end of your build output:
+
+> Converting 10 articles to PDF took 7.1 s
 
 ### Configuration
+
+Values given below are the defaults:
+
+- The shorthand `${}` is used to indicate that the parameter defaults to a
+  value in the main `mkdocs.yml` file.
+- A vacant key implies that the setting has no default.
+
+WARNING: don't copy paste this block, it won't work. Just select the
+parameters that you need.
+
+```yaml
+plugins:
+    - to-pdf:
+        ###################
+        # Header / Footer #
+        ###################
+
+        # The author of the document. Used in the header / footer.
+        author: ${site_author}
+        # The copyright statement for the document. Used in the header / footer.
+        copyright: ${copyright}
+
+        #########
+        # Cover #
+        #########
+
+        # Set to false if you do not want a cover to generate.
+        cover: true
+        # The title on the cover page.
+        cover_title: ${site_name}
+        # The subtitle on the cover page.
+        cover_subtitle:
+        # The logo to use on the cover page. URL or relative path to `docs`.
+        cover_logo:
+        # Set to true if you do want a back cover to generate.
+        back_cover: false
+
+        ##################
+        # Headings & ToC #
+        ##################
+
+        # The title for the Table of Contents
+        toc_title: "Table of Contents"
+        # The depth of headings to show in the Table of Contents. 1 to 6.
+        toc_level: 3
+        # The depth of headings to provide numbers to. Headings deeper than this
+        # number will not receive a section number.
+        ordered_chapter_level: 3
+        # Set to false to disable heading shifting. When false, all headings
+        # will use the same font and size, no matter how deep they are.
+        heading_shift: true
+
+        ##########
+        # Output #
+        ##########
+
+        # The path to write the PDF to. The root of this path is the `site`
+        # directory.
+        output_path: "pdf/document.pdf"
+        # PDFs will only be build if the environment variable referenced here
+        # is set to "1".
+        enabled_if_env:
+
+        #########
+        # Debug #
+        #########
+
+        # Set to true to see all WeasyPrint debug messages during build.
+        verbose: false
+        # Set to true to output HTML to `stdout` during build
+        debug_html: false
+```
+
+Any configuration options that aren't documented here are either legacy or
+experimental. Use at your own risk.
+
+#### `enabled_if_env`
+
+`enabled_if_env` is useful when running `mkdocs serve`. PDF builds are slower
+than the standard build, so during development you should turn them off.
+
+In your `mkdocs.yml`:
+
+```yaml
+plugins:
+    - to-pdf:
+        enabled_if_env: ENABLE_PDF_EXPORT
+```
+
+Then `mkdocs serve` won't build them anymore:
+
+```bash
+$ mkdocs serve
+INFO    -  Browser Connected: http://127.0.0.1:8000/
+INFO    -  Running task: builder (delay: None)
+INFO    -  Building documentation...
+WARNING -  without generate PDF(set environment variable ENABLE_PDF_EXPORT to 1 to enable)
+... 2 seconds later ...
+INFO    -  Reload 1 waiters: /.../index.md
+```
+
+And `mkdocs build` can be called with the appropriate environment variable:
+
+```bash
+$ ENABLE_PDF_EXPORT=1 mkdocs build
+...
+INFO    -  Converting 10 articles to PDF took 7.1s
+INFO    -  Documentation built in 8.29 seconds
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 You may customize the plugin by passing options in `mkdocs.yml`:
 
 ```yaml
 plugins:
     - to-pdf:
-        #author: WHO
-        #copyright: ANY TEXT
-        #
-        #cover: false
-        #back_cover: true
-        #cover_title: TITLE TEXT
-        #cover_subtitle: SUBTITLE TEXT
         #custom_template_path: TEMPLATES PATH
         #
-        #toc_title: TOC TITLE TEXT
-        #heading_shift: false
-        #toc_level: 3
-        #ordered_chapter_level: 2
         #excludes_children:
         #    - 'release-notes/:upgrading'
         #    - 'release-notes/:changelog'
@@ -94,100 +220,12 @@ plugins:
         #render_js: true
         #headless_chrome_path: headless-chromium
         #
-        #output_path: any-place/document.pdf
-        #enabled_if_env: ENABLE_PDF_EXPORT
-        #
-        #debug_html: true
         #show_anchors: true
-        #verbose: true
 ```
 
 #### Options
 
-##### for Properties
-
-* `author`
-
-    Set the author text.  
-    **default**: use `site_author` in your project `mkdocs.yml`
-
-* `copyright`
-
-    Set the author text.  
-    **default**: use `copyright` in your project `mkdocs.yml`
-
-> `author` and `copyright` values are drawn in Cover, and you can use '@page' content.  
->
-> ```css "e.g."
-> @page {
->   @bottom-left {
->     content: string(author) !important;
->   }
->   @bottom-right {
->     content: string(copyright) !important;
->   }
-> }
-> ```
-
-##### for Cover
-
-* `cover`
-
-    Set the value to `false` if you don't need a cover page.  
-    **default**: `true`
-
-* `back_cover`
-
-    Set the value to `true` if you need a back cover page.  
-    **default**: `false`  
-    _**since**: `v0.8.0`_
-
-    You would be better to install the `qrcode` package:
-
-    ```sh
-    pip install qrcode
-    ```
-
-* `cover_title`
-
-    Set the title text in cover page.  
-    **default**: use `site_name` in your project `mkdocs.yml`
-
-* `cover_subtitle`
-
-    Set the subtitle text in cover page.  
-    **default**: `None`
-
-* `cover_logo`
-
-    Set the logo image in cover page. This value is URL or simply specify the relative path to the docs directory.  
-    **default**: `None`  
-    _**since**: `v0.8.0`_
-
 ##### for Heading and TOC
-
-* `toc_title`
-
-    Set the title text of _Table of Content_.  
-    **default**: `Table of Content`  
-    _**since**: `v0.4.0`_
-
-* `heading_shift`
-
-    Set this value to `false`, disable shift heading in child page.  
-    **default**: `true`
-
-    In this flags enable, heading move down one level in child page.
-
-* `toc_level`
-
-    Set the level of _Table of Content_. This value is enabled in the range of from `1` to `6`.
-    **default**: `3`
-
-* `ordered_chapter_level`
-
-    Set the level of heading number addition. This value is enabled in the range of from `1` to `6`.
-    **default**: `3`
 
 * `excludes_children`
 
@@ -263,70 +301,17 @@ plugins:
 
 ##### ... and more
 
-* `output_path`
-
-    This option allows you to use a different destination for the PDF file.  
-    **default**: `pdf/document.pdf`
-
 * `custom_template_path`
 
     The path where your custom `cover.html` and/or `styles.scss` are located.
     **default**: `templates`  
     _**since**: `v0.8.0`_
 
-* `enabled_if_env`
-
-    Setting this option will enable the build only if there is an environment variable set to 1. This is useful to disable building the PDF files during development, since it can take a long time to export all files.  
-    **default**: `None`
-
-    PDF generation can take significantly longer than HTML generation which can slow down mkdocs's built-in dev-server.
-
-    Adding `enabled_if_env: ENABLE_PDF_EXPORT` under `- to-pdf:` disables PDF generation during development.  Run the dev-server normally:
-
-    ```sh
-    $ mkdocs serve
-    INFO    -  Browser Connected: http://127.0.0.1:8000/
-    INFO    -  Running task: builder (delay: None)
-    INFO    -  Building documentation...
-    WARNING -  without generate PDF(set environment variable ENABLE_PDF_EXPORT to 1 to enable)
-    ... 2 seconds later ...
-    INFO    -  Reload 1 waiters: /.../index.md
-    ```
-
-    and to build files to deploy specify `ENABLE_PDF_EXPORT=1` at the command line:
-
-    ```sh
-    $ ENABLE_PDF_EXPORT=1 mkdocs build
-    ...
-    INFO    -  Converting 10 articles to PDF took 7.1s
-    INFO    -  Documentation built in 8.29 seconds
-    ```
-
-* `debug_html`
-
-    Setting this to `true` will out HTML to `stdout` on build time.  
-    **default**: `false`
-
-    You can try this:
-
-    ```bash
-    mkdocs build > for_pdf_print.html
-    ```
-
-    ...and browse output with Google Chrome. [Chrome DevTools Into Print Preview Mode](https://developers.google.com/web/tools/chrome-devtools/css/print-preview) will you help.
-
-    Note: WeasyPrint and Google Chrome are not fully compatible.
-
 * `show_anchors`
 
     Setting this to `true` will list out of anchor points provided during the build as info message.  
     **default**: `false`  
     _**since**: `v0.7.4`_
-
-* `verbose`
-
-    Setting this to `true` will show all WeasyPrint debug messages during the build.  
-    **default**: `false`
 
 ## Custom cover page and document style
 
@@ -439,19 +424,6 @@ INFO    -  (hook on inject_link: Home)
 From reporting a bug to submitting a pull request: every contribution is appreciated and welcome. Report bugs, ask questions and request features using [Github issues][github-issues].
 If you want to contribute to the code of this project, please read the [Contribution Guidelines][contributing].
 
-## Special thanks to
-
-* [Terry Zhao][zhaoterryy] the author of the [MkDocs PDF Export Plugin][mkdocs-pdf-export-plugin] the source of our inspiration. We've used some of his code in this project.
-
-[mkdocs-pdf-export-plugin]: https://github.com/zhaoterryy/mkdocs-pdf-export-plugin
-[zhaoterryy]:  https://github.com/zhaoterryy
-
-[weasyprint]: http://weasyprint.org/
-[weasyprint-linux]: https://weasyprint.readthedocs.io/en/latest/install.html#linux
-[weasyprint-macos]: https://weasyprint.readthedocs.io/en/latest/install.html#os-x
-[weasyprint-windows]: https://weasyprint.readthedocs.io/en/latest/install.html#windows
-
-[mkdocs-plugins]: http://www.mkdocs.org/user-guide/plugins/
 [mkdocs-material]: https://github.com/squidfunk/mkdocs-material
 
 [contributing]: https://github.com/domWalters/mkdocs-to-pdf/blob/master/CONTRIBUTING.md
