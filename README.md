@@ -3,7 +3,7 @@ search:
   exclude: true
 ---
 
-# Mkdocs to PDF
+# MkDocs to PDF
 
 [![PyPi version](https://img.shields.io/pypi/v/mkdocs-to-pdf.svg)](https://pypi.org/project/mkdocs-to-pdf)
 [![PyPi downloads](https://img.shields.io/pypi/dm/mkdocs-to-pdf.svg)](https://pypi.org/project/mkdocs-to-pdf)
@@ -20,10 +20,13 @@ was inspired by [MkDocs PDF Export Plugin][mkdocs-pdf-export-plugin].
 
 ## Features
 
-- Supports `mkdocs-material`.
-- Supports `pymarkdown-extensions`.
+- Supports [`mkdocs-material`][mkdocs-material].
+- Supports [`pymdown-extensions`][pymdown-extensions].
 - Automatically generated cover page and table of contents.
 - Automatically numbered headings from h1 to h6.
+
+[mkdocs-material]: https://squidfunk.github.io/mkdocs-material/
+[pymdown-extensions]: https://facelessuser.github.io/pymdown-extensions/
 
 ## Samples
 
