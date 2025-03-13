@@ -97,6 +97,8 @@ plugins:
         #output_path: any-place/document.pdf
         #enabled_if_env: ENABLE_PDF_EXPORT
         #
+        #download_link: header
+        #
         #debug_html: true
         #show_anchors: true
         #verbose: true
@@ -301,6 +303,16 @@ plugins:
     INFO    -  Converting 10 articles to PDF took 7.1s
     INFO    -  Documentation built in 8.29 seconds
     ```
+
+* `download_link`
+
+    PDF Download link in the HTML page.
+
+    - `header` : Icon in the header.
+    - `footer` : Link in the footer.
+
+    **default**: `None`  
+    _**since**: `v0.10.0`_
 
 * `debug_html`
 

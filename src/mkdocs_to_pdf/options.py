@@ -46,6 +46,8 @@ class Options(object):
             config_options.Type(str, default='chromium-browser')),
         ('relaxedjs_path',
             config_options.Type(str, default=None)),
+
+        ('download_link', config_options.Type(str, default=None)),
     )
 
     def __init__(self, local_config, config, logger: logging):
@@ -100,6 +102,9 @@ class Options(object):
 
         self.relaxed_js = RelaxedJSRenderer.setup(
             local_config['relaxedjs_path'], logger)
+
+        # PDF Download link
+        self.download_link = local_config['download_link']
 
         # Theming
         self.theme_name = config['theme'].name
