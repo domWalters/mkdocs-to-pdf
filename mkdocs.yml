@@ -1,0 +1,77 @@
+---
+docs_dir: .
+repo_name: domWalters/mkdocs-to-pdf
+repo_url: https://github.com/domWalters/mkdocs-to-pdf
+site_author: Dominic Walters
+site_dir: site/
+site_name: mkdocs-to-pdf
+site_url: https://mkdocs-to-pdf.readthedocs.org
+
+exclude_docs: |
+  samples/
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - toc:
+      permalink: true
+
+nav:
+  - Home: README.md
+  - Installation: docs/installation.md
+  - Usage: docs/usage.md
+  - Changelog: docs/CHANGELOG.md
+  - License: docs/LICENSE.md
+  - Stuff to Migrate: docs/stuff-to-migrate.md
+
+plugins:
+  - minify:
+      minify_html: true
+  - same-dir
+  - search
+
+theme:
+  features:
+    - content.code.copy
+    - navigation.indexes
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.sections
+    - navigation.tabs
+    - navigation.top
+    - navigation.tracking
+    - search.highlight
+    - search.share
+    - search.suggest
+    - toc.follow
+    - toc.integrate
+  font:
+    text: Roboto
+    code: Roboto Mono
+  icon:
+    repo: fontawesome/brands/gitlab
+  name: material
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/link
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: indigo
+      toggle:
+        icon: material/toggle-switch-off
+        name: Switch to system preference
