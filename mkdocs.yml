@@ -5,7 +5,7 @@ repo_url: https://github.com/domWalters/mkdocs-to-pdf
 site_author: Dominic Walters
 site_dir: site/
 site_name: mkdocs-to-pdf
-site_url: https://mkdocs-to-pdf.readthedocs.org
+site_url: https://mkdocs-to-pdf.readthedocs.io
 
 exclude_docs: |
   samples/
