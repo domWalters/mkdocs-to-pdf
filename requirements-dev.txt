@@ -36,7 +36,6 @@ mkdocs-material==9.6.7
 mkdocs-material-extensions==1.3.1
 mkdocs-minify-plugin==0.8.0
 mkdocs-redirects==1.2.2
-mkdocs-same-dir==0.1.3
 mkdocstrings==0.29.0
 mkdocstrings-python==1.16.4
 packaging==24.2

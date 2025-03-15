@@ -1,14 +1,10 @@
 ---
-docs_dir: .
 repo_name: domWalters/mkdocs-to-pdf
 repo_url: https://github.com/domWalters/mkdocs-to-pdf
 site_author: Dominic Walters
 site_dir: site/
 site_name: mkdocs-to-pdf
 site_url: https://mkdocs-to-pdf.readthedocs.io
-
-exclude_docs: |
-  samples/
 
 markdown_extensions:
   - pymdownx.highlight:
@@ -23,16 +19,15 @@ markdown_extensions:
 
 nav:
   - Home: README.md
-  - Installation: docs/installation.md
-  - Usage: docs/usage.md
-  - Changelog: docs/CHANGELOG.md
-  - License: docs/LICENSE.md
-  - Stuff to Migrate: docs/stuff-to-migrate.md
+  - Installation: installation.md
+  - Usage: usage.md
+  - Changelog: CHANGELOG.md
+  - License: LICENSE.md
+  - Stuff to Migrate: stuff-to-migrate.md
 
 plugins:
   - minify:
       minify_html: true
-  - same-dir
   - search
 
 theme:
