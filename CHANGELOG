@@ -1,10 +1,19 @@
 mkdocs-to-pdf 0.10.0 (UNRELEASED)
 
   * Fix custom checkbox and ordered list overlap. #18
+    * Thanks to @hkato
   * Add tests for #18. #22
+    * Thanks to @hkato
   * Migrate to `pyproject.toml`.
     * Move minimum versions as little as possible to get Python 3.8 to work.
   * Change package name to `mkdocs-to-pdf`.
+  * Replace existing `mkdocs` and `mkdocs-material` samples with updated
+    submodules.
+  * Simplify development process with make files.
+  * Change default font family to Roboto and Noto Sans with CJK support. #24
+    * Thanks to @hkato
+  * Allow configuration of the "Download PDF" link. #44
+    * Thanks to @hkato
 
 mkdocs-with-pdf 0.9.4 (2024-28-01)
 
