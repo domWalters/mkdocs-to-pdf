@@ -24,8 +24,14 @@ was inspired by [mkdocs-pdf-export-plugin][mkdocs-pdf-export-plugin].
 [mkdocs-material]: https://squidfunk.github.io/mkdocs-material/
 [pymdown-extensions]: https://facelessuser.github.io/pymdown-extensions/
 
+## Examples
+
+See common markdown examples on [the website][readthedocs] and accompanying PDF.
+
+[readthedocs]: https://mkdocs-to-pdf.readthedocs.io/en/latest/
+
 ## Samples
 
 See the [`samples` directory](https://github.com/domWalters/mkdocs-to-pdf/tree/develop/samples)
-for easily generated example PDF files showcasing standard Markdown syntax as
-PDF.
+for easily generated example PDF files showcasing the documentation for other
+popular projects that use MkDocs for their documentation.
