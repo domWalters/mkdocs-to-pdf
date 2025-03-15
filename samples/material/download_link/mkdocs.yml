@@ -1,8 +1,0 @@
----
-site_name: Download Link
-theme:
-  name: material
-
-plugins:
-  - to-pdf:
-      download_link: header
