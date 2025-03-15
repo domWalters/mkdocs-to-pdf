@@ -1,8 +1,3 @@
----
-search:
-  exclude: true
----
-
 # MkDocs to PDF
 
 [![PyPi version](https://img.shields.io/pypi/v/mkdocs-to-pdf.svg)](https://pypi.org/project/mkdocs-to-pdf)
