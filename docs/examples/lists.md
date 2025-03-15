@@ -1,4 +1,4 @@
-# list
+# Lists
 
 ## Unordered lists
 

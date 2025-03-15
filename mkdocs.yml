@@ -5,15 +5,59 @@ site_author: Dominic Walters
 site_dir: site/
 site_name: mkdocs-to-pdf
 site_url: https://mkdocs-to-pdf.readthedocs.io
+copyright: Copyright ©️ 2020, orzih / 2024-2025, Dominic Adam Walters
+
+extra_css:
+  - stylesheets/extra.css
 
 markdown_extensions:
+  # Tooltips
+  - abbr
+  # Admonitions
+  - admonition
+  # Annotations, Buttons, Grids, Icons & Emojis, Images, Tooltips
+  - attr_list
+  # Footnotes
+  - footnotes
+  # Annotations, Grids, Images
+  - md_in_html
+  # Images
+  - pymdownx.blocks.caption
+  # Formatting
+  - pymdownx.caret
+  # Formatting
+  - pymdownx.critic
+  # Admonitions
+  - pymdownx.details
+  # Icons & Emojis
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  # Code Blocks
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span
       pygments_lang_class: true
+  # Code Blocks
   - pymdownx.inlinehilite
+  # Formatting
+  - pymdownx.keys
+  # Formatting
+  - pymdownx.mark
+  # Code Blocks, Tooltips
   - pymdownx.snippets
+  # Admonitions, Annotations, Code Blocks, Content Tabs
   - pymdownx.superfences
+  # Content Tabs
+  - pymdownx.tabbed:
+      alternate_style: true
+  # Lists
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  # Formatting
+  - pymdownx.tilde
+  # Data Tables
+  - tables
   - toc:
       permalink: true
 
@@ -21,6 +65,23 @@ nav:
   - Home: README.md
   - Installation: installation.md
   - Usage: usage.md
+  - Examples:
+      - examples/admonitions.md
+      - examples/annotations.md
+      - examples/basics.md
+      - examples/blockquotes.md
+      - examples/buttons.md
+      - examples/cjk-fonts.md
+      - examples/code-blocks.md
+      - examples/content-tabs.md
+      - examples/data-tables.md
+      - examples/footnotes.md
+      - examples/formatting.md
+      - examples/grids.md
+      - examples/icons-emojis.md
+      - examples/images.md
+      - examples/lists.md
+      - examples/tooltips.md
   - Changelog: CHANGELOG.md
   - License: LICENSE.md
   - Stuff to Migrate: stuff-to-migrate.md
@@ -29,6 +90,10 @@ plugins:
   - minify:
       minify_html: true
   - search
+  - to-pdf:
+      cover_title: MkDocs to PDF
+      cover_subtitle: An MkDocs plugin to create a PDF
+      download_link: header
 
 theme:
   features:

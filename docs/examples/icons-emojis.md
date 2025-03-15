@@ -1,4 +1,4 @@
-# Icons, Emojis
+# Icons & Emojis
 
 ## Emojis
 

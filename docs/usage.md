@@ -106,7 +106,7 @@ Set to true if you want a back cover to generate.
 ``` yaml
 plugins:
   - to-pdf:
-      cover: true
+      back_cover: true
 ```
 
 ### Headings and Table of Contents
