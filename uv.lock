@@ -757,6 +757,17 @@ dependencies = [
 ]
 
 [package.optional-dependencies]
+all = [
+    { name = "markdown-callouts" },
+    { name = "mdx-gh-links" },
+    { name = "mkdocs-autorefs" },
+    { name = "mkdocs-click" },
+    { name = "mkdocs-literate-nav" },
+    { name = "mkdocs-material" },
+    { name = "mkdocs-minify-plugin" },
+    { name = "mkdocs-redirects" },
+    { name = "mkdocstrings-python" },
+]
 docs = [
     { name = "mkdocs-material" },
     { name = "mkdocs-minify-plugin" },
@@ -788,11 +799,12 @@ requires-dist = [
     { name = "mkdocs-minify-plugin", marker = "extra == 'docs'", specifier = "==0.8.0" },
     { name = "mkdocs-minify-plugin", marker = "extra == 'samples'", specifier = "==0.8.0" },
     { name = "mkdocs-redirects", marker = "extra == 'samples'", specifier = "==1.2.2" },
+    { name = "mkdocs-to-pdf", extras = ["docs", "samples"], marker = "extra == 'all'" },
     { name = "mkdocstrings-python", marker = "extra == 'samples'", specifier = "==1.16.5" },
     { name = "pydyf", specifier = "==0.10.0" },
     { name = "weasyprint", specifier = "==62.3" },
 ]
-provides-extras = ["docs", "samples"]
+provides-extras = ["docs", "samples", "all"]
 
 [[package]]
 name = "mkdocstrings"

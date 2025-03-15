@@ -34,7 +34,7 @@ sync: setup
 	@echo "# sync #"
 	@echo "########"
 	$(at)uv --directory $(makefile_directory) lock \
-	    && uv --directory $(makefile_directory) sync --all-extras
+	    && uv --directory $(makefile_directory) sync --extra all
 	@echo ""
 
 .PHONY: build

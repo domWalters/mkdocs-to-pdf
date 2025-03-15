@@ -1,16 +1,28 @@
 # Installation
 
+## Users
+
 `mkdocs-to-pdf` is available on [PyPi](https://pypi.io/project/mkdocs-to-pdf):
 
 ```bash
 pip install mkdocs-to-pdf
 ```
 
-The `[dev]` extras supply the dependencies for the examples in the
-[`samples` directory](https://github.com/domWalters/mkdocs-to-pdf/tree/develop/samples):
+## Developers
+
+There are two sets of extras:
+
+- `docs`: Extra packages to build the `docs` directory.
+- `samples`: Extra packages to build everything in the
+  [`samples`](https://github.com/domWalters/mkdocs-to-pdf/tree/develop/samples)
+  directory.
+
+There is also the `all` extra, which installs all of these.
+
+For example:
 
 ```bash
-pip install mkdocs-to-pdf[dev]
+pip install mkdocs-to-pdf[all]
 ```
 
 ## WeasyPrint

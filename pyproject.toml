@@ -48,6 +48,7 @@ samples = [
     "mkdocs-minify-plugin == 0.8.0",
     "mkdocs-redirects == 1.2.2",
 ]
+all = ["mkdocs-to-pdf[docs, samples]"]
 
 [project.entry-points."mkdocs.plugins"]
 to-pdf = "mkdocs_to_pdf.plugin:WithPdfPlugin"
