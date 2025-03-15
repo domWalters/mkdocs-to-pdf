@@ -5,6 +5,13 @@
 
 ---
 
+This is a fork of the (
+presumed) [unmaintained `mkdocs-with-pdf` plugin](https://github.com/orzih/mkdocs-with-pdf/issues/142). Several patches
+of issues unmaintained in the
+original repo have been integrated, but notably
+fixed [indentation for nested markdown enumerations](https://github.com/orzih/mkdocs-with-pdf/commit/0571445f6a6b0dbb0ddc1b5dca3f09b743f16a63)
+and correct export of mermaid diagrams (using headless chrome)
+
 This plugin will generate a single PDF file from your MkDocs repository.
 This plugin is inspired by [MkDocs PDF Export Plugin][mkdocs-pdf-export-plugin].
 
@@ -21,39 +28,59 @@ This plugin is inspired by [MkDocs PDF Export Plugin][mkdocs-pdf-export-plugin].
 * [PDF of _'Material for MkDocs' docs_][sample_mkdocs-material]
 
 [sample_mkdocs]: https://github.com/orzih/mkdocs-with-pdf/blob/master/samples/mkdocs/README.md
+
 [sample_mkdocs-material]: https://github.com/orzih/mkdocs-with-pdf/blob/master/samples/mkdocs-material/README.md
 
 ## Requirements
 
-1. This package requires MkDocs version 1.0 or higher (0.17 works as well)
-1. Python 3.6 or higher
-1. WeasyPrint depends on cairo, Pango and GDK-PixBuf which need to be installed separately. Please follow the installation instructions for your platform carefully:
+* This package requires MkDocs version 1.0 or higher (0.17 works as well)
+* Python 3.6 or higher
+* WeasyPrint depends on cairo, Pango and GDK-PixBuf which need to be installed separately. Please follow the
+  installation instructions for your platform carefully:
     * [Linux][weasyprint-linux]
     * [MacOS][weasyprint-macos]
     * [Windows][weasyprint-windows]
+* Chrome, for headless mermaid to pdf rendering
+    * Install chrome, e.g. eith ``
 
 ## How to use
 
 ### Installation
 
-1. Install the package with pip:
+1. Install the package with pip: (Note, this installes this **patched**
+   version, [not the (presumed) unmaintained version available on pypi](https://pypi.org/project/mkdocs-with-pdf/))
 
     ```bash
-    pip install mkdocs-with-pdf
+    pip install -e git+https://github.com/domWalters/mkdocs-to-pdf.git@e26766d#egg=mkdocs-with-pdf
     ```
+
+> Hint: You can also just clone/download the repo, `cd` inside, and call `pip install .`
 
 2. Enable the plugin in your `mkdocs.yml`:
 
-    ```yaml
-    plugins:
-        - with-pdf
-    ```
+```yaml
+plugins:
+    -   with-pdf:
+            author: 'John Doe'
+            copyright: 'Amazing enterprise you're working for'
+            cover: true
+            cover_subtitle: 'Some text slightly below the middle'
+            cover_title: 'Some text slighlty above the middle'
+            cover_logo: path/to/cover/logo.png
+            toc_title: 'Table of Content'
+            output_path: 'finalname.pdf'
+            render_js: true
+            headless_chrome_path: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+```
 
-    More information about plugins in the [MkDocs documentation][mkdocs-plugins].
+ > Note: adapt `headless_chrome_path`, if you're not on MacOS. It is just the pointer to the main chrome bianry.
+
+More information about plugins in the [MkDocs documentation][mkdocs-plugins].
 
 #### Testing
 
-When building your repository with `mkdocs build`, you should now see the following message at the end of your build output:
+When building your repository with `mkdocs build`, you should now see the following message at the end of your build
+output:
 
 > Converting 10 articles to PDF took 7.1s
 
@@ -63,7 +90,7 @@ You may customize the plugin by passing options in `mkdocs.yml`:
 
 ```yaml
 plugins:
-    - with-pdf:
+    -   with-pdf:
         #author: WHO
         #copyright: ANY TEXT
         #
@@ -247,13 +274,17 @@ plugins:
 
 * `relaxedjs_path`
 
-    Set the value to execute command of relaxed if you're using e.g. '[Mermaid](https://mermaid-js.github.io) diagrams and Headless Chrome is not working for you.
-    Require "ReLaXed" Javascript PDF renderer to be installed on your system. See: '[ReLaXed](https://github.com/RelaxedJS/ReLaXed)'.
+  Set the value to execute command of relaxed if you're using e.g. '[Mermaid](https://mermaid-js.github.io) diagrams and
+  Headless Chrome is not working for you.
+  Require "ReLaXed" Javascript PDF renderer to be installed on your system.
+  See: '[ReLaXed](https://github.com/RelaxedJS/ReLaXed)'.
 
-    Please use 'theme_handler_path' option to specify custom JS sources and CSS Stylesheets which covers your needs. E.g. for Material
-    theme it would be **material.py**. See: **mkdocs-with-pdf/mkdocs_with_pdf/themes/material.py** for implementation details.
-    **default**: `None`
-    _**since**: `v0.7.0`_
+  Please use 'theme_handler_path' option to specify custom JS sources and CSS Stylesheets which covers your needs. E.g.
+  for Material
+  theme it would be **material.py**. See: **mkdocs-with-pdf/mkdocs_with_pdf/themes/material.py** for implementation
+  details.
+  **default**: `None`
+  _**since**: `v0.7.0`_
 
 > Install on your system:
 > ```
@@ -293,7 +324,7 @@ plugins:
     INFO    -  Reload 1 waiters: /.../index.md
     ```
 
-    and to build files to deploy specify `ENABLE_PDF_EXPORT=1` at the command line:
+  and to build files to deploy specify `ENABLE_PDF_EXPORT=1` at the command line:
 
     ```sh
     $ ENABLE_PDF_EXPORT=1 mkdocs build
@@ -408,7 +439,6 @@ def inject_link(html: str, href: str,
 
     return html
 
-
 # def pre_js_render(soup: BeautifulSoup, logger: logging) -> BeautifulSoup:
 #     logger.info('(hook on pre_js_render)')
 #     return soup
@@ -436,23 +466,31 @@ INFO    -  (hook on inject_link: Home)
 
 ## Contributing
 
-From reporting a bug to submitting a pull request: every contribution is appreciated and welcome. Report bugs, ask questions and request features using [Github issues][github-issues].
+From reporting a bug to submitting a pull request: every contribution is appreciated and welcome. Report bugs, ask
+questions and request features using [Github issues][github-issues].
 If you want to contribute to the code of this project, please read the [Contribution Guidelines][contributing].
 
 ## Special thanks to
 
-* [Terry Zhao][zhaoterryy] the author of the [MkDocs PDF Export Plugin][mkdocs-pdf-export-plugin] the source of our inspiration. We've used some of his code in this project.
+* [Terry Zhao][zhaoterryy] the author of the [MkDocs PDF Export Plugin][mkdocs-pdf-export-plugin] the source of our
+  inspiration. We've used some of his code in this project.
 
 [mkdocs-pdf-export-plugin]: https://github.com/zhaoterryy/mkdocs-pdf-export-plugin
+
 [zhaoterryy]:  https://github.com/zhaoterryy
 
 [weasyprint]: http://weasyprint.org/
+
 [weasyprint-linux]: https://weasyprint.readthedocs.io/en/latest/install.html#linux
+
 [weasyprint-macos]: https://weasyprint.readthedocs.io/en/latest/install.html#os-x
+
 [weasyprint-windows]: https://weasyprint.readthedocs.io/en/latest/install.html#windows
 
 [mkdocs-plugins]: http://www.mkdocs.org/user-guide/plugins/
+
 [mkdocs-material]: https://github.com/squidfunk/mkdocs-material
 
 [contributing]: https://github.com/orzih/mkdocs-with-pdf/blob/master/CONTRIBUTING.md
+
 [github-issues]: https://github.com/orzih/mkdocs-with-pdf/issues
