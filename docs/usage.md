@@ -6,7 +6,7 @@ Enable the plugin in your `mkdocs.yml`:
 
 ```yaml
 plugins:
-    - to-pdf
+  - to-pdf
 ```
 
 For more information on plugins within `mkdocs`, see the
@@ -31,8 +31,8 @@ Defaults to the `site_author`.
 
 ``` yaml
 plugins:
-    - to-pdf:
-        author: Firstname Lastname
+  - to-pdf:
+      author: Firstname Lastname
 ```
 
 #### `copyright`
@@ -43,8 +43,8 @@ Defaults to the top level `copyright`.
 
 ``` yaml
 plugins:
-    - to-pdf:
-        copyright: Copyright ©️ Firstname Lastname Year
+  - to-pdf:
+      copyright: Copyright © Firstname Lastname Year
 ```
 
 ### Cover
@@ -57,8 +57,8 @@ Set `cover` to false if you don't want a cover to generate.
 
 ``` yaml
 plugins:
-    - to-pdf:
-        cover: false
+  - to-pdf:
+      cover: false
 ```
 
 #### `cover_title`
@@ -69,8 +69,8 @@ Defaults to the `site_name`.
 
 ``` yaml
 plugins:
-    - to-pdf:
-        cover_title: Title for the Cover Page
+  - to-pdf:
+      cover_title: Title for the Cover Page
 ```
 
 #### `cover_subtitle`
@@ -81,8 +81,8 @@ By default there is no subtitle.
 
 ``` yaml
 plugins:
-    - to-pdf:
-        cover_subtitle: Subtitle for the Cover Page
+  - to-pdf:
+      cover_subtitle: Subtitle for the Cover Page
 ```
 
 #### `cover_logo`
@@ -93,8 +93,8 @@ By default these is no logo.
 
 ``` yaml
 plugins:
-    - to-pdf:
-        cover_logo: https://commons.wikimedia.org/wiki/File:Octicons-mark-github.svg
+  - to-pdf:
+      cover_logo: https://commons.wikimedia.org/wiki/File:Octicons-mark-github.svg
 ```
 
 #### `back_cover`
@@ -105,8 +105,8 @@ Set to true if you want a back cover to generate.
 
 ``` yaml
 plugins:
-    - to-pdf:
-        cover: true
+  - to-pdf:
+      cover: true
 ```
 
 ### Headings and Table of Contents
@@ -119,8 +119,8 @@ Defaults to `"Table of Contents"`.
 
 ``` yaml
 plugins:
-    - to-pdf:
-        toc_title: "Table of Contents"
+  - to-pdf:
+      toc_title: "Table of Contents"
 ```
 
 #### `toc_level`
@@ -131,8 +131,8 @@ Defaults to `3`.
 
 ``` yaml
 plugins:
-    - to-pdf:
-        toc_level: 2
+  - to-pdf:
+      toc_level: 2
 ```
 
 #### `ordered_chapter_level`
@@ -144,8 +144,8 @@ Defaults to `3`.
 
 ``` yaml
 plugins:
-    - to-pdf:
-        ordered_chapter_level: 2
+  - to-pdf:
+      ordered_chapter_level: 2
 ```
 
 #### `heading_shift`
@@ -157,8 +157,8 @@ they are.
 
 ``` yaml
 plugins:
-    - to-pdf:
-        heading_shift: false
+  - to-pdf:
+      heading_shift: false
 ```
 
 ### Output
@@ -171,8 +171,8 @@ Default is `"pdf/document.pdf"`.
 
 ``` yaml
 plugins:
-    - to-pdf:
-        output_path: document.pdf
+  - to-pdf:
+      output_path: document.pdf
 ```
 
 #### `enabled_if_env`
@@ -182,8 +182,8 @@ PDFs will only be build if the environment variable referenced here is set to
 
 ``` yaml
 plugins:
-    - to-pdf:
-        enabled_if_env: ENABLE_PDF_EXPORT
+  - to-pdf:
+      enabled_if_env: ENABLE_PDF_EXPORT
 ```
 
 Then `mkdocs serve` won't build them anymore:
@@ -207,6 +207,21 @@ INFO    -  Converting 10 articles to PDF took 7.1s
 INFO    -  Documentation built in 8.29 seconds
 ```
 
+### Website
+
+#### `download_link`
+
+Adding a PDF download link to a website (`material` theme only).
+
+- `header`: icon in the navigation header
+- `footer`: link in the footer area
+
+``` yaml
+plugins:
+  - to-pdf:
+      download_link: header
+```
+
 ### Debug
 
 #### `verbose`
@@ -215,8 +230,8 @@ Set to true to see all WeasyPrint debug messages during build.
 
 ``` yaml
 plugins:
-    - to-pdf:
-        verbose: true
+  - to-pdf:
+      verbose: true
 ```
 
 #### `debug_html`
@@ -225,7 +240,7 @@ Set to true to output HTML to `stdout` during build
 
 ``` yaml
 plugins:
-    - to-pdf:
-        debug_html: true
+  - to-pdf:
+      debug_html: true
 ```
 
