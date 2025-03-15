@@ -7,5 +7,5 @@ repos:
       - id: uv-export
         args: ["--frozen", "--output-file=requirements.txt", "--no-hashes", "--no-emit-project"]
       - id: uv-export
-        args: ["--frozen", "--output-file=requirements-dev.txt", "--no-hashes", "--no-emit-project", "--all-extras"]
+        args: ["--frozen", "--output-file=requirements-dev.txt", "--no-hashes", "--all-extras"]
 
