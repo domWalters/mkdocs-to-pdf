@@ -25,7 +25,9 @@ For example:
 pip install mkdocs-to-pdf[all]
 ```
 
-## WeasyPrint
+## Requirements
+
+### WeasyPrint
 
 `mkdocs-to-pdf` depends on [`weasyprint`][weasyprint].
 
