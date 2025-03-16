@@ -7,6 +7,7 @@ from mkdocs.plugins import BasePlugin
 from .drivers.event_hook import EventHookHandler
 from .generator import Generator
 from .options import Options
+from .pdf_engines import get_pdf_engine
 
 logging.getLogger(__name__)
 
@@ -81,16 +82,18 @@ class WithPdfPlugin(BasePlugin):
 
         self._options = Options(self.config, config, self._logger)
 
-        from weasyprint.logger import LOGGER
+        pdf_engine = get_pdf_engine(self._options.pdf_engine)
+        pdf_engine_logger = pdf_engine.get_logger()
+
         if self._options.verbose:
-            LOGGER.setLevel(logging.DEBUG)
+            pdf_engine_logger.setLevel(logging.DEBUG)
             self._logger.setLevel(logging.DEBUG)
         else:
-            LOGGER.setLevel(logging.ERROR)
+            pdf_engine_logger.setLevel(logging.ERROR)
 
         if self._options.strict:
             self._error_counter = _ErrorAndWarningCountFilter()
-            LOGGER.addFilter(self._error_counter)
+            pdf_engine_logger.addFilter(self._error_counter)
             self._logger.addFilter(self._error_counter)
 
         self.generator = Generator(options=self._options)
