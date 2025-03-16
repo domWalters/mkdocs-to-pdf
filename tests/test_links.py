@@ -1,8 +1,8 @@
+import os
 import unittest
 
-import os
-from weasyprint import urls
 from mkdocs_to_pdf.preprocessor.links.transform import transform_href
+from mkdocs_to_pdf.preprocessor.links.util import is_absolute_url
 
 
 class TransformHrefTestCase(unittest.TestCase):
@@ -16,7 +16,7 @@ class TransformHrefTestCase(unittest.TestCase):
                     href, rel_url = case
 
                     # check on `preprocessor.get_combined`
-                    if urls.url_is_absolute(href) or os.path.isabs(href):
+                    if is_absolute_url(href) or os.path.isabs(href):
                         self.assertTrue(True)
                         continue
 

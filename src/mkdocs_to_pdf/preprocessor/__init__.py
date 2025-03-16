@@ -1,10 +1,10 @@
 import os
 
 from bs4 import PageElement
-from weasyprint import urls
 
 from .links.transform import transform_href, transform_id
-from .links.util import get_body_id, rel_pdf_href, replace_asset_hrefs
+from .links.util import (get_body_id, is_absolute_url, rel_pdf_href,
+                         replace_asset_hrefs)
 
 
 def get_combined(
@@ -19,7 +19,7 @@ def get_combined(
         element['id'] = transform_id(element['id'], rel_url)
 
     for a in soup.find_all('a', href=True):
-        if urls.url_is_absolute(a['href']) or os.path.isabs(a['href']):
+        if is_absolute_url(a['href']) or os.path.isabs(a['href']):
             continue
 
         a['href'] = transform_href(a['href'], rel_url)
