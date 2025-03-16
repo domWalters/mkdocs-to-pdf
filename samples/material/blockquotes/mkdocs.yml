@@ -1,7 +1,0 @@
----
-site_name: Block Quotes
-theme:
-  name: material
-
-plugins:
-  - to-pdf:
