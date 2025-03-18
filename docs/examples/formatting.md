@@ -17,7 +17,7 @@ tags on separate lines and adding new lines between the tags and the content.
 
 - ==This was marked (highlight)==
 - ^^This was inserted (underline)^^
-- ~~This was deleted (strikethrough)~~
+- ~~This was deleted (strike-through)~~
 
 ## Sub- and superscripts
 
