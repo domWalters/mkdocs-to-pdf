@@ -1,4 +1,21 @@
 {
+  "files": [
+    "Makefile",
+    "docs/**",
+    "samples/**",
+    "src/**",
+    "tests/**"
+  ],
+  "ignorePaths": [
+    "*.css",
+    "*.scss",
+    "docs/examples/admonitions.md",
+    "docs/examples/annotations.md",
+    "docs/examples/content-tabs.md",
+    "docs/examples/footnotes.md",
+    "docs/examples/images.md",
+    "docs/examples/lists.md"
+  ],
   "language": "en",
   "version": "0.2",
   "words": [
