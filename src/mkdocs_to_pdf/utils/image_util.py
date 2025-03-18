@@ -3,7 +3,7 @@ from bs4 import PageElement, Tag
 
 
 def fix_image_alignment(soup: PageElement, logger: Logger = None):
-    """ (workaraound) convert <img align=*> to `float` style.
+    """ (workaround) convert <img align=*> to `float` style.
     and, move <img width=*>, <image height=*> to style attributes.
     """
 

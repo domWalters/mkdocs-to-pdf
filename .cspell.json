@@ -1,0 +1,23 @@
+{
+  "language": "en",
+  "version": "0.2",
+  "words": [
+    "fontawesome",
+    "headerlink",
+    "hrefs",
+    "htmlfile",
+    "levelname",
+    "levelno",
+    "linenums",
+    "mkdocs",
+    "mypy",
+    "nsprefix",
+    "noqa",
+    "pycache",
+    "qrcode",
+    "relaxedjs",
+    "twemoji",
+    "weasyprint",
+    "venv"
+  ]
+}

@@ -12,7 +12,7 @@ def make_indexes(soup: PageElement, options: Options) -> None:
         options {Options} -- The options of this sequence.
     """
 
-    # Step 1: (re)ordered headdings
+    # Step 1: (re)ordered headings
     _inject_heading_order(soup, options)
 
     # Step 2: generate toc page

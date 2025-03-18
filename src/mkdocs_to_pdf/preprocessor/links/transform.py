@@ -13,7 +13,7 @@ def transform_href(href: str, rel_url: str) -> str:
         rel_url {str} -- a current page URL(like a baseURL).
 
     Returns:
-        str -- a replased URL string.
+        str -- a transformed URL string.
     """
 
     def transform():
