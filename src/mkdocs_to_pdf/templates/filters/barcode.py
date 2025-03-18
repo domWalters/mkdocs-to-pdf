@@ -13,11 +13,15 @@ from . import _FilterBase
 class Barcode(_FilterBase):
     """ Generate Barcode for given value and returns embedded image data. """
 
+    # noqa: cSpell:disable
+
     # Support:
     # ['code39', 'code128', 'ean', 'ean13', 'ean8',
     #  'gs1', 'gtin', 'isbn',
     #  'isbn10', 'isbn13', 'issn', 'jan',
     #  'pzn', 'upc', 'upca']
+
+    # noqa: cSpell:enable
 
     def __call__(self, value, kind, **kwargs):
         coder = barcode.get_barcode_class(kind)

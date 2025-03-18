@@ -6,7 +6,7 @@
 :+1:
 :-1:
 :heart:
-:shit:
+:poop:
 :zzz:
 :woman:
 :man:
@@ -29,8 +29,10 @@
 :octicons-arrow-right-24:
 
 
-### with colors
+### With colors
 
-**XXX: Applying CSS requires the `render_js` and `headless_chrome_path` options.**
+!!! warning
+
+    Applying CSS requires the `render_js` and `headless_chrome_path` options.
 
 :fontawesome-brands-youtube:{ .youtube }

@@ -5,7 +5,7 @@ from bs4 import PageElement
 
 
 def fix_twemoji(soup: PageElement, logger: Logger = None):
-    """ (workaraound) replace <svg> to <img + b64encoded data/>
+    """ (workaround) replace <svg> to <img + b64encoded data/>
 
     cause, don't shown WeasyPrint 51
     for after material v4.5.0
@@ -18,10 +18,10 @@ def fix_twemoji(soup: PageElement, logger: Logger = None):
         svg['width'] = 24
         svg['height'] = 24
         '''
-        viewbox = _parse_viewbox(svg['viewbox'])
+        view_box = _parse_view_box(svg['viewbox'])  # cspell:disable-line
         width, height = (
-            viewbox[2] - viewbox[0],
-            viewbox[3] - viewbox[1]
+            view_box[2] - view_box[0],
+            view_box[3] - view_box[1]
         )
         svg['width'] = int(width)
         svg['height'] = int(height)
@@ -49,10 +49,10 @@ def fix_twemoji(soup: PageElement, logger: Logger = None):
             pass
 
 
-def _parse_viewbox(viewboxstring):
+def _parse_view_box(view_box_string):
     """ parse svg viewBox """
     p = re.compile(r'(-?[\d\.]+) (-?[\d\.]+) (-?[\d\.]+) (-?[\d\.]+)')
-    m = p.match(viewboxstring)
+    m = p.match(view_box_string)
     return (
         float(m.group(1)), float(m.group(2)),
         float(m.group(3)), float(m.group(4))

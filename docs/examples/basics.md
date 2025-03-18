@@ -2,7 +2,7 @@
 
 From [original Markdown](https://daringfireball.net/projects/markdown/basics) syntax
 
-## Paragraphs, Headers, Blockquotes
+## Paragraphs, Headers, and Block Quotes
 
 ### A Third Level Header
 
@@ -15,11 +15,11 @@ dog's back.
 
 #### Header 4
 
-> This is a blockquote.
-> 
-> This is the second paragraph in the blockquote.
+> This is a block quote.
 >
-> ## This is an H2 in a blockquote
+> This is the second paragraph in the block quote.
+>
+> ## This is an H2 in a block quote
 
 ## Phrase Emphasis
 
@@ -31,25 +31,25 @@ Or, if you prefer, __use two underscores instead__.
 
 ## Lists
 
-### `*`
+### Using `*`
 
 *   Candy.
 *   Gum.
 *   Booze.
 
-### `+`
+### Using `+`
 
 +   Candy.
 +   Gum.
 +   Booze.
 
-### `-`
+### Using `-`
 
 -   Candy.
 -   Gum.
 -   Booze.
 
-### Orderd
+### Ordered list
 
 1.  Red
 2.  Green
@@ -86,7 +86,7 @@ I wish SmartyPants used named entities like `&mdash;`
 instead of decimal-encoded entities like `&#8212;`.
 
 If you want your page to validate under XHTML 1.0 Strict,
-you've got to put paragraph tags in your blockquotes:
+you've got to put paragraph tags in your block quotes:
 
     <blockquote>
         <p>For example.</p>

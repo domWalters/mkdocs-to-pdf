@@ -32,7 +32,7 @@ Defaults to the `site_author`.
 ``` yaml
 plugins:
   - to-pdf:
-      author: Firstname Lastname
+      author: John Smith
 ```
 
 #### `copyright`
@@ -44,7 +44,7 @@ Defaults to the top level `copyright`.
 ``` yaml
 plugins:
   - to-pdf:
-      copyright: Copyright © Firstname Lastname Year
+      copyright: Copyright © John Smith 2025
 ```
 
 ### Cover
