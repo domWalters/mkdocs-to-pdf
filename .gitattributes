@@ -1,11 +1,10 @@
 custom_style_src/* linguist-vendored
 docker/* linguist-vendored
-docs-src/* linguist-documentation
+docs/* linguist-documentation
 samples/* linguist-documentation
 
 .gitattributes linguist-generated=true
 .gitignore linguist-generated=true
 requirements.txt linguist-generated=true
 requirements-dev.txt linguist-generated=true
-requirements-full.txt linguist-generated=true
 uv.lock linguist-generated=true
