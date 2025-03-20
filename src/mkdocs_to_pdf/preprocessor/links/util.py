@@ -74,8 +74,8 @@ def is_absolute_url(url: str) -> bool:
         return False
 
 
-def iri_to_uri(url: str) -> str:
+def iri_to_uri(iri: str) -> str:
     """convert IRI to URI"""
-    scheme, netloc, path, query, fragment = urlsplit(url)
+    scheme, netloc, path, query, fragment = urlsplit(iri)
     path = quote(path)
     return urlunsplit((scheme, netloc, path, query, fragment))
