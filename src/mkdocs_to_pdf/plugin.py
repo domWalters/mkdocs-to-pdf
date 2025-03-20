@@ -82,7 +82,7 @@ class WithPdfPlugin(BasePlugin):
 
         self._options = Options(self.config, config, self._logger)
 
-        pdf_engine = get_pdf_engine(self._options.pdf_engine)
+        pdf_engine = get_pdf_engine(self._options)
         pdf_engine_logger = pdf_engine.get_logger()
 
         if self._options.verbose:

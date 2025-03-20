@@ -7,6 +7,10 @@ from .base import PDFEngine
 class WeasyPrint(PDFEngine):
     """WeasyPrint PDF engine."""
 
+    def __init__(self, options):
+        """Initialize WeasyPrint PDF engine."""
+        self.options = options
+
     def write_pdf(self, html_string: str, output_path: str):
         """Write PDF file from HTML string."""
         html = HTML(string=html_string)

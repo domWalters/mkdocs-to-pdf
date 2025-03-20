@@ -46,6 +46,8 @@ class Options(object):
         ('render_js', config_options.Type(bool, default=False)),
         ('headless_chrome_path',
             config_options.Type(str, default='chromium-browser')),
+        ['chrome_arguments', config_options.Type(str, default='')],
+        ['chrome_extra_arguments', config_options.Type(str, default='')],
         ('relaxedjs_path',
             config_options.Type(str, default=None)),
 
@@ -99,6 +101,9 @@ class Options(object):
         # ...etc.
         self.pdf_engine = local_config['pdf_engine']
 
+        self.headless_chrome_path = local_config['headless_chrome_path']
+        self.chrome_arguments = local_config['chrome_arguments']
+        self.chrome_extra_arguments = local_config['chrome_extra_arguments']
         self.js_renderer = None
         if local_config['render_js']:
             self.js_renderer = HeadlessChromeDriver.setup(

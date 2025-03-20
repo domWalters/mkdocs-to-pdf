@@ -162,7 +162,7 @@ class Generator(object):
             self._options.relaxed_js.write_pdf(
                 html_string, abs_pdf_path)
         else:
-            pdf_engine = get_pdf_engine(self._options.pdf_engine)
+            pdf_engine = get_pdf_engine(self._options)
             pdf_engine.write_pdf(html_string, abs_pdf_path)
 
     # ------------------------
