@@ -46,7 +46,7 @@ class Options(object):
 
         ('render_js', config_options.Type(bool, default=False)),
         ('headless_chrome_path',
-            config_options.Type(str, default='chromium-browser')),
+            config_options.Type(str, default=None)),
         ('relaxedjs_path',
             config_options.Type(str, default=None)),
 

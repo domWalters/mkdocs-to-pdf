@@ -12,7 +12,7 @@ class HeadlessChromeDriver(object):
 
     @classmethod
     def setup(self, program_path: str, output_path: str, logger: Logger):
-        if not which(program_path):
+        if program_path and not which(program_path):
             raise FileNotFoundError(
                 f'Chromium executable not found at {program_path}'
             )
@@ -37,7 +37,6 @@ class HeadlessChromeDriver(object):
             self._logger.info('Rendering on `Headless Chrome`(execute JS).')
 
             html_uri = pathlib.Path(html_file.name).as_uri()
-            self._logger.info(html_uri)
 
             # Rendering JavaScript using Playwright
             with sync_playwright() as p:
@@ -54,6 +53,7 @@ class HeadlessChromeDriver(object):
 
         except Exception as e:
             self._logger.error(f'Failed to render by JS: {e}')
+            raise e
         finally:
             os.unlink(html_file.name)
 
