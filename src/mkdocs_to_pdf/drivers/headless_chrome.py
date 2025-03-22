@@ -1,8 +1,10 @@
 import os
+import pathlib
 from logging import Logger
 from shutil import which
-from subprocess import PIPE, Popen
 from tempfile import NamedTemporaryFile
+
+from playwright.sync_api import sync_playwright
 
 
 class HeadlessChromeDriver(object):
@@ -26,19 +28,20 @@ class HeadlessChromeDriver(object):
             temp.write(html.encode('utf-8'))
             temp.close()
 
-            self._logger.info("Rendering on `Headless Chrome`(execute JS).")
-            with Popen([self._program_path,
-                        '--disable-web-security',
-                        '--no-sandbox',
-                        '--headless',
-                        '--disable-gpu',
-                        '--disable-web-security',
-                        '-–allow-file-access-from-files',
-                        '--run-all-compositor-stages-before-draw',
-                        '--virtual-time-budget=10000',
-                        '--dump-dom',
-                        temp.name], stdout=PIPE) as chrome:
-                return chrome.stdout.read().decode('utf-8')
+            self._logger.info('Rendering on `Headless Chrome`(execute JS).')
+
+            html_uri = pathlib.Path(temp.name).as_uri()
+
+            # Rendering JavaScript using Playwright
+            with sync_playwright() as p:
+                if self._program_path:
+                    browser = p.chromium.launch(executable_path=self._program_path)
+                else:
+                    browser = p.chromium.launch()
+                page = browser.new_page()
+                page.goto(html_uri)
+                html = page.content()
+                browser.close()
 
         except Exception as e:
             self._logger.error(f'Failed to render by JS: {e}')
