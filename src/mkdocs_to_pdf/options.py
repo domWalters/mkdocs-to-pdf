@@ -1,4 +1,5 @@
 import logging
+import os
 
 from mkdocs.config import config_options
 
@@ -103,7 +104,10 @@ class Options(object):
         self.js_renderer = None
         if local_config['render_js']:
             self.js_renderer = HeadlessChromeDriver.setup(
-                local_config['headless_chrome_path'], logger)
+                local_config['headless_chrome_path'],
+                os.path.join(config['site_dir'], local_config['output_path']),
+                logger
+            )
 
         self.relaxed_js = RelaxedJSRenderer.setup(
             local_config['relaxedjs_path'], logger)
