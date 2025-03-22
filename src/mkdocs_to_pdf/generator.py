@@ -7,10 +7,10 @@ from pathlib import Path
 from typing import Pattern
 
 from bs4 import BeautifulSoup, PageElement
-from weasyprint import HTML
 
 from .cover import make_cover
 from .options import Options
+from .pdf_engines import get_pdf_engine
 from .preprocessor import get_combined as prep_combined
 from .styles import style_for_print
 from .themes import generic as generic_theme
@@ -162,9 +162,8 @@ class Generator(object):
             self._options.relaxed_js.write_pdf(
                 html_string, abs_pdf_path)
         else:
-            html = HTML(string=html_string)
-            render = html.render()
-            render.write_pdf(abs_pdf_path)
+            pdf_engine = get_pdf_engine(self._options)
+            pdf_engine.write_pdf(html_string, abs_pdf_path)
 
     # ------------------------
     def _remove_empty_tags(self, soup: PageElement):

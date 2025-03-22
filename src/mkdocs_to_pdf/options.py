@@ -41,6 +41,8 @@ class Options(object):
         ('convert_iframe', config_options.Type(list, default=[])),
         ('two_columns_level', config_options.Type(int, default=0)),
 
+        ['pdf_engine', config_options.Type(str, default='weasyprint')],
+
         ('render_js', config_options.Type(bool, default=False)),
         ('headless_chrome_path',
             config_options.Type(str, default='chromium-browser')),
@@ -95,6 +97,9 @@ class Options(object):
         self.two_columns_level = local_config['two_columns_level']
 
         # ...etc.
+        self.pdf_engine = local_config['pdf_engine']
+
+        self.headless_chrome_path = local_config['headless_chrome_path']
         self.js_renderer = None
         if local_config['render_js']:
             self.js_renderer = HeadlessChromeDriver.setup(
