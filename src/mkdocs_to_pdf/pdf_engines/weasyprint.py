@@ -2,12 +2,13 @@ from weasyprint import HTML
 from weasyprint.logger import LOGGER
 
 from .base import PDFEngine
+from ..options import Options
 
 
 class WeasyPrint(PDFEngine):
     """WeasyPrint PDF engine."""
 
-    def __init__(self, options):
+    def __init__(self, options: Options):
         """Initialize WeasyPrint PDF engine."""
         self.options = options
 

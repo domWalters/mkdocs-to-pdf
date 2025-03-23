@@ -98,8 +98,17 @@ class Options(object):
         self.two_columns_level = local_config['two_columns_level']
 
         # ...etc.
-        self.pdf_engine = local_config['pdf_engine']
 
+        # Chromium PDF renderer
+        self.pdf_engine = local_config['pdf_engine']
+        if local_config['pdf_engine'] == 'chromium':
+            self.pdf_renderer = HeadlessChromeDriver.setup(
+                local_config['headless_chrome_path'],
+                os.path.join(config['site_dir'], local_config['output_path']),
+                logger
+            )
+
+        # Chromium JavaScript renderer
         self.headless_chrome_path = local_config['headless_chrome_path']
         self.js_renderer = None
         if local_config['render_js']:
