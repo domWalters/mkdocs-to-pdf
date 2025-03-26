@@ -115,7 +115,8 @@ theme:
     text: Roboto
     code: Roboto Mono
   icon:
-    repo: fontawesome/brands/gitlab
+    logo: fontawesome/solid/file-pdf
+    repo: fontawesome/brands/github
   name: material
   palette:
     - media: "(prefers-color-scheme)"
