@@ -48,11 +48,16 @@ class EventHookHandler(object):
 
     def inject_link(self, output_content: str, pdf_path: str,
                     page: Page, theme_handler) -> str:
+        if self._config.theme.name == 'material':
+            # Only the Material theme has this PDF download link function
+            html = theme_handler.inject_link_download(
+                output_content, pdf_path, page, self._logger, self._options)
+            output_content = html
+
         if self._module and hasattr(self._module, 'inject_link'):
             return self._module.inject_link(
                 output_content, pdf_path, page, self._logger)
-        return theme_handler.inject_link(output_content, pdf_path,
-                                         page, self._logger, self._options)
+        return theme_handler.inject_link(output_content, pdf_path)
 
     def pre_js_render(self, soup: BeautifulSoup) -> BeautifulSoup:
         if self._module and hasattr(self._module, 'pre_js_render'):

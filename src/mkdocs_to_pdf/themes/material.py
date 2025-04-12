@@ -23,8 +23,20 @@ def get_script_sources() -> list:
                     ['material-polyfills.js']))
 
 
-def inject_link(html: str, href: str,
-                page: Page, logger: logging, options: Options) -> str:
+def inject_link(html: str, href: str) -> str:
+
+    soup = BeautifulSoup(html, 'html.parser')
+    if soup.head:
+        link = soup.new_tag('link', href=href, rel='alternate',
+                            title='PDF', type='application/pdf')
+        soup.head.append(link)
+        return str(soup)
+
+    return html
+
+
+def inject_link_download(html: str, href: str,
+                         page: Page, logger: logging, options: Options) -> str:
 
     download_link = options.download_link
     if download_link == 'footer':
