@@ -786,11 +786,11 @@ samples = [
 
 [package.metadata]
 requires-dist = [
-    { name = "beautifulsoup4", specifier = "==4.9.3" },
-    { name = "libsass", specifier = "==0.23.0" },
+    { name = "beautifulsoup4", specifier = ">=4.9.3" },
+    { name = "libsass", specifier = ">=0.23.0" },
     { name = "markdown-callouts", marker = "extra == 'samples'", specifier = "==0.4.0" },
     { name = "mdx-gh-links", marker = "extra == 'samples'", specifier = "==0.4" },
-    { name = "mkdocs", specifier = "==1.6.1" },
+    { name = "mkdocs", specifier = ">=1.6.1" },
     { name = "mkdocs-autorefs", marker = "extra == 'samples'", specifier = "==1.4.0" },
     { name = "mkdocs-click", marker = "extra == 'samples'", specifier = "==0.5.0" },
     { name = "mkdocs-literate-nav", marker = "extra == 'samples'", specifier = "==0.6.1" },
