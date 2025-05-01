@@ -46,7 +46,12 @@ class HeadlessChromeDriver(object):
                     browser = p.chromium.launch()
                 page = browser.new_page()
                 page.goto(html_uri)
-                page.pdf(path=output_path)
+                page.pdf(
+                    path=output_path,
+                    prefer_css_page_size=True,
+                    print_background=True,
+                    tagged=True,
+                )
                 browser.close()
 
         except Exception as e:
@@ -83,7 +88,7 @@ class HeadlessChromeDriver(object):
                     browser = p.chromium.launch()
                 page = browser.new_page()
                 page.goto(html_uri)
-                html_string = page.content()    # dump-dom
+                html_string = page.content()  # dump-dom
                 browser.close()
 
         except Exception as e:
