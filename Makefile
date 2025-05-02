@@ -33,7 +33,8 @@ sync: setup
 	@echo "########"
 	@echo "# sync #"
 	@echo "########"
-	$(at)uv --directory $(makefile_directory) lock \
+	$(at). $(activate) \
+        && uv --directory $(makefile_directory) lock \
 	    && uv --directory $(makefile_directory) sync --extra all
 	@echo ""
 
@@ -42,7 +43,8 @@ build: sync
 	@echo "#########"
 	@echo "# build #"
 	@echo "#########"
-	$(at)uv --directory $(makefile_directory) lock \
+	$(at). $(activate) \
+        && uv --directory $(makefile_directory) lock \
 		&& uv --directory $(makefile_directory) build
 	@echo ""
 
