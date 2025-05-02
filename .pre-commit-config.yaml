@@ -38,11 +38,11 @@ repos:
         - --markdown-linebreak-ext=md
         exclude: ".*\\.patch"
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.24.0
+    rev: v8.25.1
     hooks:
       - id: gitleaks
   - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 0.6.6
+    rev: 0.7.2
     hooks:
       - id: uv-lock
       - id: uv-export
@@ -58,6 +58,6 @@ repos:
         - --no-hashes
         - --all-extras
   - repo: https://github.com/streetsidesoftware/cspell-cli
-    rev: v8.17.3
+    rev: v8.19.0
     hooks:
       - id: cspell
