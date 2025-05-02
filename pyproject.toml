@@ -10,9 +10,9 @@ readme = "README.md"
 license = "MIT"
 requires-python = ">=3.9"
 dependencies = [
-    "beautifulsoup4 == 4.9.3",
-    "libsass == 0.23.0",
-    "mkdocs == 1.6.1",
+    "beautifulsoup4 >= 4.9.3",
+    "libsass >= 0.23.0",
+    "mkdocs >= 1.6.1",
     "weasyprint == 62.3",
     "pydyf == 0.10.0",
 ]
