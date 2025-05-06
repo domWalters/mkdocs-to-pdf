@@ -3,9 +3,7 @@ import os
 
 import sass
 from bs4 import BeautifulSoup
-
 from mkdocs.structure.pages import Page
-from ..options import Options
 
 
 def get_stylesheet(debug_html: bool) -> str:
@@ -23,7 +21,10 @@ def get_script_sources() -> list:
                     ['material-polyfills.js']))
 
 
-def inject_link(html: str, href: str) -> str:
+def inject_link(html: str, href: str, page: Page, logger: logging) -> str:
+
+    # Adding PDF View button on navigation bar
+    html = inject_link_download(html, href, page, logger)
 
     soup = BeautifulSoup(html, 'html.parser')
     if soup.head:
@@ -36,18 +37,7 @@ def inject_link(html: str, href: str) -> str:
 
 
 def inject_link_download(html: str, href: str,
-                         page: Page, logger: logging, options: Options) -> str:
-
-    download_link = options.download_link
-    if download_link == 'footer':
-        html = inject_link_footer(html, href)
-    if download_link == 'header':
-        html = inject_link_header(html, href, page, logger)
-    return html
-
-
-def inject_link_header(html: str, href: str,
-                       page: Page, logger: logging) -> str:
+                         page: Page, logger: logging) -> str:
     """Adding PDF View button on navigation bar(using material theme)"""
 
     def _pdf_icon():
@@ -67,7 +57,7 @@ def inject_link_header(html: str, href: str,
 '''  # noqa: E501
         return BeautifulSoup(_ICON, 'html.parser')
 
-    logger.info('(hook on inject_link: %s)', page.title)
+    logger.debug('(hook on inject_link: %s)', page.title)
     soup = BeautifulSoup(html, 'html.parser')
 
     nav = soup.find(class_='md-header-nav')
@@ -79,25 +69,6 @@ def inject_link_header(html: str, href: str,
                          **{'class': 'md-header-nav__button md-icon'})
         a.append(_pdf_icon())
         nav.append(a)
-        return str(soup)
-
-    return html
-
-
-def inject_link_footer(html: str, href: str) -> str:
-    soup = BeautifulSoup(html, 'html.parser')
-
-    footer = soup.select('.md-copyright')
-    if footer and footer[0]:
-        container = footer[0]
-
-        container.append(' ... ')
-        a = soup.new_tag('a', href=href, title='PDF',
-                         download=None, **{'class': 'link--pdf-download'})
-        a.append('download PDF')
-
-        container.append(a)
-
         return str(soup)
 
     return html
