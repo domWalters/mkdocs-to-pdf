@@ -1,4 +1,12 @@
-mkdocs-to-pdf 0.10.0 (UNRELEASED)
+mkdocs-to-pdf 0.10.1 (2025-05-08)
+
+  * Add @hkato as a maintainer
+    * Thank you for your sustained contributions to the project!
+  * Add more pre-commit hooks
+  * Make package dependencies more flexible (>=, rather than ==). #64
+  * Fix repo icon. #61
+
+mkdocs-to-pdf 0.10.0 (2025-03-16)
 
   * Fix custom checkbox and ordered list overlap. #18
     * Thanks to @hkato
