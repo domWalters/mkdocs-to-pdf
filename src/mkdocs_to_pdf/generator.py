@@ -1,15 +1,16 @@
 import logging
 import os
 import re
-from typing import Pattern
 from importlib import import_module
 from importlib.util import module_from_spec, spec_from_file_location
+from pathlib import Path
+from typing import Pattern
 
 from bs4 import BeautifulSoup, PageElement
-from weasyprint import HTML, urls
 
 from .cover import make_cover
 from .options import Options
+from .pdf_engines import get_pdf_engine
 from .preprocessor import get_combined as prep_combined
 from .styles import style_for_print
 from .themes import generic as generic_theme
@@ -161,9 +162,8 @@ class Generator(object):
             self._options.relaxed_js.write_pdf(
                 html_string, abs_pdf_path)
         else:
-            html = HTML(string=html_string)
-            render = html.render()
-            render.write_pdf(abs_pdf_path)
+            pdf_engine = get_pdf_engine(self._options)
+            pdf_engine.write_pdf(html_string, abs_pdf_path)
 
     # ------------------------
     def _remove_empty_tags(self, soup: PageElement):
@@ -215,7 +215,7 @@ class Generator(object):
         path = os.path.dirname(abs_dest_path)
         os.makedirs(path, exist_ok=True)
         filename = os.path.splitext(os.path.basename(src_path))[0]
-        base_url = urls.path2url(os.path.join(path, filename))
+        base_url = Path(os.path.join(path, filename)).as_uri()
 
         return prep_combined(soup, base_url, page.file.url)
 
