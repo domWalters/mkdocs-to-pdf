@@ -1,4 +1,7 @@
+import logging
+
 from bs4 import BeautifulSoup
+from mkdocs.structure.pages import Page
 
 
 def get_stylesheet(debug_html: bool) -> str:
@@ -9,7 +12,7 @@ def get_script_sources() -> list:
     return []
 
 
-def inject_link(html: str, href: str) -> str:
+def inject_link(html: str, href: str, page: Page, logger: logging) -> str:
 
     soup = BeautifulSoup(html, 'html.parser')
     if soup.head:
