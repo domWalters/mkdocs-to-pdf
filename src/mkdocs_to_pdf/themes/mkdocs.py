@@ -3,9 +3,7 @@ import os
 
 import sass
 from bs4 import BeautifulSoup
-
 from mkdocs.structure.pages import Page
-from ..options import Options
 
 
 def get_stylesheet(debug_html: bool) -> str:
@@ -18,8 +16,7 @@ def get_script_sources() -> list:
     return []
 
 
-def inject_link(html: str, href: str,
-                page: Page, logger: logging, options: Options) -> str:
+def inject_link(html: str, href: str, page: Page, logger: logging) -> str:
 
     soup = BeautifulSoup(html, 'html.parser')
     if soup.head:
