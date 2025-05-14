@@ -1,4 +1,5 @@
 import logging
+import os
 
 from mkdocs.config import config_options
 
@@ -41,9 +42,11 @@ class Options(object):
         ('convert_iframe', config_options.Type(list, default=[])),
         ('two_columns_level', config_options.Type(int, default=0)),
 
+        ['pdf_engine', config_options.Type(str, default='weasyprint')],
+
         ('render_js', config_options.Type(bool, default=False)),
         ('headless_chrome_path',
-            config_options.Type(str, default='chromium-browser')),
+            config_options.Type(str, default=None)),
         ('relaxedjs_path',
             config_options.Type(str, default=None)),
     )
@@ -93,10 +96,25 @@ class Options(object):
         self.two_columns_level = local_config['two_columns_level']
 
         # ...etc.
+
+        # Chromium PDF renderer
+        self.pdf_engine = local_config['pdf_engine']
+        if local_config['pdf_engine'] == 'chromium':
+            self.pdf_renderer = HeadlessChromeDriver.setup(
+                local_config['headless_chrome_path'],
+                os.path.join(config['site_dir'], local_config['output_path']),
+                logger
+            )
+
+        # Chromium JavaScript renderer
+        self.headless_chrome_path = local_config['headless_chrome_path']
         self.js_renderer = None
         if local_config['render_js']:
             self.js_renderer = HeadlessChromeDriver.setup(
-                local_config['headless_chrome_path'], logger)
+                local_config['headless_chrome_path'],
+                os.path.join(config['site_dir'], local_config['output_path']),
+                logger
+            )
 
         self.relaxed_js = RelaxedJSRenderer.setup(
             local_config['relaxedjs_path'], logger)

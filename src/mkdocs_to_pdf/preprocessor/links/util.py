@@ -1,6 +1,6 @@
 import os
+from urllib.parse import quote, urljoin, urlparse, urlsplit, urlunsplit
 
-from weasyprint import urls
 from bs4 import PageElement
 
 
@@ -19,7 +19,7 @@ def is_doc(href: str) -> bool:
     tail = os.path.basename(href)
     _, ext = os.path.splitext(tail)
 
-    absurl = urls.url_is_absolute(href)
+    absurl = is_absolute_url(href)
     abspath = os.path.isabs(href)
     htmlfile = ext.startswith('.html')
     if absurl or abspath or not htmlfile:
@@ -40,10 +40,10 @@ def rel_pdf_href(href: str):
 
 
 def abs_asset_href(href: str, base_url: str):
-    if urls.url_is_absolute(href) or os.path.isabs(href):
+    if is_absolute_url(href) or os.path.isabs(href):
         return href
 
-    return urls.iri_to_uri(urls.urljoin(base_url, href))
+    return iri_to_uri(urljoin(base_url, href))
 
 
 def replace_asset_hrefs(soup: PageElement, base_url: str) -> PageElement:
@@ -61,3 +61,21 @@ def replace_asset_hrefs(soup: PageElement, base_url: str) -> PageElement:
 def get_body_id(url: str):
     section, _ = os.path.splitext(url)
     return '{}:'.format(section)
+
+
+def is_absolute_url(url: str) -> bool:
+    """check if a URL is absolute"""
+    try:
+        result = urlparse(url)
+        return all([result.scheme, result.netloc])
+    except ValueError:
+        return False
+    except TypeError:
+        return False
+
+
+def iri_to_uri(iri: str) -> str:
+    """convert IRI to URI"""
+    scheme, netloc, path, query, fragment = urlsplit(iri)
+    path = quote(path)
+    return urlunsplit((scheme, netloc, path, query, fragment))
