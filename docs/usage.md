@@ -21,6 +21,20 @@ following message at the end of your build output:
 
 ## Options
 
+### Download Link
+
+#### `download_link`
+
+Where to position the PDF download link/image. Can be either at the `header` or the `footer`.
+
+Does not have a default; must be set.
+
+```yaml
+plugins:
+    - to-pdf:
+        download_link: header
+```
+
 ### Headers and Footers
 
 #### `author`
