@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mkdocs-to-pdf"
-version = "0.10.0"
+version = "0.10.1"
 description = "Generate a single PDF file from an `mkdocs` repository"
 readme = "README.md"
 license = "MIT"
