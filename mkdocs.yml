@@ -20,6 +20,10 @@ markdown_extensions:
   # Footnotes
   - footnotes
   # Diagrams
+  - markdown_include.include:
+      base_path: docs
+      headingOffset: 1
+  # Diagrams
   - markdown_kroki
   # Annotations, Grids, Images
   - md_in_html
@@ -78,7 +82,6 @@ nav:
       - examples/content-tabs.md
       - examples/data-tables.md
       - examples/diagrams.md
-      - examples/download-link.md
       - examples/footnotes.md
       - examples/formatting.md
       - examples/grids.md

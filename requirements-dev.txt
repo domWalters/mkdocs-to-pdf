@@ -63,6 +63,7 @@ libsass==0.23.0
 markdown==3.8
     # via
     #   markdown-callouts
+    #   markdown-include
     #   markdown-kroki
     #   mdx-gh-links
     #   mkdocs
@@ -72,6 +73,8 @@ markdown==3.8
     #   mkdocstrings
     #   pymdown-extensions
 markdown-callouts==0.4.0
+    # via mkdocs-to-pdf
+markdown-include==0.8.1
     # via mkdocs-to-pdf
 markdown-kroki==0.4.0
     # via mkdocs-to-pdf

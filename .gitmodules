@@ -1,3 +1,6 @@
+[submodule "markdown-kroki"]
+	path = docs/submodules/markdown-kroki
+	url = https://github.com/hkato/markdown-kroki
 [submodule "mkdocs"]
 	path = samples/mkdocs/mkdocs
 	url = https://github.com/mkdocs/mkdocs
