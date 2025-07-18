@@ -70,6 +70,7 @@ class Options(object):
         # Cover
         self.cover = local_config['cover']
         self.back_cover = local_config['back_cover']
+        self._cover_title = ""
         if self.cover or self.back_cover:
             self._cover_title = local_config['cover_title'] \
                 if local_config['cover_title'] else config['site_name']
