@@ -9,7 +9,7 @@
     harfbuzz
     noto-fonts-cjk-sans
     pango
-    python39
+    python310
     uv
   ]);
   multiPkgs = pkgs: (with pkgs; [
@@ -19,9 +19,8 @@
     harfbuzz
     noto-fonts-cjk-sans
     pango
-    python39
+    python310
     uv
   ]);
-  runScript = "bash";
+  runScript = "bash --init-file <(cat $HOME/.bashrc; cat .venv/bin/activate) -i";
 }).env
-

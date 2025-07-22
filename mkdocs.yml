@@ -24,7 +24,8 @@ markdown_extensions:
       base_path: docs
       headingOffset: 1
   # Diagrams
-  - markdown_kroki
+  - markdown_kroki:
+      kroki_url: http://localhost:8000
   # Annotations, Grids, Images
   - md_in_html
   # Images
@@ -93,6 +94,9 @@ nav:
   - License: LICENSE.md
   - Stuff to Migrate: stuff-to-migrate.md
 
+not_in_nav: |
+    submodules/markdown-kroki/*
+
 plugins:
   - minify:
       minify_html: true
@@ -100,6 +104,7 @@ plugins:
   - to-pdf:
       cover_title: MkDocs to PDF
       cover_subtitle: An MkDocs plugin to create a PDF
+      enabled_if_env: ENABLE_PDF_EXPORT
 
 theme:
   features:

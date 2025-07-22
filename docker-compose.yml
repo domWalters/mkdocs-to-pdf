@@ -1,0 +1,22 @@
+---
+services:
+  kroki:
+    image: yuzutech/kroki
+    depends_on:
+      - excalidraw
+      - mermaid
+    environment:
+      - KROKI_MERMAID_HOST=mermaid
+      - KROKI_EXCALIDRAW_HOST=excalidraw
+    ports:
+      - "8000:8000"
+    tmpfs:
+      - /tmp:exec
+  mermaid:
+    image: yuzutech/kroki-mermaid
+    expose:
+      - "8002"
+  excalidraw:
+    image: yuzutech/kroki-excalidraw
+    expose:
+      - "8004"

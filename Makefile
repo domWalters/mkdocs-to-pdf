@@ -61,7 +61,9 @@ docs: sync
 	@echo "########"
 	@echo "# docs #"
 	@echo "########"
-	$(at). $(activate) && cd $(makefile_directory) && mkdocs build
+	$(at). $(activate) \
+        && cd $(makefile_directory) \
+        && mkdocs build
 	@echo ""
 
 .PHONY: samples
