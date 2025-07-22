@@ -8,7 +8,7 @@ build:
   jobs:
     post_install:
       - ls -la
-      - source .venv/bin/activate && playwright install chromium
+      - . .venv/bin/activate && playwright install chromium
 
 mkdocs:
   configuration: mkdocs.yml
