@@ -28,7 +28,7 @@ was inspired by [`mkdocs-pdf-export-plugin`][mkdocs-pdf-export-plugin].
 
 See common markdown examples on [the website][readthedocs] and accompanying PDF.
 
-[readthedocs]: https://mkdocs-to-pdf.readthedocs.io/en/latest/
+[readthedocs]: https://mkdocs-to-pdf.readthedocs.io/en/stable/
 
 ## Samples
 
