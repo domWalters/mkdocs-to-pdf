@@ -7,8 +7,7 @@ build:
     python: "3.10"
   jobs:
     post_install:
-      - ls -la
-      - . .venv/bin/activate && playwright install chromium
+      - playwright install chromium
 
 mkdocs:
   configuration: mkdocs.yml
