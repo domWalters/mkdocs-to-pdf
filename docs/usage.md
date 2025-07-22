@@ -207,21 +207,6 @@ INFO    -  Converting 10 articles to PDF took 7.1s
 INFO    -  Documentation built in 8.29 seconds
 ```
 
-### Website
-
-#### `download_link`
-
-Adding a PDF download link to a website (`material` theme only).
-
-- `header`: icon in the navigation header
-- `footer`: link in the footer area
-
-``` yaml
-plugins:
-  - to-pdf:
-      download_link: header
-```
-
 ### Debug
 
 #### `verbose`

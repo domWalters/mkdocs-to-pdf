@@ -75,7 +75,6 @@ nav:
       - examples/code-blocks.md
       - examples/content-tabs.md
       - examples/data-tables.md
-      - examples/download-link.md
       - examples/footnotes.md
       - examples/formatting.md
       - examples/grids.md
@@ -94,7 +93,6 @@ plugins:
   - to-pdf:
       cover_title: MkDocs to PDF
       cover_subtitle: An MkDocs plugin to create a PDF
-      download_link: header
 
 theme:
   features:
@@ -115,7 +113,8 @@ theme:
     text: Roboto
     code: Roboto Mono
   icon:
-    repo: fontawesome/brands/gitlab
+    logo: fontawesome/solid/file-pdf
+    repo: fontawesome/brands/github
   name: material
   palette:
     - media: "(prefers-color-scheme)"

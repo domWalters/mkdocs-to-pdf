@@ -49,8 +49,6 @@ class Options(object):
             config_options.Type(str, default=None)),
         ('relaxedjs_path',
             config_options.Type(str, default=None)),
-
-        ('download_link', config_options.Type(str, default=None)),
     )
 
     def __init__(self, local_config, config, logger: logging):
@@ -75,6 +73,9 @@ class Options(object):
         # Cover
         self.cover = local_config['cover']
         self.back_cover = local_config['back_cover']
+        self._cover_title = ""
+        self._cover_subtitle = ""
+        self._cover_logo = ""
         if self.cover or self.back_cover:
             self._cover_title = local_config['cover_title'] \
                 if local_config['cover_title'] else config['site_name']
@@ -120,9 +121,6 @@ class Options(object):
 
         self.relaxed_js = RelaxedJSRenderer.setup(
             local_config['relaxedjs_path'], logger)
-
-        # PDF Download link
-        self.download_link = local_config['download_link']
 
         # Theming
         self.theme_name = config['theme'].name
