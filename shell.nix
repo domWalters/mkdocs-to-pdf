@@ -3,6 +3,7 @@
 (pkgs.buildFHSEnv {
   name = "mkdocs-to-pdf-env";
   targetPkgs = pkgs: (with pkgs; [
+    chromium
     fontconfig
     glib
     gnumake
