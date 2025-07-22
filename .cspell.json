@@ -14,11 +14,13 @@
     "docs/examples/content-tabs.md",
     "docs/examples/footnotes.md",
     "docs/examples/images.md",
-    "docs/examples/lists.md"
+    "docs/examples/lists.md",
+    "docs/examples/mathjax.md"
   ],
   "language": "en",
   "version": "0.2",
   "words": [
+    "arithmatex",
     "fontawesome",
     "headerlink",
     "hrefs",
