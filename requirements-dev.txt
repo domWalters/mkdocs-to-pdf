@@ -15,6 +15,7 @@ csscompressor==0.9.5
 cssselect2==0.8.0
 fonttools==4.56.0
 ghp-import==2.1.0
+greenlet==3.1.1
 griffe==1.6.0
 html5lib==1.1
 htmlmin2==0.1.13
@@ -44,8 +45,10 @@ paginate==0.5.7
 pathspec==0.12.1
 pillow==11.1.0
 platformdirs==4.3.6
+playwright==1.51.0
 pycparser==2.22
 pydyf==0.10.0
+pyee==12.1.1
 pygments==2.19.1
 pymdown-extensions==10.14.3
 pyphen==0.17.2
@@ -56,7 +59,7 @@ requests==2.32.3
 six==1.17.0
 soupsieve==2.6
 tinycss2==1.4.0
-typing-extensions==4.12.2 ; python_full_version < '3.11'
+typing-extensions==4.12.2
 urllib3==2.3.0
 watchdog==6.0.0
 weasyprint==62.3
