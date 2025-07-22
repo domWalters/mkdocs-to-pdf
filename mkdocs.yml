@@ -103,7 +103,6 @@ plugins:
       cover_title: MkDocs to PDF
       cover_subtitle: An MkDocs plugin to create a PDF
       pdf_engine: chromium
-      headless_chrome_path: /usr/bin/chromium-browser
       render_js: true
 
 theme:
