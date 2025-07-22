@@ -127,7 +127,7 @@ plugins:
 
 The depth of headings to show in the Table of Contents. 1 to 6.
 
-Defaults to `3`.
+Defaults to `2`.
 
 ``` yaml
 plugins:
