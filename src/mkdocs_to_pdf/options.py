@@ -20,13 +20,13 @@ class Options(object):
         ('output_path', config_options.Type(str, default="pdf/document.pdf")),
         ('theme_handler_path', config_options.Type(str, default=None)),
 
-        ('author', config_options.Type(str, default=None)),
-        ('copyright', config_options.Type(str, default=None)),
+        ('author', config_options.Type(str, default='')),
+        ('copyright', config_options.Type(str, default='')),
 
         ('cover', config_options.Type(bool, default=True)),
         ('back_cover', config_options.Type(bool, default=False)),
-        ('cover_title', config_options.Type(str, default=None)),
-        ('cover_subtitle', config_options.Type(str, default=None)),
+        ('cover_title', config_options.Type(str, default='')),
+        ('cover_subtitle', config_options.Type(str, default='')),
         ('cover_logo', config_options.Type(str, default=None)),
         ('custom_template_path',
             config_options.Type(str, default="templates")),
@@ -59,13 +59,8 @@ class Options(object):
         self.theme_handler_path = local_config.get('theme_handler_path', None)
 
         # Author and Copyright
-        self._author = local_config['author']
-        if not self._author:
-            self._author = config['site_author']
-
-        self._copyright = local_config['copyright']
-        if not self._copyright:
-            self._copyright = config['copyright']
+        self._author = local_config['author'] or config['site_author'] or ''
+        self._copyright = local_config['copyright'] or config['copyright'] or ''
 
         # Cover
         self.cover = local_config['cover']
