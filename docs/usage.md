@@ -175,6 +175,19 @@ plugins:
       output_path: document.pdf
 ```
 
+#### `html_path`
+
+If set, output HTML to a file, which can be used for Epub conversion.
+The root of this path is the `site` directory.
+
+Default is `""`.
+
+``` yaml
+plugins:
+  - to-pdf:
+      html_path: single.html
+```
+
 #### `enabled_if_env`
 
 PDFs will only be build if the environment variable referenced here is set to
@@ -228,4 +241,3 @@ plugins:
   - to-pdf:
       debug_html: true
 ```
-
