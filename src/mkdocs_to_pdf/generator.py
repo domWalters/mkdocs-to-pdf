@@ -153,7 +153,8 @@ class Generator(object):
         if self._options.html_path:
             abs_html_path = os.path.normpath(os.path.join(config['site_dir'], self._options.html_path))
             site_dir_abs = os.path.abspath(config['site_dir'])
-            if not abs_html_path.startswith(site_dir_abs):
+            # Use os.path.commonpath to robustly check containment
+            if os.path.commonpath([abs_html_path, site_dir_abs]) != site_dir_abs:
                 raise ValueError(f'html_path "{self._options.html_path}" escapes site_dir "{site_dir_abs}"')
             os.makedirs(os.path.dirname(abs_html_path), exist_ok=True)
             with open(abs_html_path, 'w', encoding='utf-8') as f:
