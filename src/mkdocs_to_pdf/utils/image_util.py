@@ -39,7 +39,7 @@ def fix_image_alignment(soup: PageElement, logger: Logger = None):
 
             # Remove any trailing commas from style values
             img['style'] = " ".join(
-                f'{k}: {v.rstrip(",") if k in ["width", "height", "padding-left", "padding-right", "padding-bottom"] else v};'
+                f'{k}: {v.rstrip(",")};'
                 for k, v in styles.items()
             )
         except Exception as e:
