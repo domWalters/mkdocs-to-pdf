@@ -229,3 +229,14 @@ plugins:
       debug_html: true
 ```
 
+#### `debug_html_path`
+
+When `debug_html` is set to true, `debug_html_path` can write the html output to a given file instead of `stdout`. This output html file can then be directly opened in a web browser for easier debugging.
+
+``` yaml
+plugins:
+  - to-pdf:
+      debug_html: true
+      debug_html_file: out.html
+```
+
