@@ -148,7 +148,11 @@ class Generator(object):
         html_string = self._options.hook.pre_pdf_render(html_string)
 
         if self._options.debug_html:
-            print(f'{html_string}')
+            if self._options.debug_html_path == '':
+                print(f'{html_string}')
+            else:
+                with open(self._options.debug_html_path, 'wt') as f:
+                    f.write(html_string)
 
         self.logger.info("Rendering for PDF.")
 
