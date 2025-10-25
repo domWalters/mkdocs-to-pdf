@@ -47,6 +47,17 @@ class Generator(object):
         self._options.logger.debug(
             f'Exclude page patterns: {self._exclude_page_patterns}')
 
+    def _is_first_child_of_url_less_section(self, nav_items, page):
+        """Recursively search for the page in the nav."""
+        for item in nav_items:
+            if item.is_section and not hasattr(item, 'url') and item.children:
+                if item.children[0] == page:
+                    return True
+                # Recurse into children of the section
+                if self._is_first_child_of_url_less_section(item.children, page):
+                    return True
+        return False
+
     def on_nav(self, nav):
         """ on_nav """
         self._nav = nav
@@ -55,6 +66,14 @@ class Generator(object):
 
     def on_post_page(self, output_content: str, page, pdf_path: str) -> str:
         """ on_post_page """
+
+        if self._is_first_child_of_url_less_section(self._nav, page):
+            self._options.logger.info(f"Removing h1 from '{page.title}' as it is the first child of a URL-less section.")
+            soup = BeautifulSoup(output_content, 'html.parser')
+            h1 = soup.find('h1')
+            if h1:
+                h1.decompose()
+                output_content = str(soup)
 
         def is_excluded(url: str) -> bool:
             for p in self._exclude_page_patterns:
