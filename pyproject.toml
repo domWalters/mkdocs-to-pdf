@@ -15,6 +15,7 @@ dependencies = [
     "mkdocs >= 1.6.1",
     "weasyprint == 62.3",
     "pydyf == 0.10.0",
+    "playwright>=1.51.0",
 ]
 authors = [
     { name = "orzih" },
@@ -53,7 +54,15 @@ samples = [
     "mkdocs-minify-plugin == 0.8.0",
     "mkdocs-redirects == 1.2.2",
 ]
-all = ["mkdocs-to-pdf[docs, samples]"]
+tests = [
+    "coverage == 7.9.2",
+    "hatch == 1.14.1",
+    "pytest == 8.4.1",
+    "pytest-cov == 6.2.1",
+    "pytest-sugar == 1.0.0",
+    "pytest-xdist == 3.8.0",
+]
+all = ["mkdocs-to-pdf[docs, samples, tests]"]
 
 [project.entry-points."mkdocs.plugins"]
 to-pdf = "mkdocs_to_pdf.plugin:WithPdfPlugin"
@@ -61,9 +70,17 @@ to-pdf = "mkdocs_to_pdf.plugin:WithPdfPlugin"
 [project.urls]
 Repository = "https://github.com/domWalters/mkdocs-to-pdf"
 
-
 # [tool.codespell]
 # skip = ""
+
+[tool.coverage.html]
+directory = ".htmlcov"
+
+[tool.coverage.run]
+branch = true
+
+[tool.coverage.xml]
+output = ".coverage.xml"
 
 [tool.hatch.build]
 include = [
@@ -84,3 +101,21 @@ exclude = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/mkdocs_to_pdf"]
+
+[tool.hatch.envs.hatch-test]
+dependencies = [
+    "coverage == 7.9.2",
+    "pytest == 8.4.1",
+    "pytest-cov == 6.2.1",
+    "pytest-sugar == 1.0.0",
+    "pytest-xdist == 3.8.0",
+]
+
+[[tool.hatch.envs.hatch-test.matrix]]
+python = ["3.10"]
+
+[tool.pytest.ini_options]
+addopts = "--capture=fd -n 0 --cov=mkdocs_to_pdf --cov-report html --cov-report xml --verbose --junitxml=.junit.xml -o junit_family=legacy"
+testpaths = [
+    "tests",
+]

@@ -10,6 +10,10 @@ copyright: Copyright &copy; 2025 Dom Walters, Hideyuki KATO
 extra_css:
   - stylesheets/extra.css
 
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+
 markdown_extensions:
   # Tooltips
   - abbr
@@ -21,6 +25,9 @@ markdown_extensions:
   - footnotes
   # Annotations, Grids, Images
   - md_in_html
+  # Maths
+  - pymdownx.arithmatex:
+      generic: true
   # Images
   - pymdownx.blocks.caption
   # Formatting
@@ -81,7 +88,9 @@ nav:
       - examples/icons-emojis.md
       - examples/images.md
       - examples/lists.md
+      - examples/mathjax.md
       - examples/tooltips.md
+  - FAQ: FAQ.md
   - Changelog: CHANGELOG.md
   - License: LICENSE.md
   - Stuff to Migrate: stuff-to-migrate.md
@@ -93,6 +102,8 @@ plugins:
   - to-pdf:
       cover_title: MkDocs to PDF
       cover_subtitle: An MkDocs plugin to create a PDF
+      pdf_engine: chromium
+      render_js: true
 
 theme:
   features:

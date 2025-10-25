@@ -99,9 +99,9 @@ plugins:
 
 #### `back_cover`
 
-Back covers don't generate by default.
-
 Set to true if you want a back cover to generate.
+
+By default there is no back cover.
 
 ``` yaml
 plugins:
@@ -127,7 +127,7 @@ plugins:
 
 The depth of headings to show in the Table of Contents. 1 to 6.
 
-Defaults to `3`.
+Defaults to `2`.
 
 ``` yaml
 plugins:
@@ -161,7 +161,7 @@ plugins:
       heading_shift: false
 ```
 
-### Output
+### Build Process
 
 #### `output_path`
 
@@ -220,11 +220,75 @@ INFO    -  Converting 10 articles to PDF took 7.1s
 INFO    -  Documentation built in 8.29 seconds
 ```
 
+#### `pdf_engine`
+
+> Added in v0.11.0
+
+!!! warning
+
+    This is an experimental feature.
+
+The engine used to generate the PDF can be selected using this setting.
+
+Available options:
+
+- `weasyprint`
+
+    - Default.
+
+- `chromium`
+
+``` yaml
+plugins:
+  - to-pdf:
+      pdf_engine: weasyprint
+```
+
+#### `headless_chrome_path` (only if `pdf_engine: chromium`)
+
+> Added in v0.11.0
+
+The absolute path to the executable to use with `playwright` as chromium.
+
+By default, the `playwright` package will download a local copy of chromium. To
+avoid this, you must set this variable.
+
+``` yaml
+plugins:
+  - to-pdf:
+      pdf_engine: chromium
+      headless_chrome_path: /usr/bin/chromium-browser
+```
+
+#### `render_js` (only if `pdf_engine: chromium`)
+
+> Added in v0.11.0
+
+When `true`, render the generated HTML using `playwright` with `chromium`.
+
+Set to `true` if you're using extensions that require rendering in javascript.
+
+For example:
+
+- [MathJax](https://www.mathjax.org/)
+- [Twemoji](https://twemoji.twitter.com/)
+
+Uses the `headless_chrome_path` if it is defined.
+
+Default is `false`.
+
+``` yaml
+plugins:
+  - to-pdf:
+      pdf_engine: chromium
+      render_js: true
+```
+
 ### Debug
 
 #### `verbose`
 
-Set to true to see all WeasyPrint debug messages during build.
+Set to `true` to see all WeasyPrint debug messages during build.
 
 ``` yaml
 plugins:
@@ -234,7 +298,7 @@ plugins:
 
 #### `debug_html`
 
-Set to true to output HTML to `stdout` during build
+Set to `true` to output HTML to `stdout` during build.
 
 ``` yaml
 plugins:

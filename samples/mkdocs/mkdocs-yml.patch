@@ -2,11 +2,14 @@ diff --git a/mkdocs.yml b/mkdocs.yml
 index 7246e148..61d90bb9 100644
 --- a/mkdocs.yml
 +++ b/mkdocs.yml
-@@ -74,6 +74,7 @@ plugins:
+@@ -74,6 +74,10 @@ plugins:
              show_root_heading: true
              show_source: false
              show_signature_annotations: true
-+  - to-pdf
- 
++  - to-pdf:
++      pdf_engine: chromium
++      headless_chrome_path: /usr/bin/chromium-browser
++      render_js: true
+
  watch:
    - mkdocs

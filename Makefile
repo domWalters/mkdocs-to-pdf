@@ -14,6 +14,7 @@ help:
 	@echo "  samples   : build the samples"
 	@echo "  setup     : make a venv"
 	@echo "  sync      : fill the venv"
+	@echo "  tests       : run tests"
 
 venv := $(makefile_directory)/.venv
 activate := $(venv)/bin/activate
@@ -75,8 +76,18 @@ samples: sync
 	$(at)$(MAKE) -C samples/mkdocs-material build
 	@echo ""
 
+.PHONY: tests
+tests: sync
+	@echo "########"
+	@echo "# test #"
+	@echo "########"
+	$(at). $(activate) \
+		&& cd $(makefile_directory) \
+		&& hatch test --all
+	@echo ""
+
 .PHONY: all
-all: clean build check docs samples
+all: clean build check tests docs samples
 
 token_argument = $(shell \
 	if [ -f $(makefile_directory)/.token ]; then \

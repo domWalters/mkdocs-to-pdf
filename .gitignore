@@ -1,6 +1,8 @@
-.venv/
+.aider*
+/.coverage*
+/.junit.xml
+/.token
+/.venv/
 __pycache__/
 gen/
 site/
-.aider*
-.token

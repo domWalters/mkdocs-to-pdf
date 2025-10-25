@@ -2,11 +2,14 @@ diff --git a/mkdocs.yml b/mkdocs.yml
 index 23cec8d57..96d3b5d02 100755
 --- a/mkdocs.yml
 +++ b/mkdocs.yml
-@@ -98,6 +98,7 @@ plugins:
+@@ -98,6 +98,10 @@ plugins:
        separator: '[\s\u200b\-_,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
    - minify:
        minify_html: true
-+  - to-pdf
- 
++  - to-pdf:
++      pdf_engine: chromium
++      headless_chrome_path: /usr/bin/chromium-browser
++      render_js: true
+
  # Hooks
  hooks:

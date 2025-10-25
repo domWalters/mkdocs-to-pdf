@@ -24,9 +24,6 @@ plugins:
         #    - src: ...
         #two_columns_level: 3
         #
-        #render_js: true
-        #headless_chrome_path: headless-chromium
-        #
         #show_anchors: true
 ```
 
@@ -63,48 +60,6 @@ plugins:
     _**since**: `v0.7.0`_
 
     @see [Sample of _MkDocs Material_](https://github.com/domWalters/mkdocs-to-pdf/blob/master/samples/mkdocs-material/)
-
-##### Renderer for JavaScript
-
-* `render_js`
-
-    Set the value to `true` if you're using '[MathJax](https://www.mathjax.org/)', '[Twemoji](https://twemoji.twitter.com/)' or any more.  
-    Require "Chrome" which has "headless" mode.  
-
-    **default**: `false`  
-    _**since**: `v0.7.0`_
-
-* `headless_chrome_path`
-
-    Set the "Headless Chrome" program path.  
-    If `render_js` is _`false`_, this value will be ignored.  
-
-    **default**: `chromium-browser`
-
-> Check on your system:
->
-> ```
-> $ <PROGRAM_PATH> --headless \
->    --disable-gpu \
->    --dump-dom \
->    <ANY_SITE_URL(eg. 'https://google.com')>
-> ```
-
-* `relaxedjs_path`
-
-    Set the value to execute command of relaxed if you're using e.g. '[Mermaid](https://mermaid-js.github.io) diagrams and Headless Chrome is not working for you.
-    Require "ReLaXed" Javascript PDF renderer to be installed on your system. See: '[ReLaXed](https://github.com/RelaxedJS/ReLaXed)'.
-
-    Please use 'theme_handler_path' option to specify custom JS sources and CSS Stylesheets which covers your needs. E.g. for Material
-    theme it would be **material.py**. See: **mkdocs-to-pdf/src/mkdocs_to_pdf/themes/material.py** for implementation details.
-    **default**: `None`
-    _**since**: `v0.7.0`_
-
-> Install on your system:
-> ```
-> $ npm i -g relaxedjs
-> $ relaxed --version
-> ```
 
 ##### ... and more
 
