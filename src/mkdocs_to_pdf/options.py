@@ -18,6 +18,7 @@ class Options(object):
         ('show_anchors', config_options.Type(bool, default=False)),
 
         ('output_path', config_options.Type(str, default="pdf/document.pdf")),
+        ('html_path', config_options.Type(str, default=None)),
         ('theme_handler_path', config_options.Type(str, default=None)),
 
         ('author', config_options.Type(str, default='')),
@@ -55,7 +56,8 @@ class Options(object):
         self.debug_html = local_config['debug_html']
         self.show_anchors = local_config['show_anchors']
 
-        self.output_path = local_config.get('output_path', None)
+        self.output_path = local_config['output_path']
+        self.html_path = local_config.get('html_path', None)
         self.theme_handler_path = local_config.get('theme_handler_path', None)
 
         # Author and Copyright

@@ -37,7 +37,11 @@ def fix_image_alignment(soup: PageElement, logger: Logger = None):
                 styles['height'] = _convert_dimension(img['height'])
                 img.attrs.pop('height')
 
-            img['style'] = " ".join(f'{k}: {v};' for k, v in styles.items())
+            # Remove any trailing commas from style values
+            img['style'] = " ".join(
+                f'{k}: {v.rstrip(",")};'
+                for k, v in styles.items()
+            )
         except Exception as e:
             if logger:
                 logger.warning(f'Failed to convert img align: {e}')
