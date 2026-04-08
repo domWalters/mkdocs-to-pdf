@@ -23,7 +23,7 @@ pathspec==0.12.1
 pillow==11.1.0
 platformdirs==4.3.6
 pycparser==2.22
-pydyf==0.10.0
+pydyf==0.11.0
 pyphen==0.17.2
 python-dateutil==2.9.0.post0
 pyyaml==6.0.2
@@ -32,7 +32,7 @@ six==1.17.0
 soupsieve==2.6
 tinycss2==1.4.0
 watchdog==6.0.0
-weasyprint==62.3
+weasyprint==68.1
 webencodings==0.5.1
 zipp==3.21.0 ; python_full_version < '3.10'
 zopfli==0.2.3.post1
