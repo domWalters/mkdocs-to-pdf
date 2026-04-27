@@ -18,7 +18,7 @@ help:
 venv := $(makefile_directory)/.venv
 activate := $(venv)/bin/activate
 
-$(venv)/bin/activate:
+$(activate):
 	@echo "########"
 	@echo "# venv #"
 	@echo "########"
@@ -26,7 +26,7 @@ $(venv)/bin/activate:
 	@echo ""
 
 .PHONY: setup
-setup: $(venv)/bin/activate
+setup: $(activate)
 
 .PHONY: sync
 sync: setup
@@ -38,6 +38,27 @@ sync: setup
 		&& uv --directory $(makefile_directory) sync --extra all
 	@echo ""
 
+$(makefile_directory)/.git/hooks/pre-commit:
+	@echo "###############"
+	@echo "# setup-check #"
+	@echo "###############"
+	$(at). $(activate) \
+		&& cd $(makefile_directory) \
+		&& pre-commit install
+	@echo ""
+
+.PHONY: setup-check
+setup-check: $(makefile_directory)/.git/hooks/pre-commit
+
+.PHONY: check
+check: sync setup-check
+	@echo "#########"
+	@echo "# check #"
+	@echo "#########"
+	$(at). $(activate) \
+		&& pre-commit run --all-files
+	@echo ""
+
 .PHONY: build
 build: sync
 	@echo "#########"
@@ -46,14 +67,6 @@ build: sync
 	$(at). $(activate) \
 		&& uv --directory $(makefile_directory) lock \
 		&& uv --directory $(makefile_directory) build
-	@echo ""
-
-.PHONY: check
-check: sync
-	@echo "#########"
-	@echo "# check #"
-	@echo "#########"
-	$(at). $(activate) && pre-commit run --all-files
 	@echo ""
 
 .PHONY: docs
@@ -76,7 +89,7 @@ samples: sync
 	@echo ""
 
 .PHONY: all
-all: clean build check docs samples
+all: clean check docs samples build
 
 token_argument = $(shell \
 	if [ -f $(makefile_directory)/.token ]; then \
@@ -95,16 +108,25 @@ publish: all
 
 .PHONY: clean
 clean:
-	$(at)rm -rf $(makefile_directory)/dist/
-	$(at)$(MAKE) -C samples/mkdocs clean
-	$(at)$(MAKE) -C samples/mkdocs-material clean
+	$(at)rm -rf \
+        $(makefile_directory)/dist/ \
+	    $(makefile_directory)/docs/build/
+	$(at)$(MAKE) -C $(makefile_directory)/samples/mkdocs clean
+	$(at)$(MAKE) -C $(makefile_directory)/samples/mkdocs-material clean
 
 .PHONY: distclean
 distclean: clean
-	$(at)rm -rf $(makefile_directory)/.aider*
-	$(at)rm -rf $(makefile_directory)/.mypy_cache
-	$(at)rm -rf $(makefile_directory)/.ruff_cache
-	$(at)rm -rf $(makefile_directory)/.venv
-	$(at)find $(makefile_directory)/src -type d -name __pycache__ -exec rm -rf {} +
-	$(at)$(MAKE) -C samples/mkdocs distclean
-	$(at)$(MAKE) -C samples/mkdocs-material distclean
+	$(at)rm -rf \
+        $(makefile_directory)/.aider* \
+		$(makefile_directory)/.cache \
+		$(makefile_directory)/.coverage \
+		$(makefile_directory)/.coverage.xml \
+		$(makefile_directory)/.htmlcov \
+		$(makefile_directory)/.junit.xml \
+		$(makefile_directory)/.pytest_cache \
+	    $(makefile_directory)/.ruff_cache \
+	    $(venv)
+	$(at)find $(makefile_directory) -type d -name ".mypy_cache" -exec rm -rf {} +
+	$(at)find $(makefile_directory) -type d -name "__pycache__" -exec rm -rf {} +
+	$(at)$(MAKE) -C $(makefile_directory)/samples/mkdocs distclean
+	$(at)$(MAKE) -C $(makefile_directory)/samples/mkdocs-material distclean
