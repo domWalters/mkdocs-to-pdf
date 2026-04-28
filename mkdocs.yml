@@ -82,7 +82,6 @@ nav:
       - examples/images.md
       - examples/lists.md
       - examples/tooltips.md
-  - Changelog: CHANGELOG.md
   - License: LICENSE.md
   - Stuff to Migrate: stuff-to-migrate.md
 
