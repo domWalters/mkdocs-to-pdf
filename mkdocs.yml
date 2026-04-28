@@ -83,7 +83,6 @@ nav:
       - examples/lists.md
       - examples/tooltips.md
   - License: LICENSE.md
-  - Stuff to Migrate: stuff-to-migrate.md
 
 plugins:
   - minify:
