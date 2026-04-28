@@ -16,6 +16,8 @@ cffi==1.17.1
     # via
     #   brotlicffi
     #   weasyprint
+cfgv==3.5.0
+    # via pre-commit
 charset-normalizer==3.4.1
     # via requests
 click==8.1.8
@@ -32,6 +34,12 @@ csscompressor==0.9.5
     # via mkdocs-minify-plugin
 cssselect2==0.8.0
     # via weasyprint
+distlib==0.4.0
+    # via virtualenv
+filelock==3.29.0
+    # via
+    #   python-discovery
+    #   virtualenv
 fonttools==4.56.0
     # via weasyprint
 ghp-import==2.1.0
@@ -42,6 +50,8 @@ html5lib==1.1
     # via weasyprint
 htmlmin2==0.1.13
     # via mkdocs-minify-plugin
+identify==2.6.19
+    # via pre-commit
 idna==3.10
     # via requests
 jinja2==3.1.6
@@ -109,6 +119,8 @@ mkdocstrings==0.29.0
     # via mkdocstrings-python
 mkdocstrings-python==1.16.5
     # via mkdocs-to-pdf
+nodeenv==1.10.0
+    # via pre-commit
 packaging==24.2
     # via mkdocs
 paginate==0.5.7
@@ -118,7 +130,12 @@ pathspec==0.12.1
 pillow==11.1.0
     # via weasyprint
 platformdirs==4.3.6
-    # via mkdocs-get-deps
+    # via
+    #   mkdocs-get-deps
+    #   python-discovery
+    #   virtualenv
+pre-commit==4.6.0
+    # via mkdocs-to-pdf
 pycparser==2.22
     # via cffi
 pydyf==0.10.0
@@ -135,10 +152,13 @@ pyphen==0.17.2
     # via weasyprint
 python-dateutil==2.9.0.post0
     # via ghp-import
+python-discovery==1.2.2
+    # via virtualenv
 pyyaml==6.0.2
     # via
     #   mkdocs
     #   mkdocs-get-deps
+    #   pre-commit
     #   pymdown-extensions
     #   pyyaml-env-tag
 pyyaml-env-tag==0.1
@@ -155,10 +175,14 @@ tinycss2==1.4.0
     # via
     #   cssselect2
     #   weasyprint
-typing-extensions==4.12.2 ; python_full_version < '3.11'
-    # via mkdocstrings-python
+typing-extensions==4.15.0 ; python_full_version < '3.11'
+    # via
+    #   mkdocstrings-python
+    #   virtualenv
 urllib3==2.3.0
     # via requests
+virtualenv==21.3.0
+    # via pre-commit
 watchdog==6.0.0
     # via mkdocs
 weasyprint==62.3
