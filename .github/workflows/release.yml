@@ -38,6 +38,7 @@ jobs:
     needs:
       - build-package
     permissions:
+      contents: write
       id-token: write
     environment:
       name: pypi
