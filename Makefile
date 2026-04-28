@@ -33,6 +33,7 @@ sync: setup
 	@echo "########"
 	@echo "# sync #"
 	@echo "########"
+	$(at)git -C $(makefile_directory) submodule update --init --recursive
 	$(at). $(activate) \
 		&& uv --directory $(makefile_directory) lock \
 		&& uv --directory $(makefile_directory) sync --extra all
