@@ -15,7 +15,7 @@ pkgs.mkShell {
         python310Packages.uv-build
     ];
     shellHook = ''
-        if [ -f .venv/bin/activate ]; then
+        if [ -f $HOME/.bashrc ]; then
             source $HOME/.bashrc;
         fi;
         if [ ! -f .venv/bin/activate ]; then
