@@ -25,7 +25,8 @@ def style_for_print(options: Options) -> str:
     :root {{
         string-set: author '{_css_escape(options.author)}',
             copyright '{_css_escape(options.copyright)}',
-            title '{_css_escape(options.cover_title)}';
+            title '{_css_escape(options.cover_title)}',
+            subtitle '{_css_escape(options.cover_subtitle)}';
     }}
     h1, h2, h3 {{
         string-set: chapter content();
