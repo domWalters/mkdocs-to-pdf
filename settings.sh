@@ -6,10 +6,8 @@ if [ "$(pwd)" != "$(git rev-parse --show-toplevel)" ]; then
 fi
 
 source_venv() {
+    make sync
     # shellcheck disable=SC1091
-    if [ ! -f .venv/bin/activate ]; then
-        make sync
-    fi
     . .venv/bin/activate
 }
 

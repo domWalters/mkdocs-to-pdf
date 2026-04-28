@@ -18,9 +18,7 @@ pkgs.mkShell {
         if [ -f $HOME/.bashrc ]; then
             source $HOME/.bashrc;
         fi;
-        if [ ! -f .venv/bin/activate ]; then
-            make sync;
-        fi;
+        make sync;
         source .venv/bin/activate;
         export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.fontconfig.lib}/lib;
         export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.gcc.cc.lib}/lib;
