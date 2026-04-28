@@ -1,16 +1,28 @@
 { pkgs ? import <nixpkgs> {} }:
+pkgs.mkShell {
+    buildInputs = with pkgs.buildPackages; [
+        fontconfig
+        gcc
+        glib
+        gobject-introspection
+        pango
 
-(pkgs.buildFHSEnv {
-  name = "mkdocs-to-pdf-env";
-  targetPkgs = pkgs: (with pkgs; [
-    fontconfig
-    glib
-    gnumake
-    harfbuzz
-    noto-fonts-cjk-sans
-    pango
-    python310
-    uv
-  ]);
-  runScript = "bash --init-file <(cat $HOME/.bashrc; cat .venv/bin/activate) -i";
-}).env
+        gnumake
+        noto-fonts-cjk-sans
+        pkg-config
+        python310
+        python310Packages.uv
+        python310Packages.uv-build
+    ];
+    shellHook = ''
+        if [ -f $HOME/.bashrc ]; then
+            source $HOME/.bashrc;
+        fi;
+        make sync;
+        source .venv/bin/activate;
+        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.fontconfig.lib}/lib;
+        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.gcc.cc.lib}/lib;
+        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.glib.out}/lib;
+        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.pango.out}/lib;
+    '';
+}

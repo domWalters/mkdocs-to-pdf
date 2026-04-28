@@ -5,8 +5,16 @@ if [ "$(pwd)" != "$(git rev-parse --show-toplevel)" ]; then
     return 1
 fi
 
-if command -v nix-shell > /dev/null 2>&1; then
+source_venv() {
+    make sync
+    # shellcheck disable=SC1091
+    . .venv/bin/activate
+}
+
+if [ -n "$IN_NIX_SHELL" ]; then
+    source_venv
+elif command -v nix-shell > /dev/null 2>&1; then
     nix-shell
 else
-    . .venv/bin/activate
+    source_venv
 fi

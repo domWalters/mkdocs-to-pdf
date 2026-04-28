@@ -1,7 +1,7 @@
 ---
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: check-added-large-files
       - id: check-ast
@@ -16,48 +16,54 @@ repos:
       - id: check-symlinks
       - id: check-toml
       # - id: check-vcs-permalinks
-      - id: check-xml
+      # - id: check-xml
       - id: check-yaml
-        args:
-        - --unsafe
+        args: [--unsafe]
       - id: debug-statements
       - id: destroyed-symlinks
       - id: mixed-line-ending
       - id: name-tests-test
-        args: ["--pytest-test-first"]
+        args: [--pytest-test-first]
       - id: no-commit-to-branch
       - id: pretty-format-json
-        args:
-        - --autofix
-        - --indent
-        - "2"
+        args: [
+          --autofix,
+          --indent,
+          "2",
+        ]
         exclude: "package.*\\.json"
       - id: requirements-txt-fixer
       - id: trailing-whitespace
-        args:
-        - --markdown-linebreak-ext=md
+        args: [--markdown-linebreak-ext=md]
         exclude: ".*\\.patch"
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.24.0
+    rev: v8.30.0
     hooks:
       - id: gitleaks
   - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 0.6.6
+    rev: 0.11.8
     hooks:
       - id: uv-lock
       - id: uv-export
-        args:
-        - --frozen
-        - --output-file=requirements.txt
-        - --no-hashes
-        - --no-emit-project
+        args: [
+          --frozen,
+          --output-file=requirements.txt,
+          --no-hashes,
+          --no-emit-project,
+        ]
       - id: uv-export
-        args:
-        - --frozen
-        - --output-file=requirements-dev.txt
-        - --no-hashes
-        - --all-extras
+        args: [
+          --frozen,
+          --output-file=requirements-dev.txt,
+          --no-hashes,
+          --no-emit-project,
+          --all-extras,
+        ]
   - repo: https://github.com/streetsidesoftware/cspell-cli
-    rev: v8.17.3
+    rev: v10.0.0
     hooks:
       - id: cspell
+  - repo: meta
+    hooks:
+      - id: check-hooks-apply
+      - id: check-useless-excludes

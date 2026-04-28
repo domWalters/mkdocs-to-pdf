@@ -106,6 +106,8 @@ class Template(object):
             for key in self.__KEYS:
                 if hasattr(self._options, key):
                     keywords[key] = getattr(self._options, key)
+                elif hasattr(self._options, f"_{key}"):
+                    keywords[key] = getattr(self._options, f"_{key}")
                 elif key in self._config:
                     keywords[key] = self._config[key]
 
