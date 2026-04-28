@@ -4,14 +4,14 @@ on:
   push:
     tags:
       - "v*"
+permissions:
+  contents: read
 jobs:
-  build-and-publish:
-    name: Build and publish to PyPI
+  build-package:
+    name: Build package
     runs-on: ubuntu-latest
-    environment: release
-    permissions:
-      id-token: write
-      contents: read
+    environment:
+      name: release
     steps:
       - uses: actions/checkout@v4
 
@@ -20,11 +20,35 @@ jobs:
         with:
           enable-cache: true
 
-      - name: Set up Python
-        run: uv python install 3.10
+      - name: Sync
+        run: make sync
 
       - name: Build package
-        run: uv build
+        run: make build
 
-      - name: Publish to PyPI
+      - name: Upload package
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-dists
+          path: dist/
+
+  publish-package:
+    name: Publish package
+    runs-on: ubuntu-latest
+    needs:
+      - build-package
+    permissions:
+      id-token: write
+    environment:
+      name: pypi
+    steps:
+      - name: Retrieve package
+        uses: actions/download-artifact@v4
+        with:
+          name: release-dists
+          path: dist/
+
+      - name: Publish package
         uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/
