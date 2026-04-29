@@ -19,17 +19,28 @@ in
             python310
             python310Packages.uv
             python310Packages.uv-build
+
+            zsh
         ];
         shellHook = ''
-            if [ -f $HOME/.bashrc ]; then
-                source $HOME/.bashrc;
-            fi;
-            make sync;
-            source .venv/bin/activate;
-            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.fontconfig.lib}/lib;
-            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.gcc.cc.lib}/lib;
-            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.glib.out}/lib;
-            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.pango.out}/lib;
+            case "$(basename "$SHELL")" in
+                "bash")
+                    if [ -f $HOME/.bashrc ]; then
+                        source $HOME/.bashrc
+                    fi
+                    ;;
+                "zsh")
+                    if [ -f $HOME/.zshrc ]; then
+                        source $HOME/.zshrc
+                    fi
+                    ;;
+            esac
+            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.fontconfig.lib}/lib
+            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.gcc.cc.lib}/lib
+            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.glib.out}/lib
+            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.pango.out}/lib
             export FONTCONFIG_FILE="${fontsConf}"
+            make sync
+            source .venv/bin/activate
         '';
     }

@@ -14,7 +14,7 @@ source_venv() {
 if [ -n "$IN_NIX_SHELL" ]; then
     source_venv
 elif command -v nix-shell > /dev/null 2>&1; then
-    nix-shell
+    nix-shell --run "$SHELL"
 else
     source_venv
 fi
