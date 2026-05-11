@@ -1,8 +1,7 @@
-from bs4 import PageElement, Tag
+from bs4 import PageElement, Tag, BeautifulSoup
 
 from .options import Options
 from .utils.soup_util import clone_element
-
 
 def make_indexes(soup: PageElement, options: Options) -> None:
     """ Generate ordered chapter number and TOC of document.
@@ -31,11 +30,7 @@ def make_indexes(soup: PageElement, options: Options) -> None:
         li = soup.new_tag('li')
         ref = h.get('id', '')
         a = soup.new_tag('a', href=f'#{ref}')
-        for el in h.contents:
-            if el.name == 'a':
-                a.append(el.contents[0])
-            else:
-                a.append(clone_element(el))
+        a.append(BeautifulSoup(h.decode_contents(), 'html.parser'))
         li.append(a)
         options.logger.debug(f"| [{h.get_text(separator=' ')}]({ref})")
         return li

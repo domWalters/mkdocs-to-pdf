@@ -242,7 +242,7 @@ class Generator(object):
 
             page_path = self._page_path_for_id(page)
             h1 = soup.new_tag('h1', id=f'{page_path}')
-            h1.append(str(page.title))
+            h1.append(BeautifulSoup(str(page.title), 'html.parser'))
             elem.insert(0, h1)
             return elem
 
