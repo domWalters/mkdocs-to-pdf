@@ -20,6 +20,7 @@ class Options(object):
         ('output_path', config_options.Type(str, default="pdf/document.pdf")),
         ('html_path', config_options.Type(str, default=None)),
         ('theme_handler_path', config_options.Type(str, default=None)),
+        ('weasyprint_log_path', config_options.Type(str, default='')),
 
         ('author', config_options.Type(str, default='')),
         ('copyright', config_options.Type(str, default='')),
@@ -59,6 +60,7 @@ class Options(object):
         self.output_path = local_config['output_path']
         self.html_path = local_config.get('html_path', None)
         self.theme_handler_path = local_config.get('theme_handler_path', None)
+        self.weasyprint_log_path = local_config['weasyprint_log_path']
 
         # Author and Copyright
         self._author = local_config['author'] or config['site_author'] or ''

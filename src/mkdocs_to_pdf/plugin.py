@@ -88,6 +88,12 @@ class WithPdfPlugin(BasePlugin):
         else:
             LOGGER.setLevel(logging.ERROR)
 
+        if self._options.weasyprint_log_path:
+            open(self._options.weasyprint_log_path, 'w').close() # Logger appends to the file by default so we have to clear it explicitly
+            handler = logging.FileHandler(self._options.weasyprint_log_path)
+            handler.setFormatter(logging.Formatter('%(levelname)s: %(message)s'))
+            LOGGER.addHandler(handler)
+
         if self._options.strict:
             self._error_counter = _ErrorAndWarningCountFilter()
             LOGGER.addFilter(self._error_counter)
