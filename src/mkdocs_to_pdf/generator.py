@@ -342,7 +342,10 @@ class Generator(object):
         for anchor in soup.find_all(id=True):
             anchor['id'] = normalize_anchor_chars(anchor['id'])
         for link in soup.find_all('a', href=True):
-            link['href'] = normalize_anchor_chars(link['href'])
+            # only anchors are normalized, percent encoding is significant
+            # for every other kind of target(external URLs, assets, ...)
+            if link['href'].startswith('#'):
+                link['href'] = normalize_anchor_chars(link['href'])
 
         if not (self._options.debug_html or self._options.show_anchors or
                 self._options.strict or self._options.verbose):
