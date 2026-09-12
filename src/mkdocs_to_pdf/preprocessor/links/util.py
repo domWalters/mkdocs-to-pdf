@@ -1,7 +1,36 @@
 import os
+from urllib.parse import urlparse
 
 from weasyprint import urls
 from bs4 import PageElement
+
+DOC_EXTENSIONS = ['.html', '.htm', '.md']
+
+
+def is_asset(href: str) -> bool:
+    """check if a relative href points to an asset instead of a document
+
+    An asset is anything that does not end up as a page of the generated
+    document: images, archives, other PDFs, ... Those links cannot be
+    rewritten into a document anchor, they have to keep pointing at the file.
+
+    Arguments:
+        href {str} -- a string of URL.
+
+    Returns:
+        bool -- result
+    """
+
+    if urls.url_is_absolute(href) or os.path.isabs(href):
+        return False
+
+    target = urlparse(href)
+    if target.scheme or target.netloc or not target.path:
+        return False
+
+    _, ext = os.path.splitext(os.path.basename(target.path))
+
+    return bool(ext) and ext.lower() not in DOC_EXTENSIONS
 
 
 def is_doc(href: str) -> bool:

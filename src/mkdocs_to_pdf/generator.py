@@ -322,10 +322,19 @@ class Generator(object):
                     f' from custom directory "{custom_handler_path}": {e}')
                 pass
 
+        package = 'mkdocs_to_pdf.themes'
         try:
-            return import_module(module_name, 'mkdocs_to_pdf.themes')
+            return import_module(module_name, package)
         except ImportError as e:
-            self.logger.error(f'Could not load theme handler {theme}: {e}')
+            if (isinstance(e, ModuleNotFoundError)
+                    and e.name == f'{package}{module_name}'):
+                # no handler is bundled for this theme, which is not an error:
+                # any theme without specific needs works with the generic one.
+                self.logger.info(
+                    f'No theme handler for "{theme}",'
+                    ' using the generic theme handler.')
+            else:
+                self.logger.error(f'Could not load theme handler {theme}: {e}')
             return generic_theme
 
     # -------------------------------------------------------------
@@ -342,7 +351,10 @@ class Generator(object):
         for anchor in soup.find_all(id=True):
             anchor['id'] = normalize_anchor_chars(anchor['id'])
         for link in soup.find_all('a', href=True):
-            link['href'] = normalize_anchor_chars(link['href'])
+            # only anchors are normalized, percent encoding is significant
+            # for every other kind of target(external URLs, assets, ...)
+            if link['href'].startswith('#'):
+                link['href'] = normalize_anchor_chars(link['href'])
 
         if not (self._options.debug_html or self._options.show_anchors or
                 self._options.strict or self._options.verbose):

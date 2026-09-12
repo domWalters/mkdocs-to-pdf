@@ -4,7 +4,8 @@ from bs4 import PageElement
 from weasyprint import urls
 
 from .links.transform import transform_href, transform_id
-from .links.util import get_body_id, rel_pdf_href, replace_asset_hrefs
+from .links.util import (abs_asset_href, get_body_id, is_asset,
+                         rel_pdf_href, replace_asset_hrefs)
 
 
 def get_combined(
@@ -22,7 +23,10 @@ def get_combined(
         if urls.url_is_absolute(a['href']) or os.path.isabs(a['href']):
             continue
 
-        a['href'] = transform_href(a['href'], rel_url)
+        if is_asset(a['href']):
+            a['href'] = abs_asset_href(a['href'], base_url)
+        else:
+            a['href'] = transform_href(a['href'], rel_url)
 
     soup.body['id'] = get_body_id(rel_url)
     soup = replace_asset_hrefs(soup, base_url)

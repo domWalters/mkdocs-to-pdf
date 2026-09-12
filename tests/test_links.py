@@ -3,6 +3,66 @@ import unittest
 import os
 from weasyprint import urls
 from mkdocs_to_pdf.preprocessor.links.transform import transform_href
+from mkdocs_to_pdf.preprocessor.links.util import is_asset
+
+
+class IsAssetTestCase(unittest.TestCase):
+
+    def test_is_asset(self):
+
+        def run_test(scene: str, patterns: []):
+            for index, pattern in enumerate(patterns):
+                with self.subTest(index=index, pattern=pattern):
+                    href, x_result = pattern
+
+                    r = is_asset(href)
+                    self.assertEqual(r, x_result, f'"{scene}" at {index}')
+
+        run_test('assets', [
+            # [href, is_asset]
+            ['image.png', True],
+            ['assets/image.png', True],
+            ['../assets/image.PNG', True],
+            ['assets/image.jpg', True],
+            ['assets/image.svg', True],
+            ['assets/animation.gif', True],
+            ['assets/handout.pdf', True],
+            ['assets/archive.tar.gz', True],
+            ['assets/image.png#frag', True],
+        ])
+
+        run_test('documents', [
+            # [href, is_asset]
+            ['page.html', False],
+            ['page.htm', False],
+            ['page.md', False],
+            ['path/page.html', False],
+            ['../path/page.html', False],
+            ['index.html', False],
+            ['page.html#frag', False],
+        ])
+
+        run_test('directory urls', [
+            # [href, is_asset]
+            ['.', False],
+            ['./', False],
+            ['..', False],
+            ['../', False],
+            ['target', False],
+            ['target/', False],
+            ['path/target/', False],
+            ['../page.md/', False],
+        ])
+
+        run_test('not internal links', [
+            # [href, is_asset]
+            ['#frag', False],
+            ['/assets/image.png', False],
+            ['//ex.com/image.png', False],
+            ['https://ex.com/image.png', False],
+            ['mailto:someone@ex.com', False],
+            ['data:image/png;base64,AAAA', False],
+        ])
 
 
 class TransformHrefTestCase(unittest.TestCase):

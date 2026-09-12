@@ -29,9 +29,7 @@ def transform_href(href: str, rel_url: str) -> str:
         if target in ['/', '.', 'index.html']:
             return f'#.:{hash}'
 
-        if target.endswith('.png'):
-            return href
-        elif target.endswith('index.html'):
+        if target.endswith('index.html'):
             target = re.sub(r'index\.html$', '', target)
         else:
             target = re.sub(r'\.(html|md)$', '/', target)

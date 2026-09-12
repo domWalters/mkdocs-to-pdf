@@ -19,18 +19,23 @@
     // Tabbed code block container
     .tabbed-set {
       display: block;
+      page-break-inside: auto;
+      break-inside: auto;
 
       .tabbed-content--wrap {
-        display: inline-block;
+        display: block;
         width: 100%;
-        margin-bottom: 0.25rem;
+        margin-bottom: 0.5rem;
+        page-break-inside: auto;
+        break-inside: auto;
 
         // Hide radio buttons
         > input {
           display: none;
         }
 
-        > label {
+        > label,
+        > .tabbed-label {
           background-color: rgba($color: #aaa, $alpha: 0.2);
           padding: 0.2rem 2rem;
           margin: 0;
@@ -38,11 +43,16 @@
           color: #666;
           border-radius: 3px 3px 0 0;
           border-bottom-color: transparent;
+          display: inline-block;
+          page-break-after: avoid;
+          break-after: avoid;
         }
 
         > .tabbed-content {
           display: block;
           box-shadow: none;
+          page-break-inside: auto;
+          break-inside: auto;
         }
       }
     }
