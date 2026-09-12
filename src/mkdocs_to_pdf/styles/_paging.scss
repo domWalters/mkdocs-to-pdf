@@ -79,7 +79,18 @@ section + section {
   }
 
   div.tabbed-content--wrap {
-    page-break-inside: avoid;
+    page-break-inside: auto;
+  }
+
+  .tabbed-label {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  div.tabbed-content ul,
+  div.tabbed-content ol,
+  div.tabbed-content dl {
+    page-break-inside: auto;
   }
 
   * + div.highlight,
