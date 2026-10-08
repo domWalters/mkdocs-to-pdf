@@ -176,10 +176,6 @@ tinycss2==1.4.0
     # via
     #   cssselect2
     #   weasyprint
-typing-extensions==4.15.0 ; python_full_version < '3.11'
-    # via
-    #   mkdocstrings-python
-    #   virtualenv
 urllib3==2.3.0
     # via requests
 virtualenv==21.3.0
