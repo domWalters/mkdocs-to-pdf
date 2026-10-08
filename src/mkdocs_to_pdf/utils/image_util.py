@@ -17,7 +17,8 @@ def fix_image_alignment(soup: PageElement, logger: Logger = None):
 
             styles = _parse_style(img.get('style', ''))
 
-            logger.debug(f'  | {img}')
+            if logger:
+                logger.debug(f'  | {img}')
             if img.has_attr('align'):
                 if img['align'] == 'left':
                     styles['float'] = 'left'
