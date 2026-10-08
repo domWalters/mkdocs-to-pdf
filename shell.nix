@@ -16,9 +16,9 @@ in
 
             gnumake
             pkg-config
-            python310
-            python310Packages.uv
-            python310Packages.uv-build
+            python311
+            python311Packages.uv
+            python311Packages.uv-build
 
             zsh
         ];
@@ -40,7 +40,7 @@ in
             export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.glib.out}/lib
             export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.pango.out}/lib
             export FONTCONFIG_FILE="${fontsConf}"
-            make sync
-            source .venv/bin/activate
+            . ./scripts/settings-venv.sh
+            . ./scripts/settings-post-venv.sh
         '';
     }
