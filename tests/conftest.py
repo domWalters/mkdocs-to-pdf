@@ -46,17 +46,14 @@ def make_soup() -> SoupFactory:
     return factory
 
 
-@pytest.fixture(scope="session")
-def built_site(tmp_path_factory: pytest.TempPathFactory) -> SimpleNamespace:
-    """
-    Build the fixture MkDocs site once and expose the generated artifacts.
-
-    This drives the plugin through the real `mkdocs build` pipeline, producing
-    both the combined HTML (`html_path`) and the final PDF.
-    """
-    root = tmp_path_factory.mktemp("built_site")
+def _build_fixture(
+    tmp_path_factory: pytest.TempPathFactory,
+    name: str,
+) -> SimpleNamespace:
+    """Build the named fixture site and expose the generated artifacts."""
+    root = tmp_path_factory.mktemp(name)
     project = root / "project"
-    shutil.copytree(FIXTURES / "site", project)
+    shutil.copytree(FIXTURES / name, project)
     site_dir = root / "site"
 
     config = load_config(
@@ -72,3 +69,28 @@ def built_site(tmp_path_factory: pytest.TempPathFactory) -> SimpleNamespace:
         html_path=site_dir / "single.html",
         pdf_path=site_dir / "pdf" / "document.pdf",
     )
+
+
+def _fixture_name(directory: str) -> str:
+    """Return the `built_*` fixture name for a fixture directory."""
+    return "built_" + "".join(c if c.isalnum() else "_" for c in directory)
+
+
+def _make_built_fixture(directory: str) -> object:
+    """Create a session-scoped fixture that builds the given directory."""
+
+    @pytest.fixture(scope="session", name=_fixture_name(directory))
+    def _built(tmp_path_factory: pytest.TempPathFactory) -> SimpleNamespace:
+        return _build_fixture(tmp_path_factory, directory)
+
+    return _built
+
+
+def _register_built_fixtures() -> None:
+    """Expose each `tests/fixtures/<dir>` as a session-scoped `built_<dir>`."""
+    for path in sorted(FIXTURES.iterdir()):
+        if path.is_dir():
+            globals()[_fixture_name(path.name)] = _make_built_fixture(path.name)
+
+
+_register_built_fixtures()

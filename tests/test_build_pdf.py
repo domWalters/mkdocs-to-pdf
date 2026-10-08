@@ -12,15 +12,15 @@ from bs4 import BeautifulSoup
 from pypdf import PdfReader
 
 
-def _html(built_site: SimpleNamespace) -> BeautifulSoup:
+def _html(built_base: SimpleNamespace) -> BeautifulSoup:
     """Parse the generated combined HTML."""
-    text = built_site.html_path.read_text(encoding="utf-8")
+    text = built_base.html_path.read_text(encoding="utf-8")
     return BeautifulSoup(text, "html.parser")
 
 
-def _reader(built_site: SimpleNamespace) -> PdfReader:
+def _reader(built_base: SimpleNamespace) -> PdfReader:
     """Open the generated PDF for reading."""
-    return PdfReader(str(built_site.pdf_path))
+    return PdfReader(str(built_base.pdf_path))
 
 
 def _outline_titles(reader: PdfReader) -> list[str]:
@@ -49,16 +49,16 @@ def _pdf_text(reader: PdfReader) -> str:
 # --------------------------------------------------------------------------
 
 
-def test_html_output_created(built_site: SimpleNamespace) -> None:
+def test_html_output_created(built_base: SimpleNamespace) -> None:
     """The combined HTML is written to `html_path`."""
-    assert built_site.html_path.is_file()
-    head = built_site.html_path.read_text(encoding="utf-8")[:200].lower()
+    assert built_base.html_path.is_file()
+    head = built_base.html_path.read_text(encoding="utf-8")[:200].lower()
     assert "<html" in head
 
 
-def test_cover_rendered(built_site: SimpleNamespace) -> None:
+def test_cover_rendered(built_base: SimpleNamespace) -> None:
     """The cover renders the configured title, subtitle and author."""
-    cover = _html(built_site).find("article", id="doc-cover")
+    cover = _html(built_base).find("article", id="doc-cover")
     assert cover is not None
     title = cover.find("h1")
     subtitle = cover.find("h2")
@@ -71,9 +71,9 @@ def test_cover_rendered(built_site: SimpleNamespace) -> None:
     assert author.get_text(strip=True) == "Jane Doe"
 
 
-def test_toc_generated(built_site: SimpleNamespace) -> None:
+def test_toc_generated(built_base: SimpleNamespace) -> None:
     """The table of contents lists numbered, nested headings."""
-    soup = _html(built_site)
+    soup = _html(built_base)
     toc = soup.find("article", id="doc-toc")
     assert toc is not None
     title = toc.find("h1")
@@ -90,9 +90,9 @@ def test_toc_generated(built_site: SimpleNamespace) -> None:
     assert outer.find("ul") is not None
 
 
-def test_headings_numbered(built_site: SimpleNamespace) -> None:
+def test_headings_numbered(built_base: SimpleNamespace) -> None:
     """Headings carry hierarchical numbering prefixes."""
-    soup = _html(built_site)
+    soup = _html(built_base)
 
     def order(anchor_id: str) -> str:
         """Return the numbering prefix attached to the given heading."""
@@ -106,9 +106,9 @@ def test_headings_numbered(built_site: SimpleNamespace) -> None:
     assert order("nested/child/:child-heading") == "3.1.1"
 
 
-def test_internal_links_transformed_and_resolve(built_site: SimpleNamespace) -> None:
+def test_internal_links_transformed_and_resolve(built_base: SimpleNamespace) -> None:
     """Document links are rewritten to anchors that all resolve."""
-    soup = _html(built_site)
+    soup = _html(built_base)
 
     remaining = [
         str(a["href"])
@@ -124,9 +124,9 @@ def test_internal_links_transformed_and_resolve(built_site: SimpleNamespace) -> 
             assert target in ids, f"dangling anchor: {a['href']}"
 
 
-def test_asset_hrefs_absolute_and_image_alignment(built_site: SimpleNamespace) -> None:
+def test_asset_hrefs_absolute_and_image_alignment(built_base: SimpleNamespace) -> None:
     """Image assets are absolutized and alignment folded into styles."""
-    soup = _html(built_site)
+    soup = _html(built_base)
 
     img = soup.find("img")
     assert img is not None
@@ -141,18 +141,18 @@ def test_asset_hrefs_absolute_and_image_alignment(built_site: SimpleNamespace) -
 # --------------------------------------------------------------------------
 
 
-def test_pdf_created_and_paginated(built_site: SimpleNamespace) -> None:
+def test_pdf_created_and_paginated(built_base: SimpleNamespace) -> None:
     """The PDF exists, has a PDF header and spans multiple pages."""
-    assert built_site.pdf_path.is_file()
-    assert bytes(built_site.pdf_path.read_bytes()).startswith(b"%PDF-")
+    assert built_base.pdf_path.is_file()
+    assert bytes(built_base.pdf_path.read_bytes()).startswith(b"%PDF-")
 
-    reader = _reader(built_site)
+    reader = _reader(built_base)
     assert len(reader.pages) >= 4
 
 
-def test_pdf_metadata(built_site: SimpleNamespace) -> None:
+def test_pdf_metadata(built_base: SimpleNamespace) -> None:
     """Document metadata reflects the site title and author."""
-    metadata = _reader(built_site).metadata
+    metadata = _reader(built_base).metadata
     assert metadata is not None
     assert metadata.title == "Fixture Site"
     assert metadata.author == "Jane Doe"
@@ -160,9 +160,9 @@ def test_pdf_metadata(built_site: SimpleNamespace) -> None:
     assert producer.startswith("WeasyPrint")
 
 
-def test_pdf_text_contains_rendered_content(built_site: SimpleNamespace) -> None:
+def test_pdf_text_contains_rendered_content(built_base: SimpleNamespace) -> None:
     """Extracted PDF text contains the rendered content."""
-    text = _pdf_text(_reader(built_site))
+    text = _pdf_text(_reader(built_base))
     for needle in [
         "Fixture Cover",
         "Fixture Subtitle",
@@ -175,9 +175,9 @@ def test_pdf_text_contains_rendered_content(built_site: SimpleNamespace) -> None
         assert needle in text, needle
 
 
-def test_pdf_outline_matches_heading_structure(built_site: SimpleNamespace) -> None:
+def test_pdf_outline_matches_heading_structure(built_base: SimpleNamespace) -> None:
     """PDF bookmarks mirror the document heading hierarchy."""
-    titles = _outline_titles(_reader(built_site))
+    titles = _outline_titles(_reader(built_base))
     assert "Fixture Cover" in titles
     assert "1. Introduction" in titles
     assert "2. Page One" in titles
@@ -187,9 +187,9 @@ def test_pdf_outline_matches_heading_structure(built_site: SimpleNamespace) -> N
     assert titles.index("2. Page One") < titles.index("3.1.1 Child Heading")
 
 
-def test_pdf_named_destinations(built_site: SimpleNamespace) -> None:
+def test_pdf_named_destinations(built_base: SimpleNamespace) -> None:
     """Internal anchors are exported as named destinations."""
-    destinations = set(_reader(built_site).named_destinations)
+    destinations = set(_reader(built_base).named_destinations)
     assert ".:" in destinations
     assert "doc-cover" in destinations
     assert "doc-toc" in destinations
@@ -197,9 +197,9 @@ def test_pdf_named_destinations(built_site: SimpleNamespace) -> None:
     assert "nested/child/:child-heading" in destinations
 
 
-def test_pdf_has_link_annotations(built_site: SimpleNamespace) -> None:
+def test_pdf_has_link_annotations(built_base: SimpleNamespace) -> None:
     """The PDF contains at least one link annotation."""
-    reader = _reader(built_site)
+    reader = _reader(built_base)
     count = 0
     for page in reader.pages:
         for annotation in page.get("/Annots") or []:
@@ -208,10 +208,10 @@ def test_pdf_has_link_annotations(built_site: SimpleNamespace) -> None:
     assert count > 0
 
 
-def test_pdf_internal_links_resolve(built_site: SimpleNamespace) -> None:
+def test_pdf_internal_links_resolve(built_base: SimpleNamespace) -> None:
     """Every internal link target exists as a PDF destination."""
-    destinations = set(_reader(built_site).named_destinations)
-    soup = _html(built_site)
+    destinations = set(_reader(built_base).named_destinations)
+    soup = _html(built_base)
 
     for a in soup.select('a[href^="#"]'):
         target = str(a["href"])[1:]
