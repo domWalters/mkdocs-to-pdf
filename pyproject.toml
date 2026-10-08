@@ -38,7 +38,24 @@ classifiers = [
 
 [project.optional-dependencies]
 dev = [
-    "pre-commit == 4.6.0",
+    "codespell >= 2.4.3",
+    "coverage >= 7.16.0",
+    "git-cliff >= 2.13.1",
+    "hatch >= 1.18.0",
+        "cryptography >= 49.0.0",  # forced to avoid CVE
+        "idna >= 3.18",  # forced to avoid CVE
+        "jaraco-context >= 6.1.2",  # forced to avoid CVE
+    "mypy >= 2.3.1",
+    "pre-commit >= 4.6.2",
+    "pypdf >= 6.19.0",
+    "pytest >= 9.1.1",
+    "pytest-cov >= 7.1.0",
+    "pytest-order >= 1.5.0",
+    "pytest-sugar >= 1.1.1",
+    "pytest-xdist >= 3.8.0",
+    "ruff >= 0.16.5",
+    "ty >= 0.0.78",
+    "uv >= 0.12.10",
 ]
 docs = [
     "mkdocs-material == 9.6.7",
@@ -63,9 +80,20 @@ to-pdf = "mkdocs_to_pdf.plugin:WithPdfPlugin"
 [project.urls]
 Repository = "https://github.com/domWalters/mkdocs-to-pdf"
 
+[tool.coverage.html]
+directory = ".htmlcov"
 
-# [tool.codespell]
-# skip = ""
+[tool.coverage.report]
+exclude_also = [
+    "@overload",
+    "if TYPE_CHECKING:",
+]
+
+[tool.coverage.run]
+branch = true
+
+[tool.coverage.xml]
+output = ".coverage.xml"
 
 [tool.hatch.build]
 include = [
@@ -86,3 +114,72 @@ exclude = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/mkdocs_to_pdf"]
+
+[tool.hatch.envs.hatch-test]
+dependencies = [
+    "mkdocs-to-pdf[dev]",
+]
+
+[[tool.hatch.envs.hatch-test.matrix]]
+python = ["3.11", "3.12", "3.13", "3.14"]
+
+[tool.mypy]
+allow_redefinition = true
+implicit_reexport = true
+scripts_are_modules = true
+strict = true
+warn_unreachable = true
+
+[tool.pytest.ini_options]
+addopts = "--capture=fd -n auto --dist loadgroup --strict-markers --cov=mkdocs_to_pdf --cov-report html --cov-report xml --verbose --junitxml=.junit.xml -o junit_family=legacy"
+norecursedirs = "samples/*"
+testpaths = [
+    "tests",
+]
+
+[tool.ruff]
+unsafe-fixes = true
+
+[tool.ruff.lint]
+fixable = ["ALL"]
+ignore = [
+    "CPY001",   # I don't want copyright notices in every file
+    "D203",     # I don't want blank lines before class docstrings
+    "D212",     # I want docstring opening lines to be after the """
+    "DOC201",   # I don't want to mandate documenting return type with typehints
+    "FIX002",   # I want to be able to type TODO
+    "N999",     # I want to use the same structure as pyVHDLModel
+    "TD002",    # I don't want TODOs to need authors
+    "TD003",    # I don't want TODOs to need issue IDs
+]
+preview = true
+select = [
+    "ALL",
+]
+unfixable = [
+    "T201", # Don't fix print statements
+]
+
+[tool.ty.src]
+exclude = [
+    "samples/**",
+]
+
+[tool.ty.rules]
+all = "error"
+missing-override-decorator = "ignore"  # this is emitted for every dunder override
+
+[tool.uv]
+exclude-newer = "7 days"
+preview-features = ["audit-command"]
+
+[tool.uv.audit]
+ignore = [
+    "GHSA-xvg9-69gf-fjrf",
+    "PYSEC-2026-3609",
+    "PYSEC-2026-3654",
+    "GHSA-r543-q48m-4c9j",
+    "PYSEC-2026-3940",
+    "PYSEC-2026-3412",
+    "GHSA-983w-rhvv-gwmv",
+]
