@@ -160,6 +160,16 @@ unfixable = [
     "T201", # Don't fix print statements
 ]
 
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = [
+    "DOC501", # Tests raise deliberately; no Raises section needed
+    "D100",   # Tests don't need a module-level docstring
+    "INP001", # The tests directory is not a package
+    "PLC2701", # Tests intentionally import private helpers
+    "PLR2004", # Magic values in assertions are fine
+    "S101",   # Assertions are expected in tests
+]
+
 [tool.ty.src]
 exclude = [
     "samples/**",

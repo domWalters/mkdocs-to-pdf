@@ -25,6 +25,7 @@ repos:
       - id: mixed-line-ending
       - id: name-tests-test
         args: [--pytest-test-first]
+        exclude: ^tests/_
       - id: no-commit-to-branch
       - id: pretty-format-json
         args: [
