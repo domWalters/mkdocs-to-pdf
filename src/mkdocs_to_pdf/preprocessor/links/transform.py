@@ -1,80 +1,78 @@
+"""Normalize hrefs and ids for the combined document."""
+
 import os
+import pathlib
 import re
-from urllib.parse import (urljoin, urlparse, quote)
+from urllib.parse import quote, urljoin, urlparse
 
 
 def transform_href(href: str, rel_url: str) -> str:
-    """ Transform a href for single document.
+    """
+    Transform an href for the single combined document.
 
-    normalize href to #foo/bar/section:id
+    Normalizes the href to ``#foo/bar/section:id``.
 
-    Arguments:
-        href {str} -- a linked URL string in document.
-        rel_url {str} -- a current page URL(like a baseURL).
+    Args:
+        href: A linked URL string in the document.
+        rel_url: The current page URL (like a base URL).
 
     Returns:
-        str -- a transformed URL string.
+        The transformed URL string.
+
     """
 
-    def transform():
+    def transform() -> str:
         target_url = urlparse(href)
 
         if target_url.scheme or target_url.netloc:
             # do not care, will be not reachable
             return href
 
-        hash = target_url.fragment
+        fragment = target_url.fragment
         target = urljoin(rel_url, target_url.path)
 
-        if target in ['/', '.', 'index.html']:
-            return f'#.:{hash}'
+        if target in {"/", ".", "index.html"}:
+            return f"#.:{fragment}"
 
-        if target.endswith('.png'):
+        if target.endswith(".png"):
             return href
-        elif target.endswith('index.html'):
-            target = re.sub(r'index\.html$', '', target)
+        if target.endswith("index.html"):
+            target = re.sub(r"index\.html$", "", target)
         else:
-            target = re.sub(r'\.(html|md)$', '/', target)
+            target = re.sub(r"\.(html|md)$", "/", target)
 
-        if not target.endswith('/'):
-            target += '/'
+        if not target.endswith("/"):
+            target += "/"
 
-        return f'#{quote(target)}:{hash}'
+        return f"#{quote(target)}:{fragment}"
 
-    x_href = transform()
-
-    ''' ...for DEBUG block. :FIXME: needs unit test.
-    head, tail = os.path.split(href)
-    import sys
-    print(
-        f'***** "{x_href}"\t\t"{href}",\t"{rel_url}"\t'
-        f' -- ["{head}", "{tail}"]',
-        file=sys.stderr)
-    '''
-    '''
-    import sys
-    print(f"[ ['{href}', '{rel_url}'], '{x_href}'],", file=sys.stderr)
-    '''
-
-    return x_href
+    return transform()
 
 
-def transform_id(id: str, rel_url: str):
-    """normalize id to foo/bar/section:id"""
+def transform_id(element_id: str, rel_url: str) -> str:
+    """
+    Normalize an id to ``foo/bar/section:id``.
 
-    if rel_url in ['.', 'index.html']:
-        return f'.:{id}'
+    Args:
+        element_id: The element id.
+        rel_url: The current page URL.
+
+    Returns:
+        The normalized id.
+
+    """
+    if rel_url in {".", "index.html"}:
+        return f".:{element_id}"
 
     head, tail = os.path.split(rel_url)
-    section, _ = os.path.splitext(tail)
+    section = pathlib.PurePosixPath(tail).stem
 
-    def normalize(path):
-        if len(path) == 0 or path in ['index']:
-            return ''
-        else:
-            return path + '/'
+    def normalize(path: str) -> str:
+        if len(path) == 0 or path == "index":
+            return ""
+        return path + "/"
 
     head = normalize(head)
     section = normalize(section)
 
-    return f'{head}{section}:{id}'
+    return f"{head}{section}:{element_id}"

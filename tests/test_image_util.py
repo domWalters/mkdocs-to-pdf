@@ -1,6 +1,6 @@
 import logging
 
-from _types import SoupFactory
+from _type_aliases import SoupFactory
 
 from mkdocs_to_pdf.utils.image_util import (
     _convert_dimension,
@@ -104,6 +104,22 @@ def test_images_size_to_half_in(make_soup: SoupFactory) -> None:
     style = str(img["style"])
     assert "width: 50.0px;" in style
     assert "height: 20.0px;" in style
+
+
+def test_images_size_to_half_in_bare_number(make_soup: SoupFactory) -> None:
+    """Halve a unit-less dimension without losing the last digit."""
+    soup = make_soup(
+        '<section><img style="width: 100;"></section>',
+        body=False,
+    )
+
+    section = soup.section
+    assert section is not None
+    images_size_to_half_in(section)
+
+    img = soup.img
+    assert img is not None
+    assert str(img["style"]) == "width: 50.0;"
 
 
 def test_parse_style() -> None:

@@ -1,11 +1,6 @@
-from typing import TYPE_CHECKING, cast
-
-from _types import SoupFactory
+from _type_aliases import SoupFactory
 
 from mkdocs_to_pdf.utils.soup_util import clone_element
-
-if TYPE_CHECKING:
-    from bs4 import Tag
 
 
 def test_clone_element_is_deep(make_soup: SoupFactory) -> None:
@@ -14,7 +9,7 @@ def test_clone_element_is_deep(make_soup: SoupFactory) -> None:
 
     original = soup.div
     assert original is not None
-    clone = cast("Tag", clone_element(original))
+    clone = clone_element(original)
     clone["class"] = "b"
     clone_span = clone.find("span")
     assert clone_span is not None
@@ -34,7 +29,7 @@ def test_clone_element_preserves_structure(make_soup: SoupFactory) -> None:
 
     original = soup.div
     assert original is not None
-    clone = cast("Tag", clone_element(original))
+    clone = clone_element(original)
 
     assert clone.name == "div"
     assert clone["class"] == ["a"]

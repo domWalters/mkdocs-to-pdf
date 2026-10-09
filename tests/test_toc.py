@@ -1,4 +1,4 @@
-from _types import OptionsFactory, SoupFactory
+from _type_aliases import OptionsFactory, SoupFactory
 from bs4 import BeautifulSoup
 
 from mkdocs_to_pdf.toc import _inject_heading_order, make_indexes

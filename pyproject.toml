@@ -53,6 +53,8 @@ dev = [
     "pytest-order >= 1.5.0",
     "pytest-sugar >= 1.1.1",
     "pytest-xdist >= 3.8.0",
+    "python-barcode >= 0.16.1",
+    "qrcode >= 8.2",
     "ruff >= 0.16.5",
     "ty >= 0.0.78",
     "uv >= 0.12.10",
@@ -126,9 +128,18 @@ python = ["3.11", "3.12", "3.13", "3.14"]
 [tool.mypy]
 allow_redefinition = true
 implicit_reexport = true
+mypy_path = "typings"
 scripts_are_modules = true
 strict = true
 warn_unreachable = true
+
+[[tool.mypy.overrides]]
+module = [
+    "sass",
+    "weasyprint",
+    "weasyprint.*",
+]
+ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 addopts = "--capture=fd -n auto --dist loadgroup --strict-markers --cov=mkdocs_to_pdf --cov-report html --cov-report xml --verbose --junitxml=.junit.xml -o junit_family=legacy"
@@ -168,6 +179,11 @@ unfixable = [
     "PLC2701", # Tests intentionally import private helpers
     "PLR2004", # Magic values in assertions are fine
     "S101",   # Assertions are expected in tests
+]
+
+[tool.ty.environment]
+extra-paths = [
+    "typings",
 ]
 
 [tool.ty.src]

@@ -1,4 +1,4 @@
-from _types import SoupFactory
+from _type_aliases import SoupFactory
 
 from mkdocs_to_pdf.preprocessor import get_combined
 from mkdocs_to_pdf.preprocessor.links.util import (

@@ -1,4 +1,4 @@
-from _types import SoupFactory
+from _type_aliases import SoupFactory
 
 from mkdocs_to_pdf.utils.iframe_util import convert_iframe
 

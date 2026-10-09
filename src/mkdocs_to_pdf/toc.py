@@ -1,47 +1,54 @@
-from bs4 import PageElement, Tag
+"""Generate ordered chapter numbers and the table of contents."""
+
+from bs4 import BeautifulSoup, Tag
 
 from .options import Options
-from .utils.soup_util import clone_element
+from .utils.soup_util import clone_element, get_attribute
+
+_MAX_HEADING_LEVEL = 6
 
 
-def make_indexes(soup: PageElement, options: Options) -> None:
-    """ Generate ordered chapter number and TOC of document.
-
-    Arguments:
-        soup {BeautifulSoup} -- DOM object of Document.
-        options {Options} -- The options of this sequence.
+def make_indexes(  # ruff: ignore[complex-structure, too-many-statements]
+    soup: BeautifulSoup,
+    options: Options,
+) -> None:
     """
+    Generate ordered chapter numbers and the table of contents.
 
+    Args:
+        soup: DOM object of the document.
+        options: The options of this sequence.
+
+    """
     # Step 1: (re)ordered headings
     _inject_heading_order(soup, options)
 
     # Step 2: generate toc page
     level = options.toc_level
-    if level < 1 or level > 6:
+    if level < 1 or level > _MAX_HEADING_LEVEL:
         return
 
-    options.logger.info(
-        f'Generate a table of contents up to heading level {level}.')
+    options.logger.info("Generate a table of contents up to heading level %s.", level)
 
-    def makeLink(h: Tag) -> Tag:
-        li = soup.new_tag('li')
-        ref = h.get('id', '')
-        a = soup.new_tag('a', href=f'#{ref}')
+    def make_link(h: Tag) -> Tag:
+        li = soup.new_tag("li")
+        ref = get_attribute(h, "id")
+        a = soup.new_tag("a", href=f"#{ref}")
         for el in h.contents:
-            if el.name == 'a':
+            if isinstance(el, Tag) and el.name == "a":
                 a.append(el.contents[0])
             else:
                 a.append(clone_element(el))
         li.append(a)
-        options.logger.debug(f"| [{h.get_text(separator=' ')}]({ref})")
+        options.logger.debug("| [%s](%s)", h.get_text(separator=" "), ref)
         return li
 
-    toc = soup.new_tag('article', id='doc-toc')
-    title = soup.new_tag('h1')
+    toc = soup.new_tag("article", id="doc-toc")
+    title = soup.new_tag("h1")
     title.append(soup.new_string(options.toc_title))
     toc.append(title)
 
-    h1ul = soup.new_tag('ul')
+    h1ul = soup.new_tag("ul")
     toc.append(h1ul)
 
     # The currently open `ul`/`li` per heading level (indices 1-6).
@@ -58,7 +65,7 @@ def make_indexes(soup: PageElement, options: Options) -> None:
     # level is reached.
     exclude_depth: int | None = None
 
-    headings = soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])
+    headings = soup.find_all(["h1", "h2", "h3", "h4", "h5", "h6"])
     for h in headings:
         depth = int(h.name[1])
         if depth > level:
@@ -73,7 +80,9 @@ def make_indexes(soup: PageElement, options: Options) -> None:
             parent: Tag | None = h1ul
         else:
             parent = next(
-                (lis[p] for p in range(depth - 1, 0, -1) if lis[p]), None)
+                (lis[p] for p in range(depth - 1, 0, -1) if lis[p] is not None),
+                None,
+            )
         if parent is None:
             # No shallower heading has been included yet, so there is nothing
             # to nest this heading under. Skipping keeps the TOC well-formed
@@ -86,33 +95,36 @@ def make_indexes(soup: PageElement, options: Options) -> None:
 
         target = uls[depth]
         if target is None or ul_parent[depth] is not parent:
-            target = soup.new_tag('ul')
+            target = soup.new_tag("ul")
             parent.append(target)
             uls[depth] = target
             ul_parent[depth] = parent
 
-        li = makeLink(h)
+        li = make_link(h)
         target.append(li)
         lis[depth] = li
 
-        if _is_exclude(h.get('id', None), options):
+        if _is_exclude(get_attribute(h, "id"), options):
             exclude_depth = depth
+
+    if soup.body is None:
+        options.logger.error("Failed to insert ToC")
+        return
 
     soup.body.insert(0, toc)
 
 
-def _inject_heading_order(soup: Tag, options: Options) -> None:
-
+def _inject_heading_order(soup: BeautifulSoup, options: Options) -> None:
     level = options.ordered_chapter_level
-    if level < 1 or level > 6:
+    if level < 1 or level > _MAX_HEADING_LEVEL:
         return
 
-    options.logger.info(f'Number headings up to level {level}.')
+    options.logger.info("Number headings up to level %s.", level)
 
     counts = [0] * 7
     exclude_depth: int | None = None
 
-    headings = soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])
+    headings = soup.find_all(["h1", "h2", "h3", "h4", "h5", "h6"])
     for h in headings:
         depth = int(h.name[1])
         if depth > level:
@@ -127,17 +139,16 @@ def _inject_heading_order(soup: Tag, options: Options) -> None:
         for deeper in range(depth + 1, 7):
             counts[deeper] = 0
 
-        number = '.'.join(str(counts[n]) for n in range(1, depth + 1))
-        prefix = f'{number}. ' if depth == 1 else f'{number} '
+        number = ".".join(str(counts[n]) for n in range(1, depth + 1))
+        prefix = f"{number}. " if depth == 1 else f"{number} "
 
-        options.logger.debug(
-            f"| [{prefix} {h.text}]({h.get('id', '(none)')})")
+        options.logger.debug("| [%s %s](%s)", prefix, h.text, h.get("id", "(none)"))
 
-        nm_tag = soup.new_tag('span', **{'class': 'pdf-order'})
+        nm_tag = soup.new_tag("span", attrs={"class": "pdf-order"})
         nm_tag.append(prefix)
         h.insert(0, nm_tag)
 
-        if _is_exclude(h.get('id', None), options):
+        if _is_exclude(get_attribute(h, "id"), options):
             exclude_depth = depth
 
 
@@ -146,7 +157,7 @@ def _is_exclude(url: str, options: Options) -> bool:
         return False
 
     if url in options.excludes_children:
-        options.logger.info(f"|  (exclude '{url}')")
+        options.logger.info("|  (exclude '%s')", url)
         return True
 
     return False

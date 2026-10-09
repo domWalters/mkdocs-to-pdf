@@ -4,7 +4,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-from _types import OptionsFactory, SoupFactory
+from _type_aliases import OptionsFactory, SoupFactory
 from bs4 import BeautifulSoup
 from mkdocs.commands.build import build
 from mkdocs.config import load_config

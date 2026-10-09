@@ -1,7 +1,7 @@
 import logging
 
 import pytest
-from _types import SoupFactory
+from _type_aliases import SoupFactory
 
 from mkdocs_to_pdf.utils.layout_util import convert_for_two_columns
 

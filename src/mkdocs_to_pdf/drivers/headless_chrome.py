@@ -1,48 +1,90 @@
-import os
+"""Headless Chrome JavaScript rendering driver."""
+
+# ruff: file-ignore[suspicious-subprocess-import]
+
 from logging import Logger
 from shutil import which
 from subprocess import PIPE, Popen
 from tempfile import NamedTemporaryFile
 
 
-class HeadlessChromeDriver(object):
-    """ 'Headless Chrome' executor """
+class HeadlessChromeDriver:
+    """'Headless Chrome' executor."""
 
     @classmethod
-    def setup(self, program_path: str, logger: Logger):
-        if not which(program_path):
-            raise RuntimeError(
-                'No such `Headless Chrome` program or not executable'
-                + f': "{program_path}".')
-        return self(program_path, logger)
+    def setup(cls, program_path: str, logger: Logger) -> "HeadlessChromeDriver":
+        """
+        Create a driver after verifying the Chrome binary exists.
 
-    def __init__(self, program_path: str, logger: Logger):
+        Args:
+            program_path: Path to the Chrome-compatible executable.
+            logger: The logger.
+
+        Returns:
+            The driver instance.
+
+        Raises:
+            RuntimeError: If the program is not found.
+
+        """
+        absolute_program_path = which(program_path)
+        if absolute_program_path is None:
+            message = f"No such `Headless Chrome` program: '{program_path}'"
+            raise RuntimeError(message)
+        return cls(absolute_program_path, logger)
+
+    def __init__(self, program_path: str, logger: Logger) -> None:
+        """
+        Store the executable path and logger.
+
+        Args:
+            program_path: Path to the Chrome-compatible executable.
+            logger: The logger.
+
+        """
         self._program_path = program_path
         self._logger = logger
 
     def render(self, html: str) -> str:
-        temp = NamedTemporaryFile(delete=False, suffix='.html')
-        try:
-            temp.write(html.encode('utf-8'))
-            temp.close()
+        """
+        Render the HTML by executing its JavaScript.
 
-            self._logger.info("Rendering on `Headless Chrome`(execute JS).")
-            with Popen([self._program_path,
-                        '--disable-web-security',
-                        '--no-sandbox',
-                        '--headless',
-                        '--disable-gpu',
-                        '--disable-web-security',
-                        '-–allow-file-access-from-files',
-                        '--run-all-compositor-stages-before-draw',
-                        '--virtual-time-budget=10000',
-                        '--dump-dom',
-                        temp.name], stdout=PIPE) as chrome:
-                return chrome.stdout.read().decode('utf-8')
+        Args:
+            html: The HTML to render.
 
-        except Exception as e:
-            self._logger.error(f'Failed to render by JS: {e}')
-        finally:
-            os.unlink(temp.name)
+        Returns:
+            The resulting DOM.
+
+        """
+        with NamedTemporaryFile(suffix=".html") as temp:
+            temp.write(html.encode("utf-8"))
+            try:
+                self._logger.info("Rendering on `Headless Chrome` (execute JS) ...")
+                # ruff: ignore[subprocess-without-shell-equals-true]
+                with Popen(
+                    [
+                        self._program_path,
+                        "--disable-web-security",
+                        "--no-sandbox",
+                        "--headless",
+                        "--disable-gpu",
+                        "--disable-web-security",
+                        "--allow-file-access-from-files",
+                        "--run-all-compositor-stages-before-draw",
+                        "--virtual-time-budget=10000",
+                        "--dump-dom",
+                        temp.name,
+                    ],
+                    stdout=PIPE,
+                ) as chrome:
+                    if chrome.stdout is None:
+                        self._logger.error(
+                            "Failed to render JS, retaining the original HTML",
+                        )
+                        return html
+                    return chrome.stdout.read().decode("utf-8")
+
+            except Exception:
+                self._logger.exception("Failed to render JS")
 
         return html

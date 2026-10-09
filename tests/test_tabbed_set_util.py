@@ -1,4 +1,4 @@
-from _types import SoupFactory
+from _type_aliases import SoupFactory
 
 from mkdocs_to_pdf.utils.tabbed_set_util import wrap_tabbed_set_content
 

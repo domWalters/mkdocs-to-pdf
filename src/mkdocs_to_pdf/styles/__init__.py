@@ -1,26 +1,38 @@
+"""Compile the stylesheets used for print rendering."""
+
 import html
-import os
+import pathlib
 
 import sass
 
-from ..options import Options
+from mkdocs_to_pdf.options import Options
 
 
-def _css_escape(text: str) -> str:
-    """ @see https://developer.mozilla.org/en-US/docs/Web/CSS/string """
+def _css_escape(text: str) -> str:  # ruff: ignore[non-empty-init-module]
+    """
+    Escape a value for interpolation into a CSS string.
 
+    See https://developer.mozilla.org/en-US/docs/Web/CSS/string.
+    """
     if not text:
-        return ''
+        return ""
 
     text = html.unescape(text)
 
-    # -- probably not needed.
-    # text = text.encode('unicode-escape').decode('ascii').replace('\\u', '\\')
-
-    return text.replace("'", '\\27')
+    return text.replace("'", "\\27")
 
 
-def style_for_print(options: Options) -> str:
+def style_for_print(options: Options) -> str:  # ruff: ignore[non-empty-init-module]
+    """
+    Compile the SCSS stylesheets used to render the PDF.
+
+    Args:
+        options: The project options.
+
+    Returns:
+        The compiled CSS.
+
+    """
     scss = f"""
     :root {{
         string-set: author '{_css_escape(options.author)}',
@@ -32,19 +44,19 @@ def style_for_print(options: Options) -> str:
         string-set: chapter content();
     }}
     """
-    css = sass.compile(string=scss)
+    css = str(sass.compile(string=scss))
 
-    base_path = os.path.abspath(os.path.dirname(__file__))
+    base_path = pathlib.Path(__file__).resolve().parent
 
-    filename = os.path.join(base_path, "report-print.scss")
-    css += sass.compile(filename=filename)
+    filename = str(base_path / "report-print.scss")
+    css += str(sass.compile(filename=filename))
 
     if options.cover or options.back_cover:
-        filename = os.path.join(base_path, "cover.scss")
-        css += sass.compile(filename=filename)
+        filename = str(base_path / "cover.scss")
+        css += str(sass.compile(filename=filename))
 
-    filename = os.path.join(options.custom_template_path, 'styles.scss')
-    if os.path.exists(filename):
-        css += sass.compile(filename=filename)
+    custom = pathlib.Path(options.custom_template_path) / "styles.scss"
+    if custom.exists():
+        css += str(sass.compile(filename=str(custom)))
 
     return css

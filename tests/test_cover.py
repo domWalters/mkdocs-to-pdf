@@ -3,7 +3,7 @@ from types import SimpleNamespace
 from typing import Never
 
 import pytest
-from _types import OptionsFactory, SoupFactory
+from _type_aliases import OptionsFactory, SoupFactory
 
 from mkdocs_to_pdf.cover import make_cover
 

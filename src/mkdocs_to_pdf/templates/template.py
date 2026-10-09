@@ -1,5 +1,11 @@
-import os
+"""Jinja2 template loading and keyword assembly."""
+
+import contextlib
+import html
+import pathlib
 from datetime import datetime
+from pprint import pformat
+from typing import TYPE_CHECKING, cast
 
 import jinja2
 from mkdocs.config.base import Config
@@ -7,62 +13,84 @@ from mkdocs.config.base import Config
 from .filters.datetime import strftime, strptime
 from .filters.url import URLFilter
 
-try:
+if TYPE_CHECKING:
+    from mkdocs_to_pdf.options import Options
+
+Barcode: type | None = None
+with contextlib.suppress(ModuleNotFoundError):
     from .filters.barcode import Barcode
-except ModuleNotFoundError:
-    Barcode = None
-try:
+
+QRCode: type | None = None
+with contextlib.suppress(ModuleNotFoundError):
     from .filters.qrcode import QRCode
-except ModuleNotFoundError:
-    QRCode = None
 
 
-class Template(object):
+Keyword = object
+KeywordsList = list[Keyword]
+KeywordsMap = dict[str, Keyword]
 
-    """ Pickups key-value from `mkdocs.yml` """
-    __KEYS = [
-        "author", "copyright",
-        "cover_title", "cover_subtitle", "cover_logo",
 
-        "site_url",
-        "repo_url"
-    ]
+class Template:
+    """Pickups key-value from `mkdocs.yml`."""
 
-    def __init__(self, options: object, config: Config):
+    __KEYS = frozenset(
+        {
+            "author",
+            "copyright",
+            "cover_title",
+            "cover_subtitle",
+            "cover_logo",
+            "site_url",
+            "repo_url",
+        },
+    )
+
+    def __init__(self, options: "Options", config: Config) -> None:
+        """
+        Store the plugin options and MkDocs config.
+
+        Args:
+            options: The plugin options.
+            config: The MkDocs config.
+
+        """
         self._options = options
         self._config = config
 
-        self._keywords = None
-        self._jinja_env = None
+        self._keywords: KeywordsMap | None = None
+        self._jinja_env: jinja2.Environment | None = None
 
     @property
     def _env(self) -> jinja2.Environment:
+        def generate() -> jinja2.Environment:
+            base_path = pathlib.Path(__file__).resolve().parent
+            template_paths = [str(base_path)]
 
-        def generate():
-            base_path = os.path.abspath(os.path.dirname(__file__))
-            template_paths = [os.path.join(base_path, '.')]
-
-            if os.path.exists(self._options.custom_template_path):
+            if pathlib.Path(self._options.custom_template_path).exists():
                 template_paths.append(self._options.custom_template_path)
 
             file_loader = jinja2.FileSystemLoader(template_paths)
             logging_undefined = jinja2.make_logging_undefined(
-                logger=self._options.logger, base=jinja2.Undefined)
+                logger=self._options.logger,
+                base=jinja2.Undefined,
+            )
             env = jinja2.Environment(
+                autoescape=True,
                 loader=file_loader,
-                undefined=logging_undefined,
                 lstrip_blocks=True,
-                trim_blocks=True)
+                trim_blocks=True,
+                undefined=logging_undefined,
+            )
 
-            env.filters['strptime'] = strptime
-            env.filters['strftime'] = strftime
+            env.filters["strptime"] = strptime
+            env.filters["strftime"] = strftime
 
-            env.filters['to_url'] = URLFilter(self._options, self._config)
+            env.filters["to_url"] = URLFilter(self._options, self._config)
 
-            if Barcode:
-                env.filters['barcode'] = Barcode(self._options, self._config)
-            if QRCode:
-                env.filters['qrcode'] = QRCode(self._options, self._config)
+            if Barcode is not None:
+                env.filters["barcode"] = Barcode(self._options, self._config)
+            if QRCode is not None:
+                env.filters["qrcode"] = QRCode(self._options, self._config)
 
             return env
 
@@ -71,13 +99,11 @@ class Template(object):
         return self._jinja_env
 
     @property
-    def keywords(self) -> dict:
-        """ Keywords to pass when rendering the template. """
+    def keywords(self) -> KeywordsMap:  # ruff: ignore[complex-structure]
+        """Keywords to pass when rendering the template."""
 
-        import html
-
-        def unescape_html_in_list(values: list) -> list:
-            new_values = []
+        def unescape_html_in_list(values: KeywordsList) -> KeywordsList:
+            new_values: KeywordsList = []
             for v in values:
                 if isinstance(v, str):
                     new_values.append(html.unescape(v))
@@ -90,7 +116,7 @@ class Template(object):
                     new_values.append(v)
             return new_values
 
-        def unescape_html(variables: dict):
+        def unescape_html(variables: KeywordsMap) -> None:
             for k, v in variables.items():
                 if isinstance(v, str):
                     variables[k] = html.unescape(v)
@@ -98,10 +124,11 @@ class Template(object):
                     variables[k] = unescape_html_in_list(v)
                 elif isinstance(v, dict):
                     unescape_html(v)
+                else:
+                    variables[k] = v
 
-        def build_keywords():
-            # keywords = {}
-            keywords = self._config['extra']
+        def build_keywords() -> KeywordsMap:
+            keywords = cast("KeywordsMap", self._config["extra"])
 
             for key in self.__KEYS:
                 if hasattr(self._options, key):
@@ -113,30 +140,36 @@ class Template(object):
 
             unescape_html(keywords)
 
-            keywords['now'] = datetime.now()
+            now = datetime.now()  # ruff: ignore[call-datetime-now-without-tzinfo]
+            keywords["now"] = now
 
             if self._options.verbose or self._options.debug_html:
-                from pprint import pformat
-                self._options.logger.info('Template variables:')
-                for line in pformat(keywords).split('\n'):
-                    self._options.logger.info('  ' + line)
+                self._options.logger.info("Template variables:")
+                for line in pformat(keywords).split("\n"):
+                    self._options.logger.info("  %s", line)
 
             return keywords
 
-        if not self._keywords:
+        if self._keywords is None:
             self._keywords = build_keywords()
 
         return self._keywords
 
     def select(
-        self, names: [str], parent=None, globals=None
+        self,
+        names: list[str],
+        parent: str | None = None,
+        jinja_globals: dict[str, object] | None = None,
     ) -> jinja2.Template:
-        """ Find and load a template by names of given. """
-
-        real_names = []
+        """Find and load a template by names of given."""
+        real_names: list[str] = []
         for name in names:
-            for ext in ['.html.j2', '.html.jinja2', '.html', '.htm']:
-                real_names.append(name + ext)
+            real_names.extend(
+                name + ext for ext in [".html.j2", ".html.jinja2", ".html", ".htm"]
+            )
 
         return self._env.select_template(
-            real_names, parent=parent, globals=globals)
+            real_names,
+            parent=parent,
+            globals=jinja_globals,
+        )

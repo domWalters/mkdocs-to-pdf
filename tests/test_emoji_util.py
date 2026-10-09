@@ -1,7 +1,7 @@
 import logging
 
 import pytest
-from _types import SoupFactory
+from _type_aliases import SoupFactory
 
 from mkdocs_to_pdf.utils.emoji_util import _parse_view_box, fix_twemoji
 
@@ -38,7 +38,7 @@ def test_fix_twemoji_bad_viewbox_warns_and_keeps_svg(
 
 def test_parse_view_box() -> None:
     """Parse an SVG viewBox into its four numeric components."""
-    positive = _parse_view_box("0 0 24 24")  # type: ignore[no-untyped-call]
-    negative = _parse_view_box("1.5 -2 10 20")  # type: ignore[no-untyped-call]
+    positive = _parse_view_box("0 0 24 24")
+    negative = _parse_view_box("1.5 -2 10 20")
     assert positive == (0.0, 0.0, 24.0, 24.0)
     assert negative == (1.5, -2.0, 10.0, 20.0)

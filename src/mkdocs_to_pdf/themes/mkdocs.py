@@ -1,27 +1,64 @@
-import logging
-import os
+"""Default MkDocs theme handler."""
+
+import pathlib
+from logging import Logger
 
 import sass
 from bs4 import BeautifulSoup
 from mkdocs.structure.pages import Page
 
 
-def get_stylesheet(debug_html: bool) -> str:
-    base_path = os.path.abspath(os.path.dirname(__file__))
-    filename = os.path.join(base_path, "mkdocs.scss")
-    return sass.compile(filename=filename)
+def get_stylesheet(
+    _debug_html: bool,  # ruff: ignore[boolean-type-hint-positional-argument]
+) -> str:
+    """
+    Return the compiled MkDocs theme stylesheet.
+
+    Args:
+        _debug_html: Whether debug HTML output is enabled.
+
+    Returns:
+        The compiled CSS.
+
+    """
+    base_path = pathlib.Path(__file__).resolve().parent
+    return str(sass.compile(filename=str(base_path / "mkdocs.scss")))
 
 
-def get_script_sources() -> list:
+def get_script_sources() -> list[str]:
+    """
+    Return the theme script sources.
+
+    Returns:
+        The script sources.
+
+    """
     return []
 
 
-def inject_link(html: str, href: str, page: Page, logger: logging) -> str:
+def inject_link(html: str, href: str, _page: Page, _logger: Logger) -> str:
+    """
+    Inject the PDF download link into the page head.
 
-    soup = BeautifulSoup(html, 'html.parser')
+    Args:
+        html: The rendered page HTML.
+        href: The PDF href.
+        _page: The page being rendered.
+        _logger: The logger.
+
+    Returns:
+        The modified HTML.
+
+    """
+    soup = BeautifulSoup(html, "html.parser")
     if soup.head:
-        link = soup.new_tag('link', href=href, rel='alternate',
-                            title='PDF', type='application/pdf')
+        link = soup.new_tag(
+            "link",
+            href=href,
+            rel="alternate",
+            title="PDF",
+            type="application/pdf",
+        )
         soup.head.append(link)
         return str(soup)
 

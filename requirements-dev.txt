@@ -43,6 +43,7 @@ colorama==0.4.6
     #   mkdocs
     #   mkdocs-material
     #   pytest
+    #   qrcode
 coverage==7.16.2
     # via
     #   mkdocs-to-pdf
@@ -61,7 +62,7 @@ distro==1.9.0 ; sys_platform == 'linux'
     # via hatch
 execnet==2.1.2
     # via pytest-xdist
-filelock==4.0.8
+filelock==4.0.9
     # via
     #   python-discovery
     #   virtualenv
@@ -199,7 +200,7 @@ more-itertools==11.1.0
     # via
     #   jaraco-classes
     #   jaraco-functools
-mypy==2.3.1
+mypy==2.4.0
     # via mkdocs-to-pdf
 mypy-extensions==1.1.0
     # via mypy
@@ -273,6 +274,8 @@ pytest-sugar==1.1.1
     # via mkdocs-to-pdf
 pytest-xdist==3.8.0
     # via mkdocs-to-pdf
+python-barcode==0.16.1
+    # via mkdocs-to-pdf
 python-dateutil==2.9.0.post0
     # via ghp-import
 python-discovery==1.6.1
@@ -290,11 +293,13 @@ pyyaml==6.0.3
     #   pyyaml-env-tag
 pyyaml-env-tag==1.1
     # via mkdocs
+qrcode==8.2
+    # via mkdocs-to-pdf
 requests==2.34.2
     # via mkdocs-material
 rich==15.0.0
     # via hatch
-ruff==0.16.9
+ruff==0.16.10
     # via mkdocs-to-pdf
 secretstorage==3.5.0 ; sys_platform == 'linux'
     # via keyring
@@ -338,11 +343,11 @@ urllib3==2.8.0
     # via requests
 userpath==1.9.2
     # via hatch
-uv==0.12.21
+uv==0.12.22
     # via
     #   hatch
     #   mkdocs-to-pdf
-virtualenv==21.14.2
+virtualenv==21.14.3
     # via
     #   hatch
     #   pre-commit
