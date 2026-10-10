@@ -151,13 +151,30 @@ def test_pdf_created_and_paginated(built_base: SimpleNamespace) -> None:
 
 
 def test_pdf_metadata(built_base: SimpleNamespace) -> None:
-    """Document metadata reflects the site title and author."""
+    """Document metadata reflects the site title, author and creation date."""
     metadata = _reader(built_base).metadata
     assert metadata is not None
     assert metadata.title == "Fixture Site"
     assert metadata.author == "Jane Doe"
+    assert metadata.subject is None
+    assert metadata.creation_date is not None
+    assert metadata.modification_date is not None
+    assert (metadata.creator or "").startswith("mkdocs-to-pdf")
     producer = metadata.producer or ""
-    assert producer.startswith("WeasyPrint")
+    assert producer.startswith("mkdocs-to-pdf")
+    assert "WeasyPrint" in producer
+
+
+def test_pdf_metadata_uses_plugin_options(built_metadata: SimpleNamespace) -> None:
+    """The plugin author, description and keywords reach the PDF metadata."""
+    metadata = _reader(built_metadata).metadata
+    assert metadata is not None
+    assert metadata.author == "Document Author"
+    assert metadata.subject == "Metadata description from config"
+    assert metadata.keywords == "fixture, metadata, pdf"
+    assert metadata.creation_date is not None
+    assert metadata.modification_date is not None
+    assert (metadata.creator or "").startswith("mkdocs-to-pdf")
 
 
 def test_pdf_text_contains_rendered_content(built_base: SimpleNamespace) -> None:

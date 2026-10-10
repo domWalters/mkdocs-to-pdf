@@ -25,7 +25,8 @@ following message at the end of your build output:
 
 #### `author`
 
-The author of the document. Used in the header / footer.
+The author of the document. Used in the header / footer, and written to the
+`Author` field of the PDF metadata.
 
 Defaults to the `site_author`.
 
@@ -45,6 +46,34 @@ Defaults to the top level `copyright`.
 plugins:
   - to-pdf:
       copyright: Copyright © John Smith 2025
+```
+
+### Metadata
+
+The plugin writes the `Author`, `Subject`, `Keywords`, `Creator`,
+`CreationDate` and `ModDate` fields of the PDF metadata. `Author` comes from
+[`author`](#author); the rest are configured under `metadata`. The `Producer`
+is prefixed with `mkdocs-to-pdf <version>, `.
+
+#### `metadata.description`
+
+The summary of the document, written to the PDF `Subject`.
+
+Defaults to the top level `site_description`. When neither is set, the
+`Subject` is left empty.
+
+#### `metadata.keywords`
+
+A comma-separated list of keywords, written to the PDF `Keywords`.
+
+By default no keywords are set.
+
+``` yaml
+plugins:
+  - to-pdf:
+      metadata:
+        description: A complete reference for the plugin
+        keywords: mkdocs, pdf, documentation
 ```
 
 ### Cover

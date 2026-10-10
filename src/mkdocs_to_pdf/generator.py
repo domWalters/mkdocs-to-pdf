@@ -3,6 +3,7 @@
 import logging
 import pathlib
 import re
+from datetime import UTC, datetime
 from importlib import import_module
 from importlib.util import module_from_spec, spec_from_file_location
 from types import ModuleType
@@ -27,6 +28,7 @@ from .utils.iframe_util import convert_iframe
 from .utils.image_util import fix_image_alignment
 from .utils.layout_util import convert_for_two_columns
 from .utils.linenums_util import convert_linenums_tables
+from .utils.metadata_util import prepend_producer, set_pdf_metadata
 from .utils.section import get_section_path
 from .utils.soup_util import clone_element, get_attribute
 from .utils.tabbed_set_util import wrap_tabbed_set_content
@@ -156,6 +158,15 @@ class Generator:
                 "html.parser",
             )
 
+        now = datetime.now(UTC)
+        set_pdf_metadata(
+            soup,
+            author=self._options.author,
+            description=self._options.description,
+            keywords=self._options.keywords,
+            created=now,
+        )
+
         def add_stylesheet(stylesheet: str | None) -> None:
             if stylesheet is not None:
                 style_tag = soup.new_tag("style")
@@ -220,7 +231,7 @@ class Generator:
         else:
             html = HTML(string=html_string)
             render = html.render()
-            render.write_pdf(str(abs_pdf_path))
+            render.write_pdf(str(abs_pdf_path), finisher=prepend_producer)
 
     @staticmethod
     def _remove_empty_tags(soup: BeautifulSoup) -> None:

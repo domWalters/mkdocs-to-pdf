@@ -135,6 +135,7 @@ warn_unreachable = true
 
 [[tool.mypy.overrides]]
 module = [
+    "pydyf",
     "sass",
     "weasyprint",
     "weasyprint.*",

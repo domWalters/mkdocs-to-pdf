@@ -11,6 +11,13 @@ from .drivers.relaxedjs import RelaxedJSRenderer
 from .templates.template import Template
 
 
+class MetadataConfig(Config):  # type: ignore[no-untyped-call]
+    """Overrides for the generated PDF metadata."""
+
+    description = config_options.Type(str, default="")
+    keywords = config_options.Type(str, default="")
+
+
 class Options:
     """The resolved plugin options."""
 
@@ -24,6 +31,7 @@ class Options:
         ("theme_handler_path", config_options.Type(str, default=None)),
         ("author", config_options.Type(str, default="")),
         ("copyright", config_options.Type(str, default="")),
+        ("metadata", config_options.SubConfig(MetadataConfig)),
         ("cover", config_options.Type(bool, default=True)),
         ("back_cover", config_options.Type(bool, default=False)),
         ("back_cover_qrcode", config_options.Type(bool, default=False)),
@@ -76,6 +84,13 @@ class Options:
         # Author and Copyright
         self._author = str(local_config["author"] or config["site_author"] or "")
         self._copyright = str(local_config["copyright"] or config["copyright"] or "")
+
+        # PDF metadata overrides
+        metadata = local_config["metadata"]
+        self._description = str(
+            metadata["description"] or config["site_description"] or "",
+        )
+        self._keywords = str(metadata["keywords"] or "")
 
         # Cover
         self.cover = local_config["cover"]
@@ -152,6 +167,16 @@ class Options:
     def copyright(self) -> str:
         """The document copyright statement."""
         return self._copyright
+
+    @property
+    def description(self) -> str:
+        """The document summary, written to the PDF subject."""
+        return self._description
+
+    @property
+    def keywords(self) -> str:
+        """Comma-separated keywords, written to the PDF metadata."""
+        return self._keywords
 
     @property
     def cover_title(self) -> str:
