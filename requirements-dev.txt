@@ -2,7 +2,7 @@
 #    uv export --frozen --output-file=requirements-dev.txt --no-hashes --no-emit-project --all-extras
 anyio==4.15.1 ; sys_platform != 'emscripten'
     # via httpx2
-ast-serialize==0.11.2
+ast-serialize==0.12.0
     # via mypy
 babel==2.18.0
     # via mkdocs-material
@@ -150,7 +150,7 @@ markdown-callouts==0.4.0
     # via mkdocs-to-pdf
 markdown-it-py==4.2.0
     # via rich
-markupsafe==3.0.3
+markupsafe==3.0.4
     # via
     #   jinja2
     #   mkdocs
@@ -347,7 +347,7 @@ uv==0.12.22
     # via
     #   hatch
     #   mkdocs-to-pdf
-virtualenv==21.14.3
+virtualenv==21.14.5
     # via
     #   hatch
     #   pre-commit

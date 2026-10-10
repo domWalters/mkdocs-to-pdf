@@ -28,7 +28,7 @@ libsass==0.23.0
     # via mkdocs-to-pdf
 markdown==3.11
     # via mkdocs
-markupsafe==3.0.3
+markupsafe==3.0.4
     # via
     #   jinja2
     #   mkdocs
