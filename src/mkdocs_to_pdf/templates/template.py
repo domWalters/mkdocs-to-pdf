@@ -3,6 +3,7 @@
 import contextlib
 import html
 import pathlib
+from collections.abc import Callable
 from datetime import datetime
 from pprint import pformat
 from typing import TYPE_CHECKING, cast
@@ -25,6 +26,19 @@ with contextlib.suppress(ModuleNotFoundError):
     from .filters.qrcode import QRCode
 
 
+def _missing_filter(name: str, package: str) -> Callable[..., str]:
+    """Return a filter stub that fails with an actionable message when used."""
+
+    def _unavailable(*_args: object, **_kwargs: object) -> str:
+        msg = (
+            f"The `{name}` template filter requires the `{package}` package, "
+            f"which is not installed."
+        )
+        raise RuntimeError(msg)
+
+    return _unavailable
+
+
 Keyword = object
 KeywordsList = list[Keyword]
 KeywordsMap = dict[str, Keyword]
@@ -40,6 +54,11 @@ class Template:
             "cover_title",
             "cover_subtitle",
             "cover_logo",
+            "back_cover_qrcode",
+            "back_cover_qr_url",
+            "back_cover_barcode",
+            "back_cover_barcode_value",
+            "back_cover_barcode_kind",
             "site_url",
             "repo_url",
         },
@@ -87,16 +106,32 @@ class Template:
 
             env.filters["to_url"] = URLFilter(self._options, self._config)
 
-            if Barcode is not None:
-                env.filters["barcode"] = Barcode(self._options, self._config)
-            if QRCode is not None:
-                env.filters["qrcode"] = QRCode(self._options, self._config)
+            env.filters["barcode"] = (
+                Barcode(self._options, self._config)
+                if Barcode is not None
+                else _missing_filter("barcode", "python-barcode")
+            )
+            env.filters["qrcode"] = (
+                QRCode(self._options, self._config)
+                if QRCode is not None
+                else _missing_filter("qrcode", "qrcode")
+            )
 
             return env
 
         if not self._jinja_env:
             self._jinja_env = generate()
         return self._jinja_env
+
+    @property
+    def qrcode_available(self) -> bool:
+        """Whether the `qrcode` package (and its filter) is available."""
+        return QRCode is not None
+
+    @property
+    def barcode_available(self) -> bool:
+        """Whether the `python-barcode` package (and its filter) is available."""
+        return Barcode is not None
 
     @property
     def keywords(self) -> KeywordsMap:  # ruff: ignore[complex-structure]

@@ -1,12 +1,18 @@
 <article id="doc-back_cover">
     <div class="wrapper"></div>
-    {%- set target_url = site_url or repo_url -%}
-    {% if target_url is defined -%}
+    {%- set target_url = back_cover_qr_url or site_url or repo_url -%}
+    {% if back_cover_qrcode and target_url -%}
     <div class="qrcode">
         <a href="{{ target_url }}">
             <img src="{{ target_url | qrcode }}"/>
             <div>{{ target_url }}</div>
         </a>
+    </div>
+    {%- endif %}
+    {% if back_cover_barcode and back_cover_barcode_value -%}
+    <div class="barcode">
+        <img src="{{ back_cover_barcode_value | barcode(back_cover_barcode_kind) }}"/>
+        <div>{{ back_cover_barcode_value }}</div>
     </div>
     {%- endif %}
     <div class="wrapper"></div>

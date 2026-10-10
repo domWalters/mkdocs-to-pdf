@@ -2,7 +2,7 @@
 #    uv export --frozen --output-file=requirements-dev.txt --no-hashes --no-emit-project --all-extras
 anyio==4.15.1 ; sys_platform != 'emscripten'
     # via httpx2
-ast-serialize==0.12.0
+ast-serialize==0.12.1
     # via mypy
 babel==2.18.0
     # via mkdocs-material

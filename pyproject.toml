@@ -13,8 +13,10 @@ dependencies = [
     "beautifulsoup4 >= 4.9.3",
     "libsass >= 0.23.0",
     "mkdocs >= 1.6.1",
-    "weasyprint == 62.3",
     "pydyf == 0.10.0",
+    "python-barcode >= 0.16.1",
+    "qrcode >= 8.2",
+    "weasyprint == 62.3",
 ]
 authors = [
     { name = "orzih" },
@@ -53,8 +55,6 @@ dev = [
     "pytest-order >= 1.5.0",
     "pytest-sugar >= 1.1.1",
     "pytest-xdist >= 3.8.0",
-    "python-barcode >= 0.16.1",
-    "qrcode >= 8.2",
     "ruff >= 0.16.5",
     "ty >= 0.0.78",
     "uv >= 0.12.10",

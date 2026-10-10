@@ -109,6 +109,114 @@ plugins:
       back_cover: true
 ```
 
+#### `back_cover_qrcode`
+
+Whether to add a QR code to the back cover. Off by default.
+
+``` yaml
+plugins:
+  - to-pdf:
+      back_cover: true
+      back_cover_qrcode: true
+```
+
+#### `back_cover_qr_url`
+
+The URL encoded in the back cover QR code. When empty, the `site_url` (or
+`repo_url`) is used.
+
+``` yaml
+plugins:
+  - to-pdf:
+      back_cover: true
+      back_cover_qrcode: true
+      back_cover_qr_url: https://example.com
+```
+
+#### `back_cover_barcode`
+
+Whether to add a barcode to the back cover. Off by default.
+
+``` yaml
+plugins:
+  - to-pdf:
+      back_cover: true
+      back_cover_barcode: true
+      back_cover_barcode_value: "123456789012"
+      back_cover_barcode_kind: code128
+```
+
+#### `back_cover_barcode_value`
+
+The value encoded in the back cover barcode. No barcode is drawn when empty.
+
+#### `back_cover_barcode_kind`
+
+The barcode type, a `python-barcode` kind (for example `code39`, `code128`,
+`ean13`). Defaults to `code128`.
+
+### Custom templates
+
+#### `custom_template_path`
+
+A directory containing custom cover templates and print styles. Defaults to
+`templates`.
+
+It may contain any of:
+
+- `cover.html.j2` and/or `back_cover.html.j2`: custom cover templates.
+- `styles.scss`: print styles, compiled and appended *after* the built-in
+  styles, so your rules win. Use `!important` to override theme rules that
+  have higher specificity.
+
+``` yaml
+plugins:
+  - to-pdf:
+      custom_template_path: docs/assets/stylesheets
+```
+
+This is the path to the **directory**, not to `styles.scss` itself.
+
+To see the styles you can override, browse the installed package's
+`mkdocs_to_pdf/styles/*.scss` and `mkdocs_to_pdf/themes/*.scss`.
+
+For example, to change the Material heading underlines:
+
+``` scss
+article {
+  h1 {
+    border-bottom: 2px solid #0000ff !important;
+  }
+
+  h2 {
+    border-bottom: 1px solid #000099 !important;
+  }
+}
+```
+
+!!! note
+    A relative `custom_template_path` is resolved against the *working
+    directory*, not the directory containing `mkdocs.yml`. Use an absolute
+    path, or run `mkdocs` from the directory containing your config (for
+    example, `mkdocs build -f path/to/mkdocs.yml` resolves relative paths
+    differently than running it from that directory).
+
+### Template filters
+
+Custom cover templates can use these Jinja2 filters:
+
+- `qrcode(value, ...)`: encode `value` as an SVG QR code data URI.
+- `barcode(value, kind, ...)`: encode `value` as an SVG barcode data URI,
+  where `kind` is a `python-barcode` type (for example `code39`, `code128`,
+  `ean13`).
+
+For example, in a custom `back_cover.html.j2`:
+
+``` html
+<img src="{{ 'https://example.com' | qrcode }}"/>
+<img src="{{ '1234567890' | barcode('code39') }}"/>
+```
+
 ### Headings and Table of Contents
 
 #### `toc_title`

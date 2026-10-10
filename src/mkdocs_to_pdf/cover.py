@@ -40,7 +40,21 @@ def _make_cover(soup: BeautifulSoup, options: Options) -> None:
 
 
 def _make_back_cover(soup: BeautifulSoup, options: Options) -> None:
-    keywords = options.template.keywords
+    keywords = dict(options.template.keywords)
+    if keywords.get("back_cover_qrcode") and not options.template.qrcode_available:
+        options.logger.warning(
+            "`back_cover_qrcode` is enabled but the `qrcode` package is not "
+            "installed; generating the back cover without a QR code.",
+        )
+        keywords["back_cover_qrcode"] = False
+
+    if keywords.get("back_cover_barcode") and not options.template.barcode_available:
+        options.logger.warning(
+            "`back_cover_barcode` is enabled but the `python-barcode` package "
+            "is not installed; generating the back cover without a barcode.",
+        )
+        keywords["back_cover_barcode"] = False
+
     template = options.template.select(["back_cover", "default_back_cover"])
 
     options.logger.info('Generating a back cover page with "%s" ...', template.name)

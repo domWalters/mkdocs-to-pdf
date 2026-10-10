@@ -13,7 +13,9 @@ cffi==2.1.1
 click==8.5.0
     # via mkdocs
 colorama==0.4.6 ; sys_platform == 'win32'
-    # via mkdocs
+    # via
+    #   mkdocs
+    #   qrcode
 cssselect2==0.10.1
     # via weasyprint
 fonttools==4.66.1
@@ -56,6 +58,8 @@ pydyf==0.10.0
     #   weasyprint
 pyphen==0.18.1
     # via weasyprint
+python-barcode==0.16.1
+    # via mkdocs-to-pdf
 python-dateutil==2.9.0.post0
     # via ghp-import
 pyyaml==6.0.3
@@ -65,6 +69,8 @@ pyyaml==6.0.3
     #   pyyaml-env-tag
 pyyaml-env-tag==1.1
     # via mkdocs
+qrcode==8.2
+    # via mkdocs-to-pdf
 six==1.17.0
     # via
     #   html5lib

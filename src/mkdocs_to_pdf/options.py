@@ -26,6 +26,11 @@ class Options:
         ("copyright", config_options.Type(str, default="")),
         ("cover", config_options.Type(bool, default=True)),
         ("back_cover", config_options.Type(bool, default=False)),
+        ("back_cover_qrcode", config_options.Type(bool, default=False)),
+        ("back_cover_qr_url", config_options.Type(str, default="")),
+        ("back_cover_barcode", config_options.Type(bool, default=False)),
+        ("back_cover_barcode_value", config_options.Type(str, default="")),
+        ("back_cover_barcode_kind", config_options.Type(str, default="code128")),
         ("cover_title", config_options.Type(str, default="")),
         ("cover_subtitle", config_options.Type(str, default="")),
         ("cover_logo", config_options.Type(str, default=None)),
@@ -75,6 +80,15 @@ class Options:
         # Cover
         self.cover = local_config["cover"]
         self.back_cover = local_config["back_cover"]
+        self.back_cover_qrcode = local_config["back_cover_qrcode"]
+        self._back_cover_qr_url = str(local_config["back_cover_qr_url"] or "")
+        self.back_cover_barcode = local_config["back_cover_barcode"]
+        self._back_cover_barcode_value = str(
+            local_config["back_cover_barcode_value"] or "",
+        )
+        self._back_cover_barcode_kind = str(
+            local_config["back_cover_barcode_kind"] or "code128",
+        )
         self._cover_title = ""
         self._cover_subtitle = ""
         self._cover_logo = ""
@@ -153,6 +167,21 @@ class Options:
     def cover_logo(self) -> str:
         """The cover page logo."""
         return self._cover_logo
+
+    @property
+    def back_cover_qr_url(self) -> str:
+        """The URL encoded in the back-cover QR code, if any."""
+        return self._back_cover_qr_url
+
+    @property
+    def back_cover_barcode_value(self) -> str:
+        """The value encoded in the back-cover barcode, if any."""
+        return self._back_cover_barcode_value
+
+    @property
+    def back_cover_barcode_kind(self) -> str:
+        """The barcode type used for the back-cover barcode."""
+        return self._back_cover_barcode_kind
 
     @property
     def logger(self) -> Logger:
