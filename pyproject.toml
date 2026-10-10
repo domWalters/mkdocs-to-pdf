@@ -197,7 +197,7 @@ missing-override-decorator = "ignore"  # this is emitted for every dunder overri
 
 [tool.uv]
 exclude-newer = "7 days"
-preview-features = ["audit-command"]
+preview = true
 
 [tool.uv.audit]
 ignore = [

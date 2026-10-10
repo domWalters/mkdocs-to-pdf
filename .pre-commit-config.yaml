@@ -51,6 +51,16 @@ repos:
       - id: gitleaks
   - repo: local
     hooks:
+      - id: generate-agents-skills
+        name: Generate AGENTS.md skills section
+        entry: hooks/generate-agents-skills.py
+        language: python
+        files: |
+          (?x)^(
+              ^hooks/generate-agents-skills\.py$ |
+              ^\.agents/skills/.*/SKILL\.md$
+          )$
+        pass_filenames: false
       - id: codespell
         name: codespell
         entry: codespell
