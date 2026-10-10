@@ -12,6 +12,7 @@ in
             gcc
             glib
             gobject-introspection
+            harfbuzz
             pango
 
             gnumake
@@ -39,6 +40,7 @@ in
             export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.gcc.cc.lib}/lib
             export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.glib.out}/lib
             export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.pango.out}/lib
+            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.harfbuzz.out}/lib
             export FONTCONFIG_FILE="${fontsConf}"
             . ./scripts/settings-venv.sh
             . ./scripts/settings-post-venv.sh
