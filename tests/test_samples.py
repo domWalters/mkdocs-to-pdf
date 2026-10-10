@@ -11,6 +11,7 @@ modified. The sample's ``mkdocs-yml.patch`` is then applied to the copy.
 
 import contextlib
 import os
+import re
 import shutil
 import subprocess  # ruff: ignore[suspicious-subprocess-import]
 import tempfile
@@ -19,6 +20,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+from bs4 import BeautifulSoup
 from mkdocs.commands.build import build
 from mkdocs.config import load_config
 from pypdf import PdfReader
@@ -68,6 +70,31 @@ def _ensure_to_pdf(project: Path, patch: Path) -> None:
     )
 
 
+_HTML_PATH = "single.html"
+
+
+def _enable_html_path(project: Path) -> None:
+    """Give the sample's `to-pdf` plugin an `html_path` so the HTML can be read."""
+    config_path = project / "mkdocs.yml"
+    text = config_path.read_text(encoding="utf-8")
+    if "html_path:" in text:
+        return
+
+    def add_option(match: re.Match[str]) -> str:
+        indent = match.group("indent")
+        return f"{indent}- to-pdf:\n{indent}    html_path: {_HTML_PATH}"
+
+    updated = re.sub(
+        r"(?m)^(?P<indent>\s*)- to-pdf\s*$",
+        add_option,
+        text,
+        count=1,
+    )
+    if updated == text:
+        pytest.skip("could not add `html_path` to the sample's `to-pdf` plugin")
+    config_path.write_text(updated, encoding="utf-8")
+
+
 def _build_sample(name: str) -> SimpleNamespace:
     """Build a sample site in a temporary directory, leaving submodules intact."""
     sample = SAMPLES / name
@@ -86,6 +113,7 @@ def _build_sample(name: str) -> SimpleNamespace:
 
     shutil.copy2(source / "mkdocs.yml", project / "mkdocs.yml")
     _ensure_to_pdf(project, sample / "mkdocs-yml.patch")
+    _enable_html_path(project)
 
     site_dir = root / "site"
     with _chdir(project):
@@ -98,6 +126,7 @@ def _build_sample(name: str) -> SimpleNamespace:
 
     return SimpleNamespace(
         site_dir=site_dir,
+        html_path=site_dir / _HTML_PATH,
         pdf_path=site_dir / "pdf" / "document.pdf",
     )
 
@@ -134,12 +163,48 @@ def _pdf_text(reader: PdfReader) -> str:
     return "\n".join(page.extract_text() or "" for page in reader.pages)
 
 
+def _content_headings(sample: SimpleNamespace) -> list[str]:
+    """Return the content heading texts, without cover/TOC and numbering badges."""
+    soup = BeautifulSoup(sample.html_path.read_text(encoding="utf-8"), "html.parser")
+    for article_id in ("doc-cover", "doc-toc", "doc-back_cover"):
+        for article in soup.find_all("article", id=article_id):
+            article.decompose()
+
+    headings: list[str] = []
+    for heading in soup.find_all(["h1", "h2", "h3"]):
+        badge = heading.find("span", class_="pdf-order")
+        if badge is not None:
+            badge.decompose()
+        text = heading.get_text(" ", strip=True)
+        if text:
+            headings.append(text)
+    return headings
+
+
 _SAMPLES = [
     pytest.param("mkdocs", "built_sample_mkdocs", id="mkdocs"),
     pytest.param(
         "mkdocs-material",
         "built_sample_mkdocs_material",
         id="mkdocs-material",
+    ),
+]
+
+# WeasyPrint truncates the material sample, dropping the tail of the document
+# (issues #34 and #62). This is present on the pinned version and changes where
+# it truncates on newer versions; XPASSes once the layout bug is fixed.
+_MATERIAL_TRUNCATION_XFAIL = pytest.mark.xfail(
+    reason="WeasyPrint truncates the material sample (#34/#62)",
+    strict=False,
+)
+
+_SAMPLES_OUTLINE = [
+    pytest.param("mkdocs", "built_sample_mkdocs", id="mkdocs"),
+    pytest.param(
+        "mkdocs-material",
+        "built_sample_mkdocs_material",
+        id="mkdocs-material",
+        marks=_MATERIAL_TRUNCATION_XFAIL,
     ),
 ]
 
@@ -191,3 +256,23 @@ def test_sample_text_is_complete(
     sample = request.getfixturevalue(fixture)
     text = _pdf_text(PdfReader(str(sample.pdf_path)))
     assert len(text) > 20_000, name
+
+
+@pytest.mark.parametrize(("name", "fixture"), _SAMPLES_OUTLINE)
+def test_sample_outline_covers_all_headings(
+    request: pytest.FixtureRequest,
+    name: str,
+    fixture: str,
+) -> None:
+    """Every content heading in the combined HTML is present in the PDF outline."""
+    sample = request.getfixturevalue(fixture)
+    headings = _content_headings(sample)
+    titles = _outline_titles(PdfReader(str(sample.pdf_path)))
+
+    missing = [
+        heading for heading in headings if not any(heading in title for title in titles)
+    ]
+    assert not missing, (
+        f"{name}: {len(missing)}/{len(headings)} heading(s) missing from the "
+        f"PDF outline, e.g. {missing[:3]}"
+    )
