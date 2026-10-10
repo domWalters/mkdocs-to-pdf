@@ -119,7 +119,7 @@ packages = ["src/mkdocs_to_pdf"]
 
 [tool.hatch.envs.hatch-test]
 dependencies = [
-    "mkdocs-to-pdf[dev]",
+    "mkdocs-to-pdf[all]",
 ]
 
 [[tool.hatch.envs.hatch-test.matrix]]
@@ -142,7 +142,11 @@ module = [
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]
-addopts = "--capture=fd -n auto --dist loadgroup --strict-markers --cov=mkdocs_to_pdf --cov-report html --cov-report xml --verbose --junitxml=.junit.xml -o junit_family=legacy"
+addopts = "--capture=fd -n auto --dist loadgroup --strict-markers -m 'not samples and not slow' --cov=mkdocs_to_pdf --cov-report html --cov-report xml --verbose --junitxml=.junit.xml -o junit_family=legacy"
+markers = [
+    "samples: builds the bundled sample sites (slow; needs submodules + samples extra)",
+    "slow: long-running end-to-end tests",
+]
 norecursedirs = "samples/*"
 testpaths = [
     "tests",
