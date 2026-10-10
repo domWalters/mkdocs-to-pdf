@@ -1,0 +1,14 @@
+site_name: Copyright Fixture Site
+site_author: Jane Doe
+copyright: Copyright &copy; 2026 <a href="https://example.com">Example</a>
+
+theme:
+  name: mkdocs
+
+plugins:
+  - to-pdf:
+      output_path: pdf/document.pdf
+      html_path: single.html
+      toc_title: Contents
+      toc_level: 3
+      ordered_chapter_level: 3

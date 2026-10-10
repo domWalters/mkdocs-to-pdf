@@ -71,6 +71,21 @@ def test_cover_rendered(built_base: SimpleNamespace) -> None:
     assert author.get_text(strip=True) == "Jane Doe"
 
 
+def test_cover_copyright_is_parsed_as_html(built_copyright: SimpleNamespace) -> None:
+    """An HTML copyright statement is rendered as markup, not escaped text."""
+    cover = _html(built_copyright).find("article", id="doc-cover")
+    assert cover is not None
+    statement = cover.find("p", id="copyright")
+    assert statement is not None
+
+    link = statement.find("a")
+    assert link is not None
+    assert link.get("href") == "https://example.com"
+    assert link.get_text(strip=True) == "Example"
+    assert "<a" not in statement.get_text()
+    assert "©" in statement.get_text()
+
+
 def test_toc_generated(built_base: SimpleNamespace) -> None:
     """The table of contents lists numbered, nested headings."""
     soup = _html(built_base)

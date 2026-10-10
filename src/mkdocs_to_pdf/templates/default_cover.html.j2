@@ -16,7 +16,7 @@
                 <p id="author">{{ author | e }}</p>
             {% endif %}
             {% if copyright is defined %}
-                <p id="copyright">{{ copyright | e }}</p>
+                <p id="copyright">{{ copyright | safe }}</p>
             {% endif %}
         </address>
     </div>

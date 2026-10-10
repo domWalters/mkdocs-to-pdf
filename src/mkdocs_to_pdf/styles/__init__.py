@@ -6,6 +6,7 @@ import pathlib
 import sass
 
 from mkdocs_to_pdf.options import Options
+from mkdocs_to_pdf.utils.html_util import html_to_text
 
 
 def _css_escape(text: str) -> str:  # ruff: ignore[non-empty-init-module]
@@ -36,7 +37,7 @@ def style_for_print(options: Options) -> str:  # ruff: ignore[non-empty-init-mod
     scss = f"""
     :root {{
         string-set: author '{_css_escape(options.author)}',
-            copyright '{_css_escape(options.copyright)}',
+            copyright '{_css_escape(html_to_text(options.copyright))}',
             title '{_css_escape(options.cover_title)}',
             subtitle '{_css_escape(options.cover_subtitle)}';
     }}

@@ -40,12 +40,15 @@ plugins:
 
 The copyright statement for the document. Used in the header / footer.
 
+The value is parsed as HTML on the cover page. Any tags are stripped from the
+plain-text page footer.
+
 Defaults to the top level `copyright`.
 
 ``` yaml
 plugins:
   - to-pdf:
-      copyright: Copyright © John Smith 2025
+      copyright: Copyright © <a href="https://example.com">John Smith</a> 2025
 ```
 
 ### Metadata
