@@ -92,3 +92,33 @@ section.two-columns {
   columns: 2;
   column-gap: 1cm;
 }
+
+// `linenums` code blocks (Pygments `table.highlighttable`) are a single table
+// row that WeasyPrint cannot split, so an over-long block drops everything
+// after it (#62). `linenums_util` marks such tables (when per-line spans are
+// available); lay them out as blocks and draw the gutter with a counter so the
+// block can break across pages while keeping its line numbers.
+table.highlighttable.linenums-counter,
+table.highlighttable.linenums-counter tbody,
+table.highlighttable.linenums-counter tr,
+table.highlighttable.linenums-counter td {
+  display: block !important;
+  width: auto !important;
+}
+
+table.highlighttable.linenums-counter td.code code {
+  counter-reset: pdf-line;
+}
+
+table.highlighttable.linenums-counter td.code code > span {
+  counter-increment: pdf-line;
+}
+
+table.highlighttable.linenums-counter td.code code > span::before {
+  content: counter(pdf-line);
+  display: inline-block;
+  min-width: 2.5em;
+  padding-right: 0.75em;
+  color: #999;
+  text-align: right;
+}

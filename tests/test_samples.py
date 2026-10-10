@@ -190,24 +190,6 @@ _SAMPLES = [
     ),
 ]
 
-# WeasyPrint truncates the material sample, dropping the tail of the document
-# (issues #34 and #62). This is present on the pinned version and changes where
-# it truncates on newer versions; XPASSes once the layout bug is fixed.
-_MATERIAL_TRUNCATION_XFAIL = pytest.mark.xfail(
-    reason="WeasyPrint truncates the material sample (#34/#62)",
-    strict=False,
-)
-
-_SAMPLES_OUTLINE = [
-    pytest.param("mkdocs", "built_sample_mkdocs", id="mkdocs"),
-    pytest.param(
-        "mkdocs-material",
-        "built_sample_mkdocs_material",
-        id="mkdocs-material",
-        marks=_MATERIAL_TRUNCATION_XFAIL,
-    ),
-]
-
 
 @pytest.mark.parametrize(("name", "fixture"), _SAMPLES)
 def test_sample_builds_to_pdf(
@@ -258,7 +240,7 @@ def test_sample_text_is_complete(
     assert len(text) > 20_000, name
 
 
-@pytest.mark.parametrize(("name", "fixture"), _SAMPLES_OUTLINE)
+@pytest.mark.parametrize(("name", "fixture"), _SAMPLES)
 def test_sample_outline_covers_all_headings(
     request: pytest.FixtureRequest,
     name: str,

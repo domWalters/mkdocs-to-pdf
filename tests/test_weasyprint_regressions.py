@@ -10,18 +10,8 @@ versions while still catching the layout regressions tracked in issues #34,
 from collections.abc import Iterable
 from types import SimpleNamespace
 
-import pytest
 from bs4 import BeautifulSoup
 from pypdf import PdfReader
-
-# WeasyPrint 62.3 drops everything after the long code block in this fixture
-# (issues #34 and #62). These assertions describe the correct behaviour; they
-# are expected to fail until WeasyPrint is upgraded, then XPASS so the markers
-# can be removed.
-_TRUNCATION_XFAIL = pytest.mark.xfail(
-    reason="WeasyPrint 62.3 truncates after a page-spanning code block (#34/#62)",
-    strict=False,
-)
 
 _CONTENT_SENTINELS = [
     "WEASYPRINT_FINAL_SENTINEL",
@@ -93,7 +83,6 @@ def test_regression_page_floor(built_weasyprint: SimpleNamespace) -> None:
     assert len(_reader(built_weasyprint).pages) >= 4
 
 
-@_TRUNCATION_XFAIL
 def test_regression_not_truncated(built_weasyprint: SimpleNamespace) -> None:
     """Every sentinel survives to the PDF, including those after the long block."""
     text = _pdf_text(_reader(built_weasyprint))
@@ -101,7 +90,6 @@ def test_regression_not_truncated(built_weasyprint: SimpleNamespace) -> None:
         assert sentinel in text, sentinel
 
 
-@_TRUNCATION_XFAIL
 def test_regression_outline_complete(built_weasyprint: SimpleNamespace) -> None:
     """Every content heading appears in both the outline and the text."""
     soup = _html(built_weasyprint)
@@ -116,15 +104,17 @@ def test_regression_outline_complete(built_weasyprint: SimpleNamespace) -> None:
         assert heading in text, heading
 
 
-@_TRUNCATION_XFAIL
 def test_regression_anchors_resolve(built_weasyprint: SimpleNamespace) -> None:
     """Every internal link resolves to a PDF named destination."""
     destinations = set(_reader(built_weasyprint).named_destinations)
 
     for anchor in _html(built_weasyprint).select('a[href^="#"]'):
         target = str(anchor["href"])[1:]
-        if target:
-            assert target in destinations, f"dangling anchor: {anchor['href']}"
+        # Skip Pygments line-permalink anchors: their `href` points at their own
+        # `id`, so they are self-links rather than navigation.
+        if not target or target == anchor.get("id"):
+            continue
+        assert target in destinations, f"dangling anchor: {anchor['href']}"
 
 
 def test_regression_no_dangling_doc_links(

@@ -21,7 +21,9 @@
       display: block;
 
       .tabbed-content--wrap {
-        display: inline-block;
+        // `block`, not `inline-block`: WeasyPrint cannot split an inline-block
+        // across pages, so an over-long tabbed set drops all following content.
+        display: block;
         width: 100%;
         margin-bottom: 0.25rem;
 
@@ -45,6 +47,12 @@
           box-shadow: none;
         }
       }
+    }
+
+    // Grid card separators (<hr>) make WeasyPrint drop everything that follows
+    // the card grid; they are purely decorative, so hide them in print.
+    .grid.cards hr {
+      display: none;
     }
 
     .admonition-title+.tabbed-set:last-child,

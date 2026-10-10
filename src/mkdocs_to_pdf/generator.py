@@ -26,6 +26,7 @@ from .utils.emoji_util import fix_twemoji
 from .utils.iframe_util import convert_iframe
 from .utils.image_util import fix_image_alignment
 from .utils.layout_util import convert_for_two_columns
+from .utils.linenums_util import convert_linenums_tables
 from .utils.section import get_section_path
 from .utils.soup_util import clone_element, get_attribute
 from .utils.tabbed_set_util import wrap_tabbed_set_content
@@ -173,6 +174,7 @@ class Generator:
         make_cover(soup, self._options)
 
         wrap_tabbed_set_content(soup, self._options.logger)
+        convert_linenums_tables(soup, self._options.logger)
         fix_image_alignment(soup, self._options.logger)
         convert_iframe(soup, self._options.convert_iframe, self._options.logger)
         convert_for_two_columns(
