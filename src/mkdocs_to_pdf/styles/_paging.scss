@@ -28,6 +28,13 @@
   }
 }
 
+// A bitmap taller than the printable area cannot be split, so WeasyPrint drops
+// everything after it (#116). Cap it to the A4 content box (297mm - 2 * 25mm
+// margin) so tall images scale to fit instead.
+img {
+  max-height: 240mm;
+}
+
 h1,
 h2,
 h3,
