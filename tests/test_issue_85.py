@@ -57,7 +57,9 @@ def test_issue_85_pdf_has_rendered_math(built_issue_85: SimpleNamespace) -> None
     text = _pdf_text(built_issue_85)
     assert "$a^2 + b^2 = c^2$" not in text
     assert "$$" not in text
-    assert "a2 + b2 = c2" in text
+    # MathJax renders the superscripts; the exact spacing of the extracted text
+    # varies between WeasyPrint/Pango builds, hence the compact form.
+    assert "a2+b2=c2" in text
 
 
 def test_issue_85_local_scripts_replayed(tmp_path: Path) -> None:

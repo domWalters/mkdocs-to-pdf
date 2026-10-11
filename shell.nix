@@ -14,6 +14,7 @@ in
             glib
             gobject-introspection
             harfbuzz
+            libyaml
             pango
 
             gnumake
@@ -25,6 +26,12 @@ in
             zsh
         ];
         shellHook = ''
+            # Nix's Python 3.11 build configuration leaks `_PYTHON_SYSCONFIGDATA_NAME`
+            # into the shell, which makes uv-built wheels for other interpreters
+            # (e.g. 3.15) use Python 3.11's include paths and produce mismatched
+            # wheel tags. Unset it so uv provisions each interpreter correctly.
+            unset _PYTHON_SYSCONFIGDATA_NAME
+
             case "$(basename "$SHELL")" in
                 "bash")
                     if [ -f $HOME/.bashrc ]; then
