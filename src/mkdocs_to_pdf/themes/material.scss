@@ -15,6 +15,18 @@
     left: 0.6rem;
   }
 
+  // PDFs are rendered on a light background, so hide the dark-mode variants of
+  // light/dark images. Material only hides one variant via the
+  // `data-md-color-scheme` attribute, which is applied by JavaScript and is
+  // therefore absent when WeasyPrint renders the combined HTML, leaving both
+  // variants visible (#73).
+  .md-typeset img[src$="#only-dark"],
+  .md-typeset img[src$="#gh-dark-mode-only"],
+  .md-typeset figure img[src$="#only-dark"],
+  .md-typeset figure img[src$="#gh-dark-mode-only"] {
+    display: none;
+  }
+
   .md-typeset {
     // Tabbed code block container
     .tabbed-set {
