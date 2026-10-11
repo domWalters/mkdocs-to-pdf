@@ -8,6 +8,7 @@ let
 in
     pkgs.mkShell {
         packages = with pkgs; [
+            chromium
             fontconfig
             gcc
             glib

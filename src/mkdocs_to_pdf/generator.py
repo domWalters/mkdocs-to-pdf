@@ -29,6 +29,7 @@ from .utils.image_util import fix_image_alignment
 from .utils.layout_util import convert_for_two_columns
 from .utils.linenums_util import convert_linenums_tables
 from .utils.metadata_util import prepend_producer, set_pdf_metadata
+from .utils.script_util import collect_page_scripts
 from .utils.section import get_section_path
 from .utils.soup_util import clone_element, get_attribute
 from .utils.tabbed_set_util import wrap_tabbed_set_content
@@ -52,6 +53,7 @@ class Generator:
         self._head: Tag | None = None
 
         self._scraped_scripts: list[Tag] = []
+        self._scraped_srcs: set[str] = set()
         self._mixed_script = ""
         self._articles: dict[int, Tag] = {}
 
@@ -126,7 +128,7 @@ class Generator:
                 a.decompose()
             self._fix_missing_id_for_h1(article, page)
             self._articles[id(page)] = article
-            self._scrap_scripts(soup)
+            self._scrap_scripts(soup, page)
         else:
             self.logger.warning("Missing article: [%s](%s)", page.title, page.url)
 
@@ -453,29 +455,22 @@ class Generator:
 
         return self._options.js_renderer.render(str(soup))
 
-    def _scrap_scripts(self, soup: BeautifulSoup) -> None:
+    def _scrap_scripts(self, soup: BeautifulSoup, page: Page) -> None:
         if not self._options.js_renderer:
             return
 
         # CAUTION:
         # It does not consider cases where the tag contains both src and text.
 
-        scripts = soup.select("body>script")
-        if not scripts:
-            return
-
-        def exists_src(src: str) -> bool:
-            return any(
-                src == get_attribute(script, "src") for script in self._scraped_scripts
-            )
+        base_dir = pathlib.Path(page.file.abs_dest_path).parent
+        scripts, inline = collect_page_scripts(soup, base_dir)
 
         for script in scripts:
-            if script.has_attr("src"):
-                src = get_attribute(script, "src")
-                if not src or not re.match(r"^http?s://", src) or exists_src(src):
-                    continue
-                self._scraped_scripts.append(script)
-            else:
-                text = script.get_text()
-                if text:
-                    self._mixed_script += ";" + text
+            src = get_attribute(script, "src")
+            if src in self._scraped_srcs:
+                continue
+            self._scraped_srcs.add(src)
+            self._scraped_scripts.append(script)
+
+        if inline:
+            self._mixed_script += ";" + inline
