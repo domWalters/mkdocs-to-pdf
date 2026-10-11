@@ -1,31 +1,53 @@
+"""Resolve stable paths for navigation sections."""
+
 from base64 import b32encode
 from uuid import uuid4
+from weakref import WeakKeyDictionary
+
+from mkdocs.structure.nav import Section
+
+_slug_cache: WeakKeyDictionary[Section, str] = WeakKeyDictionary()
 
 
-def get_section_path(section) -> str:
+def get_section_path(section: Section) -> str:
+    """
+    Return the slash-terminated path for a navigation section.
+
+    Args:
+        section: The section.
+
+    Returns:
+        The section path.
+
+    Raises:
+        TypeError: If the given item is not a section.
+
+    """
     if not section.is_section:
-        raise "not section"
+        msg = "not a section"
+        raise TypeError(msg)
 
-    slugs = []
-    if len(section.ancestors):
-        slugs = list(map(lambda sec: _section_slug(sec), section.ancestors))
-        slugs.reverse()
+    slugs = [
+        _section_slug(sec) for sec in section.ancestors if isinstance(sec, Section)
+    ]
+    slugs.reverse()
     slugs.append(_section_slug(section))
 
-    return '/'.join(slugs) + '/'
+    return "/".join(slugs) + "/"
 
 
-def _section_slug(section) -> str:
+def _section_slug(section: Section) -> str:
     if not section.is_section:
-        raise "not section"
+        msg = "not a section"
+        raise TypeError(msg)
 
-    slug = getattr(section, 'pdf_slug', None)
-    if slug:
-        return slug
+    cached = _slug_cache.get(section)
+    if cached is not None:
+        return cached
 
-    title = str(section.title).strip()
-    title = title if title else str(uuid4)
-    slug = b32encode(title.encode('utf-8')).rstrip(b'=').decode()
-    setattr(section, 'pdf_slug', slug)
+    title = section.title.strip()
+    title = title or str(uuid4())
+    slug = b32encode(title.encode("utf-8")).rstrip(b"=").decode()
+    _slug_cache[section] = slug
 
     return slug

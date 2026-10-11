@@ -1,0 +1,12 @@
+site_name: Back Cover Site
+site_url: https://example.com/docs/
+
+plugins:
+  - to-pdf:
+      html_path: single.html
+      back_cover: true
+      back_cover_qrcode: true
+      back_cover_qr_url: https://example.org/scanned
+      back_cover_barcode: true
+      back_cover_barcode_value: "123456789012"
+      back_cover_barcode_kind: code128

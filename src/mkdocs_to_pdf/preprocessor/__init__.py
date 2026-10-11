@@ -1,38 +1,64 @@
-import os
+"""Assemble the individual pages into a single document."""
 
-from bs4 import PageElement
+import pathlib
+from typing import cast
+
+from bs4 import BeautifulSoup, Tag
 from weasyprint import urls
+
+from mkdocs_to_pdf.utils.soup_util import get_attribute
 
 from .links.transform import transform_href, transform_id
 from .links.util import get_body_id, rel_pdf_href, replace_asset_hrefs
 
 
-def get_combined(
-        soup: PageElement,
-        base_url: str,
-        rel_url: str) -> PageElement:
-    """ transforms all relative hrefs pointing to other html docs
-    into relative pdf hrefs
+def get_combined(  # ruff: ignore[non-empty-init-module]
+    soup: BeautifulSoup,
+    base_url: str,
+    rel_url: str,
+) -> BeautifulSoup:
     """
+    Rewrite relative hrefs pointing to other HTML docs into PDF hrefs.
 
+    Args:
+        soup: DOM object of the page.
+        base_url: The base URL used to resolve assets.
+        rel_url: The page URL relative to the site root.
+
+    Returns:
+        The transformed document.
+
+    """
     for element in soup.find_all(id=True):
-        element['id'] = transform_id(element['id'], rel_url)
+        element["id"] = transform_id(get_attribute(element, "id"), rel_url)
 
-    for a in soup.find_all('a', href=True):
-        if urls.url_is_absolute(a['href']) or os.path.isabs(a['href']):
+    for a in soup.find_all("a", href=True):
+        href = get_attribute(a, "href")
+        if urls.url_is_absolute(href) or pathlib.PurePosixPath(href).is_absolute():
             continue
 
-        a['href'] = transform_href(a['href'], rel_url)
+        a["href"] = transform_href(href, rel_url)
 
-    soup.body['id'] = get_body_id(rel_url)
-    soup = replace_asset_hrefs(soup, base_url)
-
-    return soup
+    cast("Tag", soup.body)["id"] = get_body_id(rel_url)
+    return replace_asset_hrefs(soup, base_url)
 
 
-def get_separate(soup: PageElement, base_url: str) -> PageElement:
-    for a in soup.find_all('a', href=True):
-        a['href'] = rel_pdf_href(a['href'])
+def get_separate(  # ruff: ignore[non-empty-init-module]
+    soup: BeautifulSoup,
+    base_url: str,
+) -> BeautifulSoup:
+    """
+    Rewrite document hrefs to their standalone PDF counterparts.
 
-    soup = replace_asset_hrefs(soup, base_url)
-    return soup
+    Args:
+        soup: DOM object of the page.
+        base_url: The base URL used to resolve assets.
+
+    Returns:
+        The transformed document.
+
+    """
+    for a in soup.find_all("a", href=True):
+        a["href"] = rel_pdf_href(get_attribute(a, "href"))
+
+    return replace_asset_hrefs(soup, base_url)

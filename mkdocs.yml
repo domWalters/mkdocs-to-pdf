@@ -5,7 +5,7 @@ site_author: Dominic Walters
 site_dir: site/
 site_name: mkdocs-to-pdf
 site_url: https://mkdocs-to-pdf.readthedocs.io
-copyright: Copyright &copy; 2025 Dom Walters, Hideyuki KATO
+copyright: Copyright &copy; 2026 Dom Walters, Hideyuki KATO
 
 extra_css:
   - stylesheets/extra.css
@@ -82,9 +82,7 @@ nav:
       - examples/images.md
       - examples/lists.md
       - examples/tooltips.md
-  - Changelog: CHANGELOG.md
   - License: LICENSE.md
-  - Stuff to Migrate: stuff-to-migrate.md
 
 plugins:
   - minify:

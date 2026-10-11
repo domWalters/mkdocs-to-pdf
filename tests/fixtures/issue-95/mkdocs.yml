@@ -1,0 +1,14 @@
+site_name: User Manual
+site_author: Test Author
+
+nav:
+  - Chapter 1 Introduction:
+      - chapter_1.md
+
+theme:
+  name: mkdocs
+
+plugins:
+  - to-pdf:
+      toc_level: 4
+      html_path: single.html

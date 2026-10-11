@@ -15,13 +15,27 @@
     left: 0.6rem;
   }
 
+  // PDFs are rendered on a light background, so hide the dark-mode variants of
+  // light/dark images. Material only hides one variant via the
+  // `data-md-color-scheme` attribute, which is applied by JavaScript and is
+  // therefore absent when WeasyPrint renders the combined HTML, leaving both
+  // variants visible (#73).
+  .md-typeset img[src$="#only-dark"],
+  .md-typeset img[src$="#gh-dark-mode-only"],
+  .md-typeset figure img[src$="#only-dark"],
+  .md-typeset figure img[src$="#gh-dark-mode-only"] {
+    display: none;
+  }
+
   .md-typeset {
     // Tabbed code block container
     .tabbed-set {
       display: block;
 
       .tabbed-content--wrap {
-        display: inline-block;
+        // `block`, not `inline-block`: WeasyPrint cannot split an inline-block
+        // across pages, so an over-long tabbed set drops all following content.
+        display: block;
         width: 100%;
         margin-bottom: 0.25rem;
 
@@ -45,6 +59,12 @@
           box-shadow: none;
         }
       }
+    }
+
+    // Grid card separators (<hr>) make WeasyPrint drop everything that follows
+    // the card grid; they are purely decorative, so hide them in print.
+    .grid.cards hr {
+      display: none;
     }
 
     .admonition-title+.tabbed-set:last-child,

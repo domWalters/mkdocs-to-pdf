@@ -1,0 +1,16 @@
+site_name: Fixture Site
+site_author: Jane Doe
+copyright: Copyright Fixture
+
+theme:
+  name: mkdocs
+
+plugins:
+  - to-pdf:
+      output_path: pdf/document.pdf
+      html_path: single.html
+      cover_title: Fixture Cover
+      cover_subtitle: Fixture Subtitle
+      toc_title: Contents
+      toc_level: 3
+      ordered_chapter_level: 3

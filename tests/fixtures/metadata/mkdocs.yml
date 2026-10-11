@@ -1,0 +1,15 @@
+site_name: Metadata Site
+site_author: Site Author
+site_description: Metadata description from config
+
+theme:
+  name: mkdocs
+
+plugins:
+  - to-pdf:
+      output_path: pdf/document.pdf
+      html_path: single.html
+      author: Document Author
+      metadata:
+        keywords: fixture, metadata, pdf
+      cover: false

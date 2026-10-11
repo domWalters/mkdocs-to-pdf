@@ -1,201 +1,156 @@
-from bs4 import PageElement, Tag, BeautifulSoup
+"""Generate ordered chapter numbers and the table of contents."""
+
+from bs4 import BeautifulSoup, Tag
 
 from .options import Options
-from .utils.soup_util import clone_element
+from .utils.soup_util import clone_element, get_attribute
 
-def make_indexes(soup: PageElement, options: Options) -> None:
-    """ Generate ordered chapter number and TOC of document.
 
-    Arguments:
-        soup {BeautifulSoup} -- DOM object of Document.
-        options {Options} -- The options of this sequence.
+_MAX_HEADING_LEVEL = 6
+
+
+def make_indexes(  # ruff: ignore[complex-structure, too-many-statements]
+    soup: BeautifulSoup,
+    options: Options,
+) -> None:
     """
+    Generate ordered chapter numbers and the table of contents.
 
+    Args:
+        soup: DOM object of the document.
+        options: The options of this sequence.
+
+    """
     # Step 1: (re)ordered headings
     _inject_heading_order(soup, options)
 
     # Step 2: generate toc page
     level = options.toc_level
-    if level < 1 or level > 6:
+    if level < 1 or level > _MAX_HEADING_LEVEL:
         return
 
-    options.logger.info(
-        f'Generate a table of contents up to heading level {level}.')
+    options.logger.info("Generate a table of contents up to heading level %s.", level)
 
-    h1li = None
-    h2ul = h2li = h3ul = h4ul = h5ul = h6ul = None
-    exclude_lv2 = exclude_lv3 = exclude_lv4 = exclude_lv5 = exclude_lv6 = False
-
-    def makeLink(h: Tag) -> Tag:
-        li = soup.new_tag('li')
-        ref = h.get('id', '')
-        a = soup.new_tag('a', href=f'#{ref}')
-        a.append(BeautifulSoup(h.decode_contents(), 'html.parser'))
+    def make_link(h: Tag) -> Tag:
+        li = soup.new_tag("li")
+        ref = get_attribute(h, "id")
+        a = soup.new_tag("a", href=f"#{ref}")
+        for el in h.contents:
+            if isinstance(el, Tag) and el.name == "a":
+                a.append(el.contents[0])
+            else:
+                a.append(clone_element(el))
         li.append(a)
-        options.logger.debug(f"| [{h.get_text(separator=' ')}]({ref})")
+        options.logger.debug("| [%s](%s)", h.get_text(separator=" "), ref)
         return li
 
-    toc = soup.new_tag('article', id='doc-toc')
-    title = soup.new_tag('h1')
+    toc = soup.new_tag("article", id="doc-toc")
+    title = soup.new_tag("h1")
     title.append(soup.new_string(options.toc_title))
     toc.append(title)
 
-    h1ul = soup.new_tag('ul')
+    h1ul = soup.new_tag("ul")
     toc.append(h1ul)
 
-    headings = soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])
+    # The currently open `ul`/`li` per heading level (indices 1-6).
+    # `ul_parent[n]` remembers which `li` the level-`n` list hangs off, so a
+    # new list is only created when its ancestor changes.
+    uls: list[Tag | None] = [None] * 7
+    lis: list[Tag | None] = [None] * 7
+    ul_parent: list[Tag | None] = [None] * 7
+    uls[1] = h1ul
+    ul_parent[1] = h1ul
+
+    # Level of the closest heading listed in `excludes_children`. Headings
+    # deeper than it are omitted until a heading at the same or a shallower
+    # level is reached.
+    exclude_depth: int | None = None
+
+    headings = soup.find_all(["h1", "h2", "h3", "h4", "h5", "h6"])
     for h in headings:
-
-        if h.name == 'h1':
-
-            h1li = makeLink(h)
-            h1ul.append(h1li)
-            h2ul = h2li = h3ul = h4ul = h5ul = h6ul = None
-
-            exclude_lv2 = _is_exclude(h.get('id', None), options)
-
-        elif not exclude_lv2 and h.name == 'h2' and level >= 2:
-
-            if not h2ul:
-                h2ul = soup.new_tag('ul')
-                h1li.append(h2ul)
-            h2li = makeLink(h)
-            h2ul.append(h2li)
-            h3ul = None
-
-            exclude_lv3 = _is_exclude(h.get('id', None), options)
-
-        elif not exclude_lv2 and not exclude_lv3 \
-                and h.name == 'h3' and level >= 3:
-
-            if not h2li:
-                continue
-            if not h3ul:
-                h3ul = soup.new_tag('ul')
-                h2li.append(h3ul)
-            h3li = makeLink(h)
-            h3ul.append(h3li)
-            h4ul = None
-
-            exclude_lv4 = _is_exclude(h.get('id', None), options)
-
-        elif not exclude_lv3 and not exclude_lv4 \
-                and h.name == 'h4' and level >= 4:
-
-            if not h3li:
-                continue
-            if not h4ul:
-                h4ul = soup.new_tag('ul')
-                h3li.append(h4ul)
-            h4li = makeLink(h)
-            h4ul.append(h4li)
-            h5ul = None
-
-            exclude_lv5 = _is_exclude(h.get('id', None), options)
-
-        elif not exclude_lv4 and not exclude_lv5 \
-                and h.name == 'h5' and level >= 5:
-
-            if not h4li:
-                continue
-            if not h5ul:
-                h5ul = soup.new_tag('ul')
-                h4li.append(h5ul)
-            h5li = makeLink(h)
-            h5ul.append(h5li)
-            h6ul = None
-
-            exclude_lv6 = _is_exclude(h.get('id', None), options)
-
-        elif not exclude_lv5 and not exclude_lv6 \
-                and h.name == 'h6' and level >= 6:
-
-            if not h5li:
-                continue
-            if not h6ul:
-                h6ul = soup.new_tag('ul')
-                h5li.append(h6ul)
-            h6li = makeLink(h)
-            h6ul.append(h6li)
-
-        else:
+        depth = int(h.name[1])
+        if depth > level:
             continue
-        pass
+
+        if exclude_depth is not None:
+            if depth > exclude_depth:
+                continue
+            exclude_depth = None
+
+        if depth == 1:
+            parent: Tag | None = h1ul
+        else:
+            parent = next(
+                (lis[p] for p in range(depth - 1, 0, -1) if lis[p] is not None),
+                None,
+            )
+        if parent is None:
+            # No shallower heading has been included yet, so there is nothing
+            # to nest this heading under. Skipping keeps the TOC well-formed
+            # even when heading levels are not used strictly.
+            continue
+
+        # A new heading invalidates any open lists at deeper levels.
+        for deeper in range(depth + 1, 7):
+            uls[deeper] = lis[deeper] = ul_parent[deeper] = None
+
+        target = uls[depth]
+        if target is None or ul_parent[depth] is not parent:
+            target = soup.new_tag("ul")
+            parent.append(target)
+            uls[depth] = target
+            ul_parent[depth] = parent
+
+        li = make_link(h)
+        target.append(li)
+        lis[depth] = li
+
+        if _is_exclude(get_attribute(h, "id"), options):
+            exclude_depth = depth
+
+    if soup.body is None:
+        options.logger.error("Failed to insert ToC")
+        return
 
     soup.body.insert(0, toc)
 
 
-def _inject_heading_order(soup: Tag, options: Options):
-
+def _inject_heading_order(soup: BeautifulSoup, options: Options) -> None:
     level = options.ordered_chapter_level
-    if level < 1 or level > 6:
+    if level < 1 or level > _MAX_HEADING_LEVEL:
         return
 
-    options.logger.info(f'Number headings up to level {level}.')
+    options.logger.info("Number headings up to level %s.", level)
 
-    h1n = h2n = h3n = h4n = h5n = h6n = 0
-    exclude_lv2 = exclude_lv3 = exclude_lv4 = exclude_lv5 = exclude_lv6 = False
+    counts = [0] * 7
+    exclude_depth: int | None = None
 
-    headings = soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])
+    headings = soup.find_all(["h1", "h2", "h3", "h4", "h5", "h6"])
     for h in headings:
-
-        if h.name == 'h1':
-
-            h1n += 1
-            h2n = h3n = h4n = h5n = h6n = 0
-            prefix = f'{h1n}. '
-
-            exclude_lv2 = _is_exclude(h.get('id', None), options)
-
-        elif not exclude_lv2 and h.name == 'h2' and level >= 2:
-
-            h2n += 1
-            h3n = h4n = h5n = h6n = 0
-            prefix = f'{h1n}.{h2n} '
-
-            exclude_lv3 = _is_exclude(h.get('id', None), options)
-
-        elif not exclude_lv2 and not exclude_lv3 \
-                and h.name == 'h3' and level >= 3:
-
-            h3n += 1
-            h4n = h5n = h6n = 0
-            prefix = f'{h1n}.{h2n}.{h3n} '
-
-            exclude_lv4 = _is_exclude(h.get('id', None), options)
-
-        elif not exclude_lv3 and not exclude_lv4 \
-                and h.name == 'h4' and level >= 4:
-
-            h4n += 1
-            h5n = h6n = 0
-            prefix = f'{h1n}.{h2n}.{h3n}.{h4n} '
-
-            exclude_lv5 = _is_exclude(h.get('id', None), options)
-
-        elif not exclude_lv4 and not exclude_lv5 \
-                and h.name == 'h5' and level >= 5:
-
-            h6n = 0
-            h5n += 1
-            prefix = f'{h1n}.{h2n}.{h3n}.{h4n}.{h5n} '
-
-            exclude_lv6 = _is_exclude(h.get('id', None), options)
-
-        elif not exclude_lv5 and not exclude_lv6 \
-                and h.name == 'h6' and level >= 6:
-
-            h6n += 1
-            prefix = f'{h1n}.{h2n}.{h3n}.{h4n}.{h5n}.{h6n} '
-
-        else:
+        depth = int(h.name[1])
+        if depth > level:
             continue
 
-        options.logger.debug(f"| [{prefix} {h.text}]({h.get('id', '(none)')})")
+        if exclude_depth is not None:
+            if depth > exclude_depth:
+                continue
+            exclude_depth = None
 
-        nm_tag = soup.new_tag('span', **{'class': 'pdf-order'})
+        counts[depth] += 1
+        for deeper in range(depth + 1, 7):
+            counts[deeper] = 0
+
+        number = ".".join(str(counts[n]) for n in range(1, depth + 1))
+        prefix = f"{number}. " if depth == 1 else f"{number} "
+
+        options.logger.debug("| [%s %s](%s)", prefix, h.text, h.get("id", "(none)"))
+
+        nm_tag = soup.new_tag("span", attrs={"class": "pdf-order"})
         nm_tag.append(prefix)
         h.insert(0, nm_tag)
+
+        if _is_exclude(get_attribute(h, "id"), options):
+            exclude_depth = depth
 
 
 def _is_exclude(url: str, options: Options) -> bool:
@@ -203,7 +158,7 @@ def _is_exclude(url: str, options: Options) -> bool:
         return False
 
     if url in options.excludes_children:
-        options.logger.info(f"|  (exclude '{url}')")
+        options.logger.info("|  (exclude '%s')", url)
         return True
 
     return False

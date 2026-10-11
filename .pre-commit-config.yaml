@@ -1,7 +1,7 @@
 ---
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: check-added-large-files
       - id: check-ast
@@ -16,48 +16,131 @@ repos:
       - id: check-symlinks
       - id: check-toml
       # - id: check-vcs-permalinks
-      - id: check-xml
+      # - id: check-xml
       - id: check-yaml
-        args:
-        - --unsafe
+        args: [--unsafe]
       - id: debug-statements
       - id: destroyed-symlinks
+      - id: end-of-file-fixer
       - id: mixed-line-ending
       - id: name-tests-test
-        args: ["--pytest-test-first"]
+        args: [--pytest-test-first]
+        exclude: ^tests/_
       - id: no-commit-to-branch
       - id: pretty-format-json
-        args:
-        - --autofix
-        - --indent
-        - "2"
+        args: [
+          --autofix,
+          --indent,
+          "4",
+        ]
         exclude: "package.*\\.json"
       - id: requirements-txt-fixer
       - id: trailing-whitespace
-        args:
-        - --markdown-linebreak-ext=md
+        args: [--markdown-linebreak-ext=md]
         exclude: ".*\\.patch"
+  - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
+    rev: v9.26.0
+    hooks:
+      - id: commitlint
+        stages: [commit-msg]
+        additional_dependencies: ["@commitlint/config-conventional"]
+        args: [--config, .commitlintrc.yaml]
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.24.0
+    rev: v8.30.0
     hooks:
       - id: gitleaks
-  - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 0.6.6
+  - repo: local
     hooks:
+      - id: generate-agents-skills
+        name: Generate AGENTS.md skills section
+        entry: hooks/generate-agents-skills.py
+        language: python
+        files: |
+          (?x)^(
+              ^hooks/generate-agents-skills\.py$ |
+              ^\.agents/skills/.*/SKILL\.md$
+          )$
+        pass_filenames: false
+      - id: update-changelog
+        name: Generate CHANGELOG.md
+        entry: hooks/update-changelog.py
+        language: system
+        always_run: true
+        pass_filenames: false
+      - id: codespell
+        name: codespell
+        entry: codespell
+        language: system
+        types: [text]
+      - id: ruff-format
+        name: ruff format
+        entry: ruff format --force-exclude
+        language: system
+        types_or: [python, pyi, jupyter]
+        require_serial: true
+      - id: ruff-check
+        name: ruff check
+        entry: ruff check --force-exclude
+        language: system
+        types_or: [python, pyi, jupyter]
+        args: [--fix]
+        require_serial: true
+      - id: ruff-format-after
+        name: ruff format (after ruff-check)
+        entry: ruff format --force-exclude
+        language: system
+        types_or: [python, pyi, jupyter]
+        require_serial: true
+      - id: mypy
+        name: mypy 3.11
+        entry: mypy
+        language: system
+        types_or: [python, pyi]
+        args: [--python-version, "3.11"]
+        require_serial: true
+      - id: ty
+        name: ty check
+        entry: ty check --fix --project src/mkdocs_to_pdf --python .venv
+        language: python
+        files: \.py
       - id: uv-lock
+        name: uv lock
+        entry: uv lock
+        language: system
+        files: ^(uv\.lock|pyproject\.toml|uv\.toml)$
+        pass_filenames: false
       - id: uv-export
-        args:
-        - --frozen
-        - --output-file=requirements.txt
-        - --no-hashes
-        - --no-emit-project
-      - id: uv-export
-        args:
-        - --frozen
-        - --output-file=requirements-dev.txt
-        - --no-hashes
-        - --all-extras
-  - repo: https://github.com/streetsidesoftware/cspell-cli
-    rev: v8.17.3
+        name: uv export (requirements.txt)
+        entry: uv export
+        language: system
+        files: ^uv\.lock$
+        args: [
+          --frozen,
+          --output-file=requirements.txt,
+          --no-hashes,
+          --no-emit-project,
+        ]
+        pass_filenames: false
+      - id: uv-export-dev
+        name: uv export (requirements-dev.txt)
+        entry: uv export
+        language: system
+        files: ^uv\.lock$
+        args: [
+          --frozen,
+          --output-file=requirements-dev.txt,
+          --no-hashes,
+          --no-emit-project,
+          --all-extras,
+        ]
+        pass_filenames: false
+      - id: uv-audit
+        name: uv audit
+        entry: uv audit
+        language: python
+        always_run: true
+        pass_filenames: false
+  - repo: meta
     hooks:
-      - id: cspell
+      - id: check-hooks-apply
+      - id: check-useless-excludes

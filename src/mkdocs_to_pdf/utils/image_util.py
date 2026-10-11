@@ -1,89 +1,102 @@
+"""Image attribute fix-ups for print output."""
+
 from logging import Logger
-from bs4 import PageElement, Tag
+
+from bs4 import BeautifulSoup, Tag
+
+from .soup_util import get_attribute
 
 
-def fix_image_alignment(soup: PageElement, logger: Logger = None):
-    """ (workaround) convert <img align=*> to `float` style.
-    and, move <img width=*>, <image height=*> to style attributes.
+def fix_image_alignment(  # ruff: ignore[complex-structure]
+    soup: BeautifulSoup,
+    logger: Logger | None = None,
+) -> None:
     """
+    Fold ``align``/``width``/``height`` image attributes into inline styles.
 
+    Args:
+        soup: DOM object of the page.
+        logger: Optional logger.
+
+    """
     if logger:
-        logger.info('Converting <img> alignment(workaround).')
+        logger.info("Converting <img> alignment(workaround).")
 
-    for img in soup.select('img'):
-        try:
-            if img.has_attr('class') and 'twemoji' in img['class']:
+    for img in soup.select("img"):
+        try:  # ruff: ignore[too-many-statements-in-try-clause]
+            classes = img.get("class")
+            if classes and "twemoji" in classes:
                 continue
 
-            styles = _parse_style(getattr(img, 'style', ''))
+            styles = _parse_style(get_attribute(img, "style"))
 
-            logger.debug(f'  | {img}')
-            if img.has_attr('align'):
-                if img['align'] == 'left':
-                    styles['float'] = 'left'
-                    styles['padding-right'] = '1rem'
-                    styles['padding-bottom'] = '0.5rem'
-                    img.attrs.pop('align')
-                elif img['align'] == 'right':
-                    styles['float'] = 'right'
-                    styles['padding-left'] = '1rem'
-                    styles['padding-bottom'] = '0.5rem'
-                    img.attrs.pop('align')
+            if logger:
+                logger.debug("  | %s", img)
+            if img.has_attr("align"):
+                if img["align"] == "left":
+                    styles["float"] = "left"
+                    styles["padding-right"] = "1rem"
+                    styles["padding-bottom"] = "0.5rem"
+                    img.attrs.pop("align")
+                elif img["align"] == "right":
+                    styles["float"] = "right"
+                    styles["padding-left"] = "1rem"
+                    styles["padding-bottom"] = "0.5rem"
+                    img.attrs.pop("align")
 
-            if img.has_attr('width'):
-                styles['width'] = _convert_dimension(img['width'])
-                img.attrs.pop('width')
-            if img.has_attr('height'):
-                styles['height'] = _convert_dimension(img['height'])
-                img.attrs.pop('height')
+            if img.has_attr("width"):
+                styles["width"] = _convert_dimension(get_attribute(img, "width"))
+                img.attrs.pop("width")
+            if img.has_attr("height"):
+                styles["height"] = _convert_dimension(get_attribute(img, "height"))
+                img.attrs.pop("height")
 
             # Remove any trailing commas from style values
-            img['style'] = " ".join(
-                f'{k}: {v.rstrip(",")};'
-                for k, v in styles.items()
-            )
-        except Exception as e:
+            img["style"] = " ".join(f"{k}: {v.rstrip(',')};" for k, v in styles.items())
+        except Exception as e:  # ruff: ignore[blind-except]
             if logger:
-                logger.warning(f'Failed to convert img align: {e}')
-            pass
+                logger.warning("Failed to convert img align: %s", e)
 
 
-def images_size_to_half_in(section: Tag):
+def images_size_to_half_in(section: Tag) -> None:
+    """
+    Halve image dimensions and padding inside a section.
 
-    def _split(s):
-        for i, c in enumerate(s):
-            if not c.isdigit():
-                break
-        number = s[:i]
-        unit = s[i:].lstrip()
-        return (number, unit)
+    Args:
+        section: The section to process.
 
-    for img in section.find_all('img'):
-        if not img.has_attr('style'):
+    """
+
+    def _split(s: str) -> tuple[str, str]:
+        index = next((i for i, c in enumerate(s) if not c.isdigit()), len(s))
+        return (s[:index], s[index:].lstrip())
+
+    for img in section.find_all("img"):
+        if not img.has_attr("style"):
             continue
-        styles = _parse_style(img['style'])
+        styles = _parse_style(get_attribute(img, "style"))
         if not len(styles):
             continue
 
-        for key in ['width', 'height', 'padding-left', 'padding-right']:
+        for key in ["width", "height", "padding-left", "padding-right"]:
             if key in styles:
                 (dim, u) = _split(styles[key])
                 styles[key] = str(int(dim) / 2) + u
-        img['style'] = " ".join(f'{k}: {v};' for k, v in styles.items())
+        img["style"] = " ".join(f"{k}: {v};" for k, v in styles.items())
 
 
-def _parse_style(style_string: str) -> dict:
+def _parse_style(style_string: str) -> dict[str, str]:
     styles = {}
     if style_string:
-        for attr in style_string.split(';'):
+        for attr in style_string.split(";"):
             if not len(attr):
                 continue
-            val = attr.split(':', 2)
+            val = attr.split(":", 2)
             styles[val[0].strip()] = val[1].strip()
     return styles
 
 
 def _convert_dimension(dim_str: str) -> str:
     if dim_str.isdecimal():
-        return dim_str + 'px'
+        return dim_str + "px"
     return dim_str

@@ -1,0 +1,27 @@
+#!/usr/bin/env sh
+
+# Run a single pytest test file or test case against the project venv.
+#
+# Runs in-process (`-n 0`) without coverage for fast iteration.
+
+set -e
+
+prog="$(basename "$0")"
+root="$(realpath "$(dirname "$0")/../..")"
+venv_pytest="$root/.venv/bin/pytest"
+
+if [ ! -f "$venv_pytest" ]; then
+    make -C "$root" sync-venv
+fi
+
+if [ $# -eq 0 ]; then
+    echo "Usage: $prog <pytest-args>..." >&2
+    echo "" >&2
+    echo "Examples:" >&2
+    echo "  $prog tests/test_toc.py" >&2
+    echo "  $prog tests/test_toc.py -k test_make_indexes" >&2
+    echo "  $prog -k 'toc and level'" >&2
+    exit 1
+fi
+
+"$venv_pytest" -n 0 --no-cov "$@"

@@ -1,0 +1,86 @@
+#!/usr/bin/env python3
+
+"""
+Print the combined HTML generated for a tests/fixtures/<name>/ site.
+
+The plugin must be configured with the ``html_path`` option (every bundled
+fixture is), so the assembled single-file document can be inspected without
+rendering a PDF. An existing ``.html`` file can also be passed directly.
+"""
+
+from __future__ import annotations
+
+import argparse
+import shutil
+import sys
+import tempfile
+from pathlib import Path
+
+from mkdocs.commands.build import build
+from mkdocs.config import load_config
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+FIXTURES = REPO_ROOT / "tests" / "fixtures"
+
+
+def _available_fixtures() -> str:
+    return ", ".join(sorted(path.name for path in FIXTURES.iterdir() if path.is_dir()))
+
+
+def _build_fixture(name: str) -> Path:
+    source = FIXTURES / name
+    if not source.is_dir():
+        msg = f"unknown fixture {name!r}; available: {_available_fixtures()}"
+        raise SystemExit(
+            msg,
+        )
+
+    root = Path(tempfile.mkdtemp(prefix=f"mkdocs-to-pdf-{name}-"))
+    project = root / "project"
+    shutil.copytree(source, project)
+    site_dir = root / "site"
+
+    config = load_config(
+        config_file=str(project / "mkdocs.yml"),
+        docs_dir=str(project / "docs"),
+        site_dir=str(site_dir),
+    )
+    build(config)
+    return site_dir
+
+
+def _find_html(site_dir: Path) -> Path:
+    html = site_dir / "single.html"
+    if html.is_file():
+        return html
+
+    found = sorted(site_dir.glob("*.html"))
+    if found:
+        return found[0]
+
+    msg = f"no combined HTML found under {site_dir}; set the plugin's html_path option"
+    raise SystemExit(
+        msg,
+    )
+
+
+def main() -> int:
+    """Resolve the combined HTML and print its path or contents."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("source", help="fixture name or path to an existing .html file")
+    parser.add_argument("--path", action="store_true", help="print only the file path")
+    args = parser.parse_args()
+
+    source = Path(args.source)
+    html = source if source.is_file() else _find_html(_build_fixture(args.source))
+
+    if args.path:
+        sys.stdout.write(f"{html}\n")
+        return 0
+
+    sys.stdout.write(html.read_text(encoding="utf-8"))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

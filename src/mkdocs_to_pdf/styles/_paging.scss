@@ -28,6 +28,13 @@
   }
 }
 
+// A bitmap taller than the printable area cannot be split, so WeasyPrint drops
+// everything after it (#116). Cap it to the A4 content box (297mm - 2 * 25mm
+// margin) so tall images scale to fit instead.
+img {
+  max-height: 240mm;
+}
+
 h1,
 h2,
 h3,
@@ -57,21 +64,23 @@ section + section {
 
   a,
   blockquote,
-  table,
+  table {
+    page-break-before: avoid;
+    page-break-inside: avoid;
+  }
+
+  // Lists may be taller than a single page, so let them break between items
+  // rather than forcing the whole (possibly nested) list onto a fresh page and
+  // leaving the previous page almost empty (#88).
   ul,
   ol {
     page-break-before: avoid;
-    page-break-inside: avoid;
+    page-break-inside: auto;
   }
 
   pre,
   dt + dd {
     page-break-before: avoid;
-  }
-
-  %headings + ul,
-  %headings + ol {
-    page-break-inside: auto;
   }
 
   div.admonition {
@@ -91,4 +100,34 @@ section + section {
 section.two-columns {
   columns: 2;
   column-gap: 1cm;
+}
+
+// `linenums` code blocks (Pygments `table.highlighttable`) are a single table
+// row that WeasyPrint cannot split, so an over-long block drops everything
+// after it (#62). `linenums_util` marks such tables (when per-line spans are
+// available); lay them out as blocks and draw the gutter with a counter so the
+// block can break across pages while keeping its line numbers.
+table.highlighttable.linenums-counter,
+table.highlighttable.linenums-counter tbody,
+table.highlighttable.linenums-counter tr,
+table.highlighttable.linenums-counter td {
+  display: block !important;
+  width: auto !important;
+}
+
+table.highlighttable.linenums-counter td.code code {
+  counter-reset: pdf-line;
+}
+
+table.highlighttable.linenums-counter td.code code > span {
+  counter-increment: pdf-line;
+}
+
+table.highlighttable.linenums-counter td.code code > span::before {
+  content: counter(pdf-line);
+  display: inline-block;
+  min-width: 2.5em;
+  padding-right: 0.75em;
+  color: #999;
+  text-align: right;
 }

@@ -1,0 +1,3 @@
+from .base import BaseImage
+
+class SvgPathImage(BaseImage): ...

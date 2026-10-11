@@ -1,0 +1,21 @@
+site_name: MathJax Math
+
+theme:
+  name: material
+
+plugins:
+  - to-pdf:
+      output_path: pdf/document.pdf
+      html_path: single.html
+      render_js: true
+      headless_chrome_path: chromium
+
+markdown_extensions:
+  - pymdownx.arithmatex:
+      generic: true
+      tex_inline_wrap: ["$", "$"]
+      tex_block_wrap: ["$$", "$$"]
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js

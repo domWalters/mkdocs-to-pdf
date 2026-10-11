@@ -1,0 +1,82 @@
+#!/usr/bin/env python3
+
+"""
+Build a tests/fixtures/<name>/ MkDocs site and print its artifact paths.
+
+The fixture is copied to a fresh temporary directory and built with a real
+``mkdocs build``, exactly as the end-to-end tests do, so the resulting
+``site/`` directory (combined HTML and PDF) can be inspected.
+"""
+
+from __future__ import annotations
+
+import argparse
+import shutil
+import sys
+import tempfile
+from pathlib import Path
+
+from mkdocs.commands.build import build
+from mkdocs.config import load_config
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+FIXTURES = REPO_ROOT / "tests" / "fixtures"
+
+
+def available_fixtures() -> list[str]:
+    """Return the sorted names of the available fixture directories."""
+    return sorted(path.name for path in FIXTURES.iterdir() if path.is_dir())
+
+
+def build_fixture(name: str) -> Path:
+    """
+    Build the named fixture into a new temporary directory and return it.
+
+    Raises:
+        SystemExit: If no fixture with the given name exists.
+
+    """
+    source = FIXTURES / name
+    if not source.is_dir():
+        names = ", ".join(available_fixtures())
+        msg = f"unknown fixture {name!r}; available: {names}"
+        raise SystemExit(msg)
+
+    root = Path(tempfile.mkdtemp(prefix=f"mkdocs-to-pdf-{name}-"))
+    project = root / "project"
+    shutil.copytree(source, project)
+    site_dir = root / "site"
+
+    config = load_config(
+        config_file=str(project / "mkdocs.yml"),
+        docs_dir=str(project / "docs"),
+        site_dir=str(site_dir),
+    )
+    build(config)
+    return root
+
+
+def main() -> int:
+    """Build the requested fixture and print the artifact paths."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("fixture", help="name of a tests/fixtures/<name> directory")
+    args = parser.parse_args()
+
+    root = build_fixture(args.fixture)
+    site_dir = root / "site"
+
+    sys.stdout.write(f"project: {root / 'project'}\n")
+    sys.stdout.write(f"site:    {site_dir}\n")
+
+    html = site_dir / "single.html"
+    if html.is_file():
+        sys.stdout.write(f"html:    {html}\n")
+
+    for pdf in sorted(site_dir.glob("**/*.pdf")):
+        sys.stdout.write(f"pdf:     {pdf}\n")
+
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

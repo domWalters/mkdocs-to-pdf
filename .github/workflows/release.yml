@@ -1,0 +1,107 @@
+---
+name: Release
+on:
+  push:
+    tags:
+      - "v*.*.*"
+permissions:
+  contents: read
+jobs:
+  build-package:
+    name: Build package
+    runs-on: ubuntu-latest
+    environment:
+      name: release
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Sync
+        run: make sync
+
+      - name: Build package
+        run: make build
+
+      - name: Upload package
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-dists
+          path: dist/
+
+  release-package-pypi:
+    name: Release package to PyPi
+    runs-on: ubuntu-latest
+    needs:
+      - build-package
+    permissions:
+      id-token: write
+    environment:
+      name: pypi
+    steps:
+      - name: Retrieve package
+        uses: actions/download-artifact@v4
+        with:
+          name: release-dists
+          path: dist/
+
+      - name: Publish package
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/
+
+  release-package-github:
+    name: Release package to github
+    runs-on: ubuntu-latest
+    needs:
+      - build-package
+    permissions:
+      contents: write
+    environment:
+      name: github
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # git-cliff needs the full history and tags to build the release notes
+          fetch-depth: 0
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Retrieve package
+        uses: actions/download-artifact@v4
+        with:
+          name: release-dists
+          path: dist/
+
+      - name: Generate version variable
+        id: vars
+        run: |
+          # Strip the leading 'v' if it exists
+          TAG=${{ github.ref_name }}
+          VERSION=${TAG#v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Generate release notes
+        run: |
+          uvx git-cliff --latest --strip header > release_notes.md
+          {
+            echo
+            echo "Documentation: https://mkdocs-to-pdf.readthedocs.io/en/${{ github.ref_name }}/"
+            echo "PyPi: https://pypi.org/project/mkdocs-to-pdf/${{ steps.vars.outputs.version }}/"
+          } >> release_notes.md
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          tag_name: ${{ github.ref_name }}
+          body_path: release_notes.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

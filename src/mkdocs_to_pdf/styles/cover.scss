@@ -92,6 +92,18 @@ article#doc-back_cover {
       }
     }
   }
+
+  .barcode {
+    display: inline-block;
+    flex: 0 0 auto;
+    padding: 0.5em 2em;
+    background: $back_cover-bg;
+
+    img {
+      width: 100%;
+      height: auto;
+    }
+  }
 }
 
 @page back_cover {

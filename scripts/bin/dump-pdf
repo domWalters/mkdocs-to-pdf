@@ -1,0 +1,149 @@
+#!/usr/bin/env python3
+
+"""
+Print a summary of a generated PDF: metadata, outline, destinations and links.
+
+Accepts either a path to an existing PDF or the name of a tests/fixtures/<name>/
+site, which is built first. Use ``--text`` to also print the extracted text.
+"""
+
+from __future__ import annotations
+
+import argparse
+import shutil
+import sys
+import tempfile
+from pathlib import Path
+from typing import TYPE_CHECKING
+
+from mkdocs.commands.build import build
+from mkdocs.config import load_config
+from pypdf import PdfReader
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+FIXTURES = REPO_ROOT / "tests" / "fixtures"
+
+_METADATA_FIELDS = ("title", "author", "subject", "creator", "producer")
+
+
+def _available_fixtures() -> str:
+    return ", ".join(sorted(path.name for path in FIXTURES.iterdir() if path.is_dir()))
+
+
+def _build_fixture(name: str) -> Path:
+    source = FIXTURES / name
+    if not source.is_dir():
+        msg = f"unknown fixture {name!r}; available: {_available_fixtures()}"
+        raise SystemExit(
+            msg,
+        )
+
+    root = Path(tempfile.mkdtemp(prefix=f"mkdocs-to-pdf-{name}-"))
+    project = root / "project"
+    shutil.copytree(source, project)
+    site_dir = root / "site"
+
+    config = load_config(
+        config_file=str(project / "mkdocs.yml"),
+        docs_dir=str(project / "docs"),
+        site_dir=str(site_dir),
+    )
+    build(config)
+    return site_dir
+
+
+def _find_pdf(site_dir: Path) -> Path:
+    pdfs = sorted(site_dir.glob("**/*.pdf"))
+    if not pdfs:
+        msg = f"no PDF found under {site_dir}"
+        raise SystemExit(msg)
+    return pdfs[0]
+
+
+def _walk_outline(
+    nodes: Iterable[object],
+    depth: int = 0,
+) -> Iterable[tuple[int, str]]:
+    for node in nodes or []:
+        if isinstance(node, list):
+            yield from _walk_outline(node, depth + 1)
+        else:
+            yield depth, str(getattr(node, "title", node))
+
+
+def _resolve_pdf(source: str) -> Path:
+    path = Path(source)
+    if path.is_file():
+        return path
+    if path.suffix == ".pdf":
+        msg = f"no such PDF: {path}"
+        raise SystemExit(msg)
+    return _find_pdf(_build_fixture(source))
+
+
+def _write_metadata(reader: PdfReader) -> None:
+    metadata = reader.metadata
+    if metadata is None:
+        return
+    for field in _METADATA_FIELDS:
+        value = getattr(metadata, field, None)
+        if value:
+            sys.stdout.write(f"{field}: {value}\n")
+
+
+def _write_outline(reader: PdfReader) -> None:
+    sys.stdout.write("\noutline:\n")
+    for depth, title in _walk_outline(reader.outline):
+        sys.stdout.write(f"{'  ' * depth}- {title}\n")
+
+
+def _write_destinations(reader: PdfReader) -> None:
+    destinations = reader.named_destinations
+    sys.stdout.write(f"\nnamed destinations: {len(destinations)}\n")
+    for name in sorted(destinations):
+        sys.stdout.write(f"  {name}\n")
+
+
+def _count_links(reader: PdfReader) -> int:
+    count = 0
+    for page in reader.pages:
+        for annotation in page.get("/Annots") or []:
+            if annotation.get_object().get("/Subtype") == "/Link":
+                count += 1
+    return count
+
+
+def _write_text(reader: PdfReader) -> None:
+    sys.stdout.write("\ntext:\n")
+    for page in reader.pages:
+        sys.stdout.write(f"{page.extract_text() or ''}\n")
+
+
+def main() -> int:
+    """Print the PDF summary."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("source", help="fixture name or path to an existing PDF")
+    parser.add_argument("--text", action="store_true", help="also print the page text")
+    args = parser.parse_args()
+
+    pdf = _resolve_pdf(args.source)
+    reader = PdfReader(str(pdf))
+
+    sys.stdout.write(f"file: {pdf}\n")
+    sys.stdout.write(f"pages: {len(reader.pages)}\n")
+    _write_metadata(reader)
+    _write_outline(reader)
+    _write_destinations(reader)
+    sys.stdout.write(f"\nlink annotations: {_count_links(reader)}\n")
+
+    if args.text:
+        _write_text(reader)
+
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

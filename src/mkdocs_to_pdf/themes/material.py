@@ -1,47 +1,94 @@
-import logging
-import os
+"""Material for MkDocs theme handler."""
+
+import pathlib
+from logging import Logger
 
 import sass
 from bs4 import BeautifulSoup
 from mkdocs.structure.pages import Page
 
 
-def get_stylesheet(debug_html: bool) -> str:
-    base_path = os.path.abspath(os.path.dirname(__file__))
+def get_stylesheet(
+    _debug_html: bool,  # ruff: ignore[boolean-type-hint-positional-argument]
+) -> str:
+    """
+    Return the compiled Material theme stylesheet.
+
+    Args:
+        _debug_html: Whether debug HTML output is enabled.
+
+    Returns:
+        The compiled CSS.
+
+    """
+    base_path = pathlib.Path(__file__).resolve().parent
     style = ""
     for src in ["material.scss", "material-polyfills.css"]:
-        filename = os.path.join(base_path, src)
-        style += sass.compile(filename=filename)
+        style += str(sass.compile(filename=str(base_path / src)))
     return style
 
 
-def get_script_sources() -> list:
-    base_path = os.path.abspath(os.path.dirname(__file__))
-    return list(map(lambda src: os.path.join(base_path, src),
-                    ['material-polyfills.js']))
+def get_script_sources() -> list[str]:
+    """
+    Return the theme script sources.
+
+    Returns:
+        The script sources.
+
+    """
+    base_path = pathlib.Path(__file__).resolve().parent
+    return [str(base_path / src) for src in ["material-polyfills.js"]]
 
 
-def inject_link(html: str, href: str, page: Page, logger: logging) -> str:
+def inject_link(html: str, href: str, page: Page, logger: Logger) -> str:
+    """
+    Inject the PDF download link into the page head and header.
 
+    Args:
+        html: The rendered page HTML.
+        href: The PDF href.
+        page: The page being rendered.
+        logger: The logger.
+
+    Returns:
+        The modified HTML.
+
+    """
     # Adding PDF View button on navigation bar
     html = inject_link_download(html, href, page, logger)
 
-    soup = BeautifulSoup(html, 'html.parser')
+    soup = BeautifulSoup(html, "html.parser")
     if soup.head:
-        link = soup.new_tag('link', href=href, rel='alternate',
-                            title='PDF', type='application/pdf')
+        link = soup.new_tag(
+            "link",
+            href=href,
+            rel="alternate",
+            title="PDF",
+            type="application/pdf",
+        )
         soup.head.append(link)
         return str(soup)
 
     return html
 
 
-def inject_link_download(html: str, href: str,
-                         page: Page, logger: logging) -> str:
-    """Adding PDF View button on navigation bar(using material theme)"""
+def inject_link_download(html: str, href: str, page: Page, logger: Logger) -> str:
+    """
+    Add a PDF view button to the Material theme navigation bar.
 
-    def _pdf_icon():
-        _ICON = '''
+    Args:
+        html: The rendered page HTML.
+        href: The PDF href.
+        page: The page being rendered.
+        logger: The logger.
+
+    Returns:
+        The modified HTML.
+
+    """
+
+    def _pdf_icon() -> BeautifulSoup:
+        icon = """
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
 <path d="M128,0c-17.6,0-32,14.4-32,32v448c0,17.6,14.4,32,32,32h320c17.6,0,32-14.4,32-32V128L352,0H128z" fill="#E2E5E7"/>
 <path d="m384 128h96l-128-128v96c0 17.6 14.4 32 32 32z" fill="#B0B7BD"/>
@@ -54,19 +101,23 @@ def inject_link_download(html: str, href: str,
 </g>
 <path d="m400 432h-304v16h304c8.8 0 16-7.2 16-16v-16c0 8.8-7.2 16-16 16z" fill="#CAD1D8"/>
 </svg>
-'''  # noqa: E501
-        return BeautifulSoup(_ICON, 'html.parser')
+"""  # ruff: ignore[line-too-long]
+        return BeautifulSoup(icon, "html.parser")
 
-    logger.debug('(hook on inject_link: %s)', page.title)
-    soup = BeautifulSoup(html, 'html.parser')
+    logger.debug("(hook on inject_link: %s)", page.title)
+    soup = BeautifulSoup(html, "html.parser")
 
-    nav = soup.find(class_='md-header-nav')
+    nav = soup.find(class_="md-header-nav")
     if not nav:
         # after 7.x
-        nav = soup.find('nav', class_='md-header__inner')
+        nav = soup.find("nav", class_="md-header__inner")
     if nav:
-        a = soup.new_tag('a', href=href, title='PDF',
-                         **{'class': 'md-header-nav__button md-icon'})
+        a = soup.new_tag(
+            "a",
+            href=href,
+            title="PDF",
+            attrs={"class": "md-header-nav__button md-icon"},
+        )
         a.append(_pdf_icon())
         nav.append(a)
         return str(soup)
