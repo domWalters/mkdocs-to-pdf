@@ -3,7 +3,7 @@
 from bs4 import BeautifulSoup, Tag
 
 from .options import Options
-from .utils.soup_util import clone_element, get_attribute
+from .utils.soup_util import get_attribute
 
 _MAX_HEADING_LEVEL = 6
 
@@ -34,11 +34,7 @@ def make_indexes(  # ruff: ignore[complex-structure, too-many-statements]
         li = soup.new_tag("li")
         ref = get_attribute(h, "id")
         a = soup.new_tag("a", href=f"#{ref}")
-        for el in h.contents:
-            if isinstance(el, Tag) and el.name == "a":
-                a.append(el.contents[0])
-            else:
-                a.append(clone_element(el))
+        a.append(BeautifulSoup(h.decode_contents(), "html.parser"))
         li.append(a)
         options.logger.debug("| [%s](%s)", h.get_text(separator=" "), ref)
         return li
