@@ -187,19 +187,45 @@ The value encoded in the back cover barcode. No barcode is drawn when empty.
 The barcode type, a `python-barcode` kind (for example `code39`, `code128`,
 `ean13`). Defaults to `code128`.
 
-### Custom templates
+### Customizing the PDF
+
+The recommended way to change how the generated PDF looks — fonts, colours,
+heading sizes, underlines, and the page headers and footers — is a custom
+`styles.scss` file. It is compiled with [Sass][sass] and appended to the
+built-in styles, so you can use variables, nesting and `@import`, and your
+rules override the defaults.
+
+By default the plugin loads `styles.scss` from a `templates` directory at the
+root of your project, so creating `templates/styles.scss` is enough:
+
+``` scss
+// templates/styles.scss
+
+// The defaults use grey headings and red underlines; plain black suits paper.
+article h1,
+article h2,
+article h3 {
+  color: #000 !important;
+  border-bottom-color: #a9a9a9 !important;
+}
+```
+
+To keep the file elsewhere, point
+[`custom_template_path`](#custom_template_path) at its directory.
+
+[sass]: https://sass-lang.com/
 
 #### `custom_template_path`
 
-A directory containing custom cover templates and print styles. Defaults to
-`templates`.
+A directory containing the custom `styles.scss` and optional custom cover
+templates. Defaults to `templates`.
 
 It may contain any of:
 
-- `cover.html.j2` and/or `back_cover.html.j2`: custom cover templates.
 - `styles.scss`: print styles, compiled and appended *after* the built-in
   styles, so your rules win. Use `!important` to override theme rules that
   have higher specificity.
+- `cover.html.j2` and/or `back_cover.html.j2`: custom cover templates.
 
 ``` yaml
 plugins:
@@ -212,7 +238,16 @@ This is the path to the **directory**, not to `styles.scss` itself.
 To see the styles you can override, browse the installed package's
 `mkdocs_to_pdf/styles/*.scss` and `mkdocs_to_pdf/themes/*.scss`.
 
-For example, to change the Material heading underlines:
+!!! note
+    A relative `custom_template_path` is resolved against the *working
+    directory*, not the directory containing `mkdocs.yml`. Use an absolute
+    path, or run `mkdocs` from the directory containing your config (for
+    example, `mkdocs build -f path/to/mkdocs.yml` resolves relative paths
+    differently than running it from that directory).
+
+#### Common style changes
+
+Change the heading colours and underlines:
 
 ``` scss
 article {
@@ -226,12 +261,38 @@ article {
 }
 ```
 
-!!! note
-    A relative `custom_template_path` is resolved against the *working
-    directory*, not the directory containing `mkdocs.yml`. Use an absolute
-    path, or run `mkdocs` from the directory containing your config (for
-    example, `mkdocs build -f path/to/mkdocs.yml` resolves relative paths
-    differently than running it from that directory).
+Make `h4`–`h6` the same size and weight as the body text:
+
+``` scss
+article h4,
+article h5,
+article h6 {
+  color: #000 !important;
+  font-size: 1em !important;
+  font-weight: normal !important;
+}
+```
+
+Stop inline code shrinking below the body font size:
+
+``` scss
+pre,
+code,
+var,
+samp,
+kbd,
+tt {
+  font-size: 1em;
+}
+```
+
+Recolour the page header and footer with the CSS `@page` rule:
+
+``` scss
+@page {
+  color: #000;
+}
+```
 
 ### Template filters
 
