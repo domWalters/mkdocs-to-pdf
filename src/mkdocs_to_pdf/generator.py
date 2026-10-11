@@ -197,14 +197,16 @@ class Generator:
         )
         self._normalize_link_anchors(soup)
 
-        html_string = str(soup) if self._options.relaxed_js else self._render_js(soup)
+        site_dir = pathlib.Path(config["site_dir"])
+
+        html_string = (
+            str(soup) if self._options.relaxed_js else self._render_js(soup, site_dir)
+        )
 
         html_string = self._options.hook.pre_pdf_render(html_string)
 
         if self._options.debug_html:
             print(f"{html_string}")  # ruff: ignore[print]
-
-        site_dir = pathlib.Path(config["site_dir"])
 
         if self._options.html_path:
             abs_html_path = (site_dir / self._options.html_path).resolve()
@@ -433,7 +435,7 @@ class Generator:
                 for anchor in sorted(anchors):
                     self.logger.info("  | %s", anchor)
 
-    def _render_js(self, soup: BeautifulSoup) -> str:
+    def _render_js(self, soup: BeautifulSoup, site_dir: pathlib.Path) -> str:
         if not self._options.js_renderer:
             fix_twemoji(soup, self._options.logger)
             return str(soup)
@@ -453,7 +455,7 @@ class Generator:
                 for src in scripts:
                     body.append(soup.new_tag("script", src=f"file://{src}"))
 
-        return self._options.js_renderer.render(str(soup))
+        return self._options.js_renderer.render(str(soup), site_dir)
 
     def _scrap_scripts(self, soup: BeautifulSoup, page: Page) -> None:
         if not self._options.js_renderer:
