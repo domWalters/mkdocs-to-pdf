@@ -63,7 +63,7 @@ As soon as you've finished reading this file, read the following skills:
 <!-- BEGIN_SKILLS -->
 ```txt
 .agents/skills
-├── build-docs                 - Builds the MkDocs documentation site, including its generated PDF
+├── build-docs                 - Builds the MkDocs documentation site and its generated PDFs
 ├── build-fixture              - Builds a tests/fixtures/<name>/ MkDocs site and prints the generated artifact paths
 ├── build-package              - Builds the mkdocs-to-pdf Python package using the Hatchling build backend
 ├── build-samples              - Builds the sample MkDocs projects and their generated PDFs

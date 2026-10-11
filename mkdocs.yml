@@ -61,10 +61,14 @@ markdown_extensions:
   - toc:
       permalink: true
 
+hooks:
+  - hooks/publish-fixture-pdfs.py
+
 nav:
   - Home: README.md
   - Installation: installation.md
   - Usage: usage.md
+  - Example PDFs: examples/example-pdfs.md
   - Examples:
       - examples/admonitions.md
       - examples/annotations.md
