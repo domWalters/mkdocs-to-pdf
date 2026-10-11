@@ -11,6 +11,12 @@
 This repository is a fork of [`mkdocs-with-pdf`][mkdocs-with-pdf], which itself
 was inspired by [`mkdocs-pdf-export-plugin`][mkdocs-pdf-export-plugin].
 
+> **Theme support**
+>
+> `mkdocs-to-pdf` is primarily intended for use with the
+> [`mkdocs-material`][mkdocs-material] theme. Other themes can be used, but
+> they are not officially supported and are used at your own risk.
+
 ## Features
 
 - Supports [`mkdocs-material`][mkdocs-material].

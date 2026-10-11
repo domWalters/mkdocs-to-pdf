@@ -1,5 +1,12 @@
 # Usage
 
+!!! warning "Theme support"
+
+    `mkdocs-to-pdf` is primarily intended for use with the
+    [`mkdocs-material`](https://squidfunk.github.io/mkdocs-material/) theme.
+    Other themes can be used, but they are not officially supported and are
+    used at your own risk.
+
 ## Initial Plugin
 
 Enable the plugin in your `mkdocs.yml`:
