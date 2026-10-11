@@ -62,7 +62,7 @@ distro==1.9.0 ; sys_platform == 'linux'
     # via hatch
 execnet==2.1.2
     # via pytest-xdist
-filelock==4.0.9
+filelock==4.0.10
     # via
     #   python-discovery
     #   virtualenv
@@ -224,7 +224,7 @@ pexpect==4.9.0
     # via hatch
 pillow==12.3.0
     # via weasyprint
-platformdirs==4.12.2
+platformdirs==4.12.3
     # via
     #   hatch
     #   mkdocs-get-deps
@@ -343,7 +343,7 @@ urllib3==2.8.0
     # via requests
 userpath==1.9.2
     # via hatch
-uv==0.12.22
+uv==0.12.23
     # via
     #   hatch
     #   mkdocs-to-pdf
@@ -360,7 +360,7 @@ webencodings==0.6.1
     #   cssselect2
     #   html5lib
     #   tinycss2
-zipp==4.1.0 ; python_full_version < '3.12'
+zipp==4.1.1 ; python_full_version < '3.12'
     # via importlib-metadata
 zopfli==0.4.3
     # via fonttools

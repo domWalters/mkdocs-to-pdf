@@ -48,7 +48,7 @@ pathspec==1.1.1
     # via mkdocs
 pillow==12.3.0
     # via weasyprint
-platformdirs==4.12.2
+platformdirs==4.12.3
     # via mkdocs-get-deps
 pycparser==3.0 ; implementation_name != 'PyPy'
     # via cffi
