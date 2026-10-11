@@ -6,6 +6,7 @@ help:
 	@echo "Usage:"
 	@echo "  all             : clean, setup, sync, build, check, docs, samples"
 	@echo "  build           : build wheel and compressed source"
+	@echo "  changelog       : regenerate CHANGELOG.md from commit history"
 	@echo "  check           : run pre-commit"
 	@echo "  clean           : delete all generated content"
 	@echo "  clean-build     : delete all builds"
@@ -94,6 +95,15 @@ build: sync-venv clean-build
 	$(at). $(activate) \
 		&& uv --directory $(makefile_directory) lock \
 		&& uv --directory $(makefile_directory) build
+	@echo ""
+
+.PHONY: changelog
+changelog:
+	@echo "#############"
+	@echo "# changelog #"
+	@echo "#############"
+	$(at). $(activate) \
+		&& $(makefile_directory)/hooks/update-changelog.py
 	@echo ""
 
 .PHONY: docs

@@ -30,13 +30,14 @@ docs/
     stylesheets/                - Extra CSS for the documentation site
 hooks/
     generate-agents-skills.py   - Pre-commit hook that syncs the skills listing in AGENTS.md
+    update-changelog.py         - Pre-commit hook that regenerates CHANGELOG.md from commit history
 samples/
     mkdocs/                     - Sample site that renders the mkdocs docs to PDF
     mkdocs-material/            - Sample site that renders the mkdocs-material docs to PDF
 scripts/
     settings-venv.sh            - Create / sync the venv and activate it
     settings-post-venv.sh       - Put scripts/bin on PATH
-    update_version.sh           - Cut a release branch, bump the version and tag
+    update-version.sh           - Cut a release branch, bump the version and tag
 src/mkdocs_to_pdf/
     plugin.py                   - MkDocs plugin entry point (WithPdfPlugin)
     options.py                  - Plugin config scheme and resolved Options
@@ -139,6 +140,10 @@ nix-shell --run "<command>"
 - Tests live in `tests/` and are named `test_*.py`; reuse the `make_options` and
   `make_soup` fixtures from `tests/conftest.py`, and the session-scoped
   `built_<fixture>` fixtures generated from `tests/fixtures/<dir>`
+- Commit messages follow [Conventional Commits](https://www.conventionalcommits.org)
+  (enforced by `commitlint`); `CHANGELOG.md` is generated from them by
+  `git-cliff` (`.cliff.toml`) via `hooks/update-changelog.py` and must not be
+  edited by hand. Regenerate it with `make changelog`.
 - Prefer small, pure transform functions that take a `BeautifulSoup` and mutate
   it, so they can be unit-tested with `make_soup`
 

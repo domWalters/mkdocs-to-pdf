@@ -61,6 +61,12 @@ repos:
               ^\.agents/skills/.*/SKILL\.md$
           )$
         pass_filenames: false
+      - id: update-changelog
+        name: Generate CHANGELOG.md
+        entry: hooks/update-changelog.py
+        language: system
+        always_run: true
+        pass_filenames: false
       - id: codespell
         name: codespell
         entry: codespell

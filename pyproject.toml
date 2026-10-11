@@ -85,6 +85,10 @@ to-pdf = "mkdocs_to_pdf.plugin:WithPdfPlugin"
 [project.urls]
 Repository = "https://github.com/domWalters/mkdocs-to-pdf"
 
+[tool.codespell]
+# CHANGELOG.md quotes historical commit messages verbatim
+exclude-file = "CHANGELOG.md"
+
 [tool.coverage.html]
 directory = ".htmlcov"
 
@@ -103,7 +107,7 @@ output = ".coverage.xml"
 [tool.hatch.build]
 include = [
     "CONTRIBUTING.md",
-    "CHANGELOG",
+    "CHANGELOG.md",
     "src/mkdocs_to_pdf/**/*.css",
     "src/mkdocs_to_pdf/**/*.html",
     "src/mkdocs_to_pdf/**/*.j2",

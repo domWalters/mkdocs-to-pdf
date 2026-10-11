@@ -31,10 +31,23 @@ fi
 git checkout develop
 git pull
 
-make tests
-make check
+make check || true
+if ! git diff --quiet; then
+    if ! git diff --quiet CHANGELOG.md; then
+        git add CHANGELOG.md
+        make check
+        git commit -m "chore: update changelog"
+        git push --set-upstream origin develop
+    else
+        echo "'make check' changed files, terminating ..."
+        exit 1
+    fi
+fi
 
-git checkout -b "release-v$new_version"
+make tests
+
+release_branch="release-v$new_version"
+git checkout -b "$release_branch"
 
 escaped_new_version=${new_version//\./\\\.}
 
@@ -52,7 +65,7 @@ make check
 git add uv.lock
 
 git commit -m "chore: v$new_version"
-git push --set-upstream origin "release-v$new_version"
+git push --set-upstream origin "$release_branch"
 
 git checkout main
 git merge "release-v$new_version"
@@ -64,3 +77,6 @@ git push --tags
 git checkout develop
 git merge main
 git push
+
+git push origin --delete "$release_branch"
+git branch -d "$release_branch"

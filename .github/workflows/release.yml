@@ -63,6 +63,17 @@ jobs:
     environment:
       name: github
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # git-cliff needs the full history and tags to build the release notes
+          fetch-depth: 0
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
       - name: Retrieve package
         uses: actions/download-artifact@v4
         with:
@@ -77,15 +88,20 @@ jobs:
           VERSION=${TAG#v}
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
+      - name: Generate release notes
+        run: |
+          uvx git-cliff --latest --strip header > release_notes.md
+          {
+            echo
+            echo "Documentation: https://mkdocs-to-pdf.readthedocs.io/en/${{ github.ref_name }}/"
+            echo "PyPi: https://pypi.org/project/mkdocs-to-pdf/${{ steps.vars.outputs.version }}/"
+          } >> release_notes.md
+
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
         with:
           files: dist/*
           tag_name: ${{ github.ref_name }}
-          body: |
-            ## Release ${{ github.ref_name }}
-
-            Documentation: https://mkdocs-to-pdf.readthedocs.io/en/${{ github.ref_name }}/
-            PyPi: https://pypi.org/project/mkdocs-to-pdf/${{ steps.vars.outputs.version }}/
+          body_path: release_notes.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
