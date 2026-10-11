@@ -13,10 +13,10 @@ dependencies = [
     "beautifulsoup4 >= 4.9.3",
     "libsass >= 0.23.0",
     "mkdocs >= 1.6.1",
-    "pydyf == 0.10.0",
+    "pydyf >= 0.12.1",
     "python-barcode >= 0.16.1",
     "qrcode >= 8.2",
-    "weasyprint == 62.3",
+    "weasyprint >= 70.0",
 ]
 authors = [
     { name = "orzih" },
@@ -42,13 +42,13 @@ classifiers = [
 [project.optional-dependencies]
 dev = [
     "codespell >= 2.4.3",
-    "coverage >= 7.16.0",
+    "coverage >= 7.16.2",
     "git-cliff >= 2.13.1",
-    "hatch >= 1.18.0",
+    "hatch >= 1.18.1",
         "cryptography >= 49.0.0",  # forced to avoid CVE
         "idna >= 3.18",  # forced to avoid CVE
         "jaraco-context >= 6.1.2",  # forced to avoid CVE
-    "mypy >= 2.3.1",
+    "mypy >= 2.4.0",
     "pre-commit >= 4.6.2",
     "pypdf >= 6.19.0",
     "pytest >= 9.1.1",
@@ -56,13 +56,14 @@ dev = [
     "pytest-order >= 1.5.0",
     "pytest-sugar >= 1.1.1",
     "pytest-xdist >= 3.8.0",
-    "ruff >= 0.16.5",
-    "ty >= 0.0.78",
-    "uv >= 0.12.10",
+    "ruff < 0.17.0",
+    "ty <= 0.0.84",
+    "uv < 0.13.0",
 ]
 docs = [
-    "mkdocs-material == 9.6.7",
+    "mkdocs-material == 9.7.7",
     "mkdocs-minify-plugin == 0.8.0",
+        "pymdown-extensions >= 11.0.1",  # forced to avoid CVE
 ]
 samples = [
     "markdown-callouts == 0.4.0",
@@ -71,9 +72,10 @@ samples = [
     "mkdocs-autorefs == 1.4.0",
     "mkdocs-click == 0.5.0",
     "mkdocs-literate-nav == 0.6.1",
-    "mkdocs-material == 9.6.7",
+    "mkdocs-material == 9.7.7",
     "mkdocs-minify-plugin == 0.8.0",
     "mkdocs-redirects == 1.2.2",
+        "pymdown-extensions >= 11.0.1",  # forced to avoid CVE
 ]
 all = ["mkdocs-to-pdf[dev, docs, samples]"]
 
@@ -204,14 +206,3 @@ missing-override-decorator = "ignore"  # this is emitted for every dunder overri
 [tool.uv]
 exclude-newer = "7 days"
 preview = true
-
-[tool.uv.audit]
-ignore = [
-    "GHSA-xvg9-69gf-fjrf",
-    "PYSEC-2026-3609",
-    "PYSEC-2026-3654",
-    "GHSA-r543-q48m-4c9j",
-    "PYSEC-2026-3940",
-    "PYSEC-2026-3412",
-    "GHSA-983w-rhvv-gwmv",
-]

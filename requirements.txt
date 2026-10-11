@@ -22,8 +22,6 @@ fonttools==4.66.1
     # via weasyprint
 ghp-import==2.1.0
     # via mkdocs
-html5lib==1.1
-    # via weasyprint
 jinja2==3.1.6
     # via mkdocs
 libsass==0.23.0
@@ -52,7 +50,7 @@ platformdirs==4.12.3
     # via mkdocs-get-deps
 pycparser==3.0 ; implementation_name != 'PyPy'
     # via cffi
-pydyf==0.10.0
+pydyf==0.12.1
     # via
     #   mkdocs-to-pdf
     #   weasyprint
@@ -72,25 +70,25 @@ pyyaml-env-tag==1.1
 qrcode==8.2
     # via mkdocs-to-pdf
 six==1.17.0
-    # via
-    #   html5lib
-    #   python-dateutil
+    # via python-dateutil
 soupsieve==2.10
     # via beautifulsoup4
 tinycss2==1.5.1
     # via
     #   cssselect2
     #   weasyprint
+tinyhtml5==2.1.0
+    # via weasyprint
 typing-extensions==4.16.0
     # via beautifulsoup4
 watchdog==6.0.0
     # via mkdocs
-weasyprint==62.3
+weasyprint==70.0
     # via mkdocs-to-pdf
 webencodings==0.6.1
     # via
     #   cssselect2
-    #   html5lib
     #   tinycss2
+    #   tinyhtml5
 zopfli==0.4.3
     # via fonttools
