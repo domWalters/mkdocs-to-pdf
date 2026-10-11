@@ -2,6 +2,7 @@
 
 # ruff: file-ignore[suspicious-subprocess-import]
 
+import os
 from logging import Logger
 from shutil import which
 from subprocess import PIPE, Popen
@@ -58,6 +59,11 @@ class HeadlessChromeDriver:
         """
         with NamedTemporaryFile(suffix=".html") as temp:
             temp.write(html.encode("utf-8"))
+            # Chrome reads the file from disk, so flush the buffer (and fsync)
+            # before launching it; otherwise it can see an empty file and dump
+            # an empty DOM.
+            temp.flush()
+            os.fsync(temp.fileno())
             try:
                 self._logger.info("Rendering on `Headless Chrome` (execute JS) ...")
                 # ruff: ignore[subprocess-without-shell-equals-true]
