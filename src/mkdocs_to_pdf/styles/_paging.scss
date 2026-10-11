@@ -64,21 +64,23 @@ section + section {
 
   a,
   blockquote,
-  table,
+  table {
+    page-break-before: avoid;
+    page-break-inside: avoid;
+  }
+
+  // Lists may be taller than a single page, so let them break between items
+  // rather than forcing the whole (possibly nested) list onto a fresh page and
+  // leaving the previous page almost empty (#88).
   ul,
   ol {
     page-break-before: avoid;
-    page-break-inside: avoid;
+    page-break-inside: auto;
   }
 
   pre,
   dt + dd {
     page-break-before: avoid;
-  }
-
-  %headings + ul,
-  %headings + ol {
-    page-break-inside: auto;
   }
 
   div.admonition {

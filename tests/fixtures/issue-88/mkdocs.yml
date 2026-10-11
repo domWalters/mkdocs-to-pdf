@@ -1,0 +1,23 @@
+site_name: GSAS-II Help
+
+nav:
+  - Contents: index.md
+
+theme:
+  name: material
+
+plugins:
+  - to-pdf:
+      author: Brian H. Toby and Robert B. Von Dreele
+      cover_title: GSAS-II Help information
+      cover_subtitle: A compilation of HTML pages into PDF
+      copyright: From https://advancedphotonsource.github.io/GSAS-II-tutorials/help/
+      output_path: pdf/document.pdf
+      html_path: single.html
+
+markdown_extensions:
+  - def_list
+  - admonition
+
+site_url: ""
+use_directory_urls: false
