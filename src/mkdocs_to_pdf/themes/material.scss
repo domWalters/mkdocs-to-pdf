@@ -15,6 +15,31 @@
     left: 0.6rem;
   }
 
+  // Material makes admonitions, details and lists block formatting-context
+  // roots with `display: flow-root`. WeasyPrint does not move a BFC root out of
+  // the way of a float, so an aligned image overlaps the admonition border and
+  // the list bullets (#104). When the page contains a floated image:
+  //  - lay admonitions/details out as tables, which WeasyPrint *does* move
+  //    beside the float, so their border and icon clear the image;
+  //  - fall lists back to `block` and pull the markers into the flow so their
+  //    bullets wrap around the float.
+  .md-typeset:has(img[style*="float"]) {
+    .admonition,
+    details {
+      display: table;
+    }
+
+    ul:not([hidden]),
+    ol:not([hidden]) {
+      display: block;
+    }
+
+    ul,
+    ol {
+      list-style-position: inside;
+    }
+  }
+
   .md-typeset {
     // Tabbed code block container
     .tabbed-set {

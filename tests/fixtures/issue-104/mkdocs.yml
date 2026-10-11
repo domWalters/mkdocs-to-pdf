@@ -1,0 +1,22 @@
+site_name: Image Alignment Regression Site
+site_author: Regression Author
+copyright: Copyright Regression
+
+theme:
+  name: material
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+
+plugins:
+  - to-pdf:
+      output_path: pdf/document.pdf
+      html_path: single.html
+      cover_title: Image Alignment
+      cover_subtitle: Issue 104
+      toc_title: Contents
+
+nav:
+  - Home: index.md
