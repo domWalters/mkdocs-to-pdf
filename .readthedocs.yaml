@@ -12,3 +12,7 @@ mkdocs:
 python:
   install:
     - requirements: requirements-dev.txt
+    # requirements-dev.txt excludes the project (`uv export --no-emit-project`),
+    # so install it explicitly for the `to-pdf` plugin entry point.
+    - method: pip
+      path: .
