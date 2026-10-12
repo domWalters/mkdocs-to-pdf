@@ -17,7 +17,7 @@ import { Configuration } from "webpack"
 function config(args: Configuration): Configuration {
   return {
     mode: args.mode,
-    target: 'es5',
+    target: ['web', 'es5'],
 
     /* Loaders */
     module: {
@@ -50,18 +50,21 @@ function config(args: Configuration): Configuration {
                     [
                       'postcss-inline-svg',
                       {
-                        paths: [path.resolve(__dirname, 'node_modules')],
-                        encode: false
+                        paths: [path.resolve(__dirname, 'node_modules')]
                       }
                     ],
                     [
                       'postcss-svgo',
                       {
                         plugins: [
-                          { removeDoctype: true },
-                          { removeComments: true },
-                          { removeDimensions: true },
-                          { removeViewBox: false }
+                          {
+                            name: 'preset-default',
+                            params: {
+                              overrides: {
+                                removeViewBox: false
+                              }
+                            }
+                          }
                         ],
                         encode: false
                       }
@@ -76,7 +79,7 @@ function config(args: Configuration): Configuration {
               options: {
                 implementation: require('sass'),
                 sassOptions: {
-                  includePaths: [
+                  loadPaths: [
                     'node_modules/modularscale-sass/stylesheets',
                     'node_modules/material-design-color'
                   ]
@@ -145,7 +148,15 @@ export default (_env: never, args: Configuration): Configuration[] => {
       ],
 
       /* Optimizations */
-      optimization: {}
+      optimization: {
+        // Webpack 5.111's built-in CSS minifier corrupts shorthand values
+        // (e.g. `border-width: a b c d`), which WeasyPrint silently drops.
+        // Keep JS minified by terser, but leave the CSS emitted by the
+        // sass/postcss pipeline untouched.
+        minimizeOptions: {
+          css: false
+        }
+      }
     }
   ]
 }

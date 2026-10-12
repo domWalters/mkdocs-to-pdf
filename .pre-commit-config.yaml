@@ -72,6 +72,8 @@ repos:
         entry: codespell
         language: system
         types: [text]
+        # Lockfiles hold package names and hashes that codespell false-positives on
+        exclude: package-lock\.json$
       - id: ruff-format
         name: ruff format
         entry: ruff format --force-exclude

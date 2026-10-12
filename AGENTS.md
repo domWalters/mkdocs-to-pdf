@@ -23,6 +23,8 @@ plugins:
 ## Directory Layout
 
 ```txt
+custom_style_src/
+    material-polyfills/         - npm/TypeScript project that builds the Material print polyfills (`make polyfills`)
 docs/
     installation.md             - Installation instructions
     usage.md                    - Reference for every plugin option
@@ -137,6 +139,12 @@ nix-shell --run "<command>"
   `src/mkdocs_to_pdf/options.py` and resolved in `Options.__init__`
 - Theme-specific behaviour lives in a per-theme module under
   `src/mkdocs_to_pdf/themes/`
+- The `custom_style_src/material-polyfills` npm project has one accepted
+  `npm audit` finding: `braces` (`GHSA-vfj7-8cjw-p6xm`), a dev-only DoS via
+  deeply nested glob patterns with no fixed release. It is reachable through
+  both `stylelint` and `webpack-dev-server`; do not try to clear it by
+  force-upgrading or by swapping those packages. Rebuild the assets with
+  `make polyfills`.
 - Tests live in `tests/` and are named `test_*.py`; reuse the `make_options` and
   `make_soup` fixtures from `tests/conftest.py`, and the session-scoped
   `built_<fixture>` fixtures generated from `tests/fixtures/<dir>`

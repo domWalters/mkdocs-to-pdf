@@ -12,6 +12,7 @@ help:
 	@echo "  clean-build     : delete all builds"
 	@echo "  distclean       : delete the venv and all cached data"
 	@echo "  docs            : build the documentation"
+	@echo "  polyfills       : rebuild the material-polyfills assets"
 	@echo "  publish         : publish to PyPi"
 	@echo "  samples         : build the samples"
 	@echo "  setup           : make a venv"
@@ -114,6 +115,30 @@ docs: sync
 	$(at). $(activate) \
 		&& cd $(makefile_directory) \
 		&& mkdocs build
+	@echo ""
+
+.PHONY: polyfills
+polyfills:
+	@echo "#############"
+	@echo "# polyfills #"
+	@echo "#############"
+	$(at)cd $(makefile_directory)/custom_style_src/material-polyfills \
+		&& npm ci \
+		&& npm run build \
+		&& cp \
+			dist/material-polyfills.css \
+			dist/material-polyfills.css.map \
+			dist/material-polyfills.js \
+			dist/material-polyfills.js.map \
+			$(makefile_directory)/src/mkdocs_to_pdf/themes/ \
+		&& for f in \
+			$(makefile_directory)/src/mkdocs_to_pdf/themes/material-polyfills.css \
+			$(makefile_directory)/src/mkdocs_to_pdf/themes/material-polyfills.css.map \
+			$(makefile_directory)/src/mkdocs_to_pdf/themes/material-polyfills.js \
+			$(makefile_directory)/src/mkdocs_to_pdf/themes/material-polyfills.js.map \
+		; do \
+			[ -z "$$(tail -c1 "$$f")" ] || printf '\n' >> "$$f"; \
+		done
 	@echo ""
 
 .PHONY: samples
