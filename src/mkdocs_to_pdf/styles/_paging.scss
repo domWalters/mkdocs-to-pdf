@@ -47,7 +47,11 @@ h6 {
 article,
 section + section {
   page-break-before: always;
-  min-height: 100vh;
+
+  // No `min-height: 100vh` here: WeasyPrint 70 resolves viewport units, and a
+  // full-viewport minimum on every section makes it stop laying out content
+  // after a handful of pages, truncating the document. The cover and back
+  // cover set their own height in `cover.scss`.
 
   &,
   %headings,
