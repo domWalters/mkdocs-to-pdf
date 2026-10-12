@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Apply PR #101
+- Avoid docs regression caused by weasyprint update (#122)
 
 ## [0.12.0] - 2026-10-11
 
