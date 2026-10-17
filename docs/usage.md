@@ -220,7 +220,34 @@ article h3 {
 To keep the file elsewhere, point
 [`custom_template_path`](#custom_template_path) at its directory.
 
+`styles.scss` is rendered as a [Jinja2][jinja] template *before* it is
+compiled, using the same variables as the cover templates. This lets you define
+a value once in the `extra` section of `mkdocs.yml` and reuse it across both
+your cover and your styles:
+
+``` yaml
+# mkdocs.yml
+extra:
+  brand_colour: "#0055aa"
+```
+
+``` scss
+// templates/styles.scss
+$brand: {{ brand_colour }};
+
+article h1 {
+  color: $brand !important;
+  border-bottom-color: $brand !important;
+}
+```
+
+The available variables are every key under `extra` plus `author`,
+`copyright`, `cover_title`, `cover_subtitle`, `cover_logo`, the `back_cover_*`
+options, `site_url`, `repo_url` and `now`. Because the file is a Jinja2
+template, a literal `{{` must be escaped (for example `{{ '{{' }}`).
+
 [sass]: https://sass-lang.com/
+[jinja]: https://jinja.palletsprojects.com/
 
 #### `custom_template_path`
 

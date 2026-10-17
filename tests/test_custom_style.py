@@ -10,7 +10,7 @@ from mkdocs.commands.build import build
 from mkdocs.config import load_config
 
 _SCSS = """
-$custom-accent: #ff00ff;
+$custom-accent: {{ pdf_accent }};
 
 article h1 {
   color: $custom-accent !important;
@@ -45,6 +45,9 @@ def built_custom_style(tmp_path: Path) -> SimpleNamespace:
                   custom_template_path: {stylesheets}
                   html_path: single.html
                   output_path: pdf/document.pdf
+
+            extra:
+              pdf_accent: "#ff00ff"
 
             site_url: ""
             use_directory_urls: false
@@ -89,3 +92,16 @@ def test_custom_style_scss_is_compiled_into_html(
     )
     assert "article h1" in _styles(soup)
     assert "color: #ff00ff !important;" in _styles(soup)
+
+
+def test_custom_style_uses_extra_variables(
+    built_custom_style: SimpleNamespace,
+) -> None:
+    """`extra` variables are available as Jinja2 variables in `styles.scss`."""
+    styles = _styles(
+        BeautifulSoup(
+            built_custom_style.html_path.read_text(encoding="utf-8"),
+            "html.parser",
+        ),
+    )
+    assert "{{ pdf_accent }}" not in styles

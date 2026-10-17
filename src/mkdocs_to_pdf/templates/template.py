@@ -190,6 +190,20 @@ class Template:
 
         return self._keywords
 
+    def render_string(self, source: str) -> str:
+        """
+        Render a template given as a string with the plugin keywords.
+
+        Args:
+            source: The template source.
+
+        Returns:
+            The rendered string.
+
+        """
+        template = self._env.from_string(source)
+        return template.render(self.keywords)
+
     def select(
         self,
         names: list[str],

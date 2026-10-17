@@ -22,6 +22,15 @@ from mkdocs.config import load_config
 FIXTURES = Path(__file__).parent / "fixtures"
 
 
+class TemplateStub:
+    """Stand-in for the Jinja2 template handler used by option stubs."""
+
+    @staticmethod
+    def render_string(source: str) -> str:
+        """Render a template given as a string using the keywords."""
+        return source
+
+
 @pytest.fixture
 def make_options() -> OptionsFactory:
     """Build a stand-in for `mkdocs_to_pdf.options.Options`."""
@@ -36,6 +45,7 @@ def make_options() -> OptionsFactory:
             "cover": True,
             "back_cover": False,
             "logger": logging.getLogger("mkdocs_to_pdf.test"),
+            "template": TemplateStub(),
         }
         base.update(overrides)
         return SimpleNamespace(**base)

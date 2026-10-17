@@ -58,6 +58,8 @@ def style_for_print(options: Options) -> str:  # ruff: ignore[non-empty-init-mod
 
     custom = pathlib.Path(options.custom_template_path) / "styles.scss"
     if custom.exists():
-        css += str(sass.compile(filename=str(custom)))
+        source = custom.read_text(encoding="utf-8")
+        source = options.template.render_string(source)
+        css += str(sass.compile(string=source))
 
     return css
