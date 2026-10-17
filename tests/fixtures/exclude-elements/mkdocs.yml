@@ -1,0 +1,14 @@
+site_name: Exclude Elements
+
+theme:
+  name: mkdocs
+
+plugins:
+  - to-pdf:
+      output_path: pdf/document.pdf
+      html_path: single.html
+      cover: false
+      exclude_elements:
+        - ".feedback-button"
+        - "#web-only-banner"
+        - "div.print-hidden"

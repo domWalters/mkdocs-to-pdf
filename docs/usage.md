@@ -396,6 +396,84 @@ plugins:
       heading_shift: false
 ```
 
+### Excluding content
+
+#### `exclude_pages`
+
+A list of patterns for pages to omit from the PDF entirely. Each entry is a
+regular expression matched from the start of a page's URL, so `bugs/` excludes
+every page under `bugs/`.
+
+``` yaml
+plugins:
+  - to-pdf:
+      exclude_pages:
+        - "bugs/"
+        - "appendix/contribute/"
+```
+
+Excluded pages contribute no content, headings, or table of contents entries.
+
+Default is `[]`.
+
+#### `excludes_children`
+
+A list of heading IDs whose descendants are omitted from heading numbering and
+the table of contents. The matching heading itself is still numbered and
+listed; headings deeper than it are skipped until a heading at the same or a
+shallower level is reached.
+
+The ID is the page path followed by `:` and the heading's anchor, for example
+`page-one/:section-a` for `## Section A` on `page-one.md`, or
+`.:introduction` for a heading on the top-level page.
+
+Default is `[]`.
+
+``` yaml
+plugins:
+  - to-pdf:
+      excludes_children:
+        - "release-notes/:upgrading"
+        - "release-notes/:changelog"
+```
+
+#### `exclude_elements`
+
+A list of CSS selectors for elements to remove from the combined document
+before the PDF is rendered. This is useful for web-only widgets, such as
+floating feedback buttons or banners, that have no place in the PDF.
+
+``` yaml
+plugins:
+  - to-pdf:
+      exclude_elements:
+        - ".feedback-button"
+        - "#web-only-banner"
+        - "div[data-print='false']"
+```
+
+The selectors are matched against the combined document after the pages, the
+table of contents and the cover have been assembled, so they can target any
+element in the PDF. Every element matching a selector, including its children,
+is removed.
+
+Removing an element does not remove its stylesheet. If the goal is only to
+avoid web-only styling, a `@media print` rule in
+[`styles.scss`](#custom_template_path) is often enough:
+
+``` scss
+@media print {
+  .feedback-button {
+    display: none !important;
+  }
+}
+```
+
+A selector that is not valid CSS fails the build with an error. A selector
+that matches nothing is reported as a warning.
+
+Default is `[]`.
+
 ### Output
 
 #### `output_path`

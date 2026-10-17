@@ -24,6 +24,7 @@ from .styles import style_for_print
 from .themes import generic as generic_theme
 from .toc import make_indexes
 from .utils.emoji_util import fix_twemoji
+from .utils.exclude_util import remove_elements
 from .utils.iframe_util import convert_iframe
 from .utils.image_util import fix_image_alignment
 from .utils.layout_util import convert_for_two_columns
@@ -198,7 +199,7 @@ class Generator:
             self._options.two_columns_level,
             self._options.logger,
         )
-        self._normalize_link_anchors(soup)
+        self._prepare_for_render(soup)
 
         site_dir = pathlib.Path(config["site_dir"])
 
@@ -382,6 +383,17 @@ class Generator:
         except ImportError:
             self.logger.exception("Could not load theme handler %s", theme)
             return generic_theme
+
+    def _prepare_for_render(self, soup: BeautifulSoup) -> None:
+        """
+        Drop elements excluded from the PDF and normalize the anchors left.
+
+        Args:
+            soup: The combined document.
+
+        """
+        remove_elements(soup, self._options.exclude_elements, self._options.logger)
+        self._normalize_link_anchors(soup)
 
     def _normalize_link_anchors(  # ruff: ignore[complex-structure]
         self,

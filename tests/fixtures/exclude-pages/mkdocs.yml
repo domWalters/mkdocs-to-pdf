@@ -1,0 +1,19 @@
+site_name: Exclude Pages
+
+nav:
+  - Home: index.md
+  - Bugs: bugs/index.md
+  - Known bugs: bugs/known.md
+  - Contribute: appendix/contribute.md
+
+theme:
+  name: mkdocs
+
+plugins:
+  - to-pdf:
+      output_path: pdf/document.pdf
+      html_path: single.html
+      cover: false
+      exclude_pages:
+        - "bugs/"
+        - "appendix/contribute/"

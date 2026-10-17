@@ -49,6 +49,7 @@ class Options:
         ("ordered_chapter_level", config_options.Type(int, default=3)),
         ("excludes_children", config_options.Type(list, default=[])),
         ("exclude_pages", config_options.Type(list, default=[])),
+        ("exclude_elements", config_options.Type(list, default=[])),
         ("convert_iframe", config_options.Type(list, default=[])),
         ("two_columns_level", config_options.Type(int, default=0)),
         ("render_js", config_options.Type(bool, default=False)),
@@ -123,7 +124,10 @@ class Options:
         self.excludes_children = local_config["excludes_children"]
 
         # Page
-        self.exclude_pages = local_config["exclude_pages"]
+        self.exclude_pages, self.exclude_elements = (
+            local_config["exclude_pages"],
+            local_config["exclude_elements"],
+        )
         self.convert_iframe = local_config["convert_iframe"]
 
         self.two_columns_level = local_config["two_columns_level"]
