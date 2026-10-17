@@ -8,6 +8,12 @@
 pip install mkdocs-to-pdf
 ```
 
+`mkdocs-to-pdf` works with both [`mkdocs`][mkdocs] and [`properdocs`][properdocs],
+a drop-in `mkdocs` fork. Use `properdocs build` in place of `mkdocs build`.
+
+[mkdocs]: https://www.mkdocs.org/
+[properdocs]: https://properdocs.org/
+
 ## Developers
 
 There are two sets of extras:

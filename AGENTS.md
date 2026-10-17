@@ -113,6 +113,8 @@ nix-shell --run "<command>"
 - Check for manually made local changes by a developer working on the code base
   at the same time as you
 
+    - This may include a developer staging your own changes
+
 ## Never do
 
 - Run `pytest` manually; always use the `run-one-test` / `run-tests` skills
@@ -146,6 +148,16 @@ nix-shell --run "<command>"
   edited by hand. Regenerate it with `make changelog`.
 - Prefer small, pure transform functions that take a `BeautifulSoup` and mutate
   it, so they can be unit-tested with `make_soup`
+- [ProperDocs](https://properdocs.org/) is a drop-in MkDocs fork and the
+  preferred docs builder here: `make docs` runs `properdocs build -f mkdocs.yml`
+  (the filename is kept for Read the Docs). ProperDocs redirects every `mkdocs.*`
+  import to `properdocs.*` and discovers `mkdocs.plugins` entry points, so no
+  plugin code changes are needed. `make tests` runs the suite under both MkDocs
+  (via `hatch test`) and ProperDocs; the latter is switched on with
+  `MKDOCS_TO_PDF_USE_PROPERDOCS=1`, which makes the shim at the top of
+  `tests/conftest.py` load `properdocs.replacement`. The test fixtures use the
+  `mkdocs` theme, so `properdocs-theme-mkdocs` (a `dev` extra) is required for
+  that run.
 
 ## Common Agent Tasks
 

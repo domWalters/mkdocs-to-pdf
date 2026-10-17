@@ -5,12 +5,14 @@ anyio==4.15.1 ; sys_platform != 'emscripten'
 ast-serialize==0.12.1
     # via mypy
 babel==2.18.0
-    # via mkdocs-material
+    # via
+    #   mkdocs-material
+    #   properdocs-theme-mkdocs
 backports-tarfile==1.2.0 ; python_full_version < '3.12'
     # via jaraco-context
 backports-zstd==1.7.0 ; python_full_version < '3.14'
     # via hatch
-backrefs==8.0
+backrefs==8.1
     # via mkdocs-material
 beautifulsoup4==4.15.0
     # via mkdocs-to-pdf
@@ -34,6 +36,7 @@ click==8.5.0
     #   hatch
     #   mkdocs
     #   mkdocs-click
+    #   properdocs
     #   userpath
 codespell==2.4.3
     # via mkdocs-to-pdf
@@ -42,6 +45,7 @@ colorama==0.4.6
     #   griffecli
     #   mkdocs
     #   mkdocs-material
+    #   properdocs
     #   pytest
     #   qrcode
 coverage==7.16.2
@@ -62,21 +66,23 @@ distro==1.9.0 ; sys_platform == 'linux'
     # via hatch
 execnet==2.1.2
     # via pytest-xdist
-filelock==4.0.10
+filelock==4.1.0
     # via
     #   python-discovery
     #   virtualenv
 fonttools==4.66.1
     # via weasyprint
 ghp-import==2.1.0
-    # via mkdocs
+    # via
+    #   mkdocs
+    #   properdocs
 git-cliff==2.14.2
     # via mkdocs-to-pdf
-griffe==2.3.0
+griffe==2.3.2
     # via mkdocstrings-python
-griffecli==2.3.0
+griffecli==2.3.2
     # via griffe
-griffelib==2.3.0
+griffelib==2.3.2
     # via
     #   griffe
     #   griffecli
@@ -107,7 +113,7 @@ idna==3.20
     #   requests
 importlib-metadata==9.0.1 ; python_full_version < '3.12'
     # via keyring
-iniconfig==2.3.0
+iniconfig==2.3.1
     # via pytest
 jaraco-classes==3.4.0
     # via keyring
@@ -126,6 +132,7 @@ jinja2==3.1.6
     #   mkdocs
     #   mkdocs-material
     #   mkdocstrings
+    #   properdocs
 jsmin==3.0.1
     # via mkdocs-minify-plugin
 keyring==25.7.0
@@ -143,6 +150,7 @@ markdown==3.11
     #   mkdocs-click
     #   mkdocs-material
     #   mkdocstrings
+    #   properdocs
     #   pymdown-extensions
 markdown-callouts==0.4.0
     # via mkdocs-to-pdf
@@ -154,6 +162,7 @@ markupsafe==3.0.4
     #   mkdocs
     #   mkdocs-autorefs
     #   mkdocstrings
+    #   properdocs
 mdurl==0.1.2
     # via markdown-it-py
 mdx-gh-links==0.4
@@ -190,7 +199,7 @@ mkdocs-minify-plugin==0.8.0
     # via mkdocs-to-pdf
 mkdocs-redirects==1.2.2
     # via mkdocs-to-pdf
-mkdocstrings==1.0.6
+mkdocstrings==1.0.7
     # via mkdocstrings-python
 mkdocstrings-python==1.16.5
     # via mkdocs-to-pdf
@@ -209,6 +218,7 @@ packaging==26.3
     #   hatch
     #   hatchling
     #   mkdocs
+    #   properdocs
     #   pytest
     #   virtualenv
 paginate==0.5.7
@@ -218,14 +228,16 @@ pathspec==1.1.1
     #   hatchling
     #   mkdocs
     #   mypy
+    #   properdocs
 pexpect==4.9.0
     # via hatch
 pillow==12.3.0
     # via weasyprint
-platformdirs==4.12.3
+platformdirs==4.12.4
     # via
     #   hatch
     #   mkdocs-get-deps
+    #   properdocs
     #   virtualenv
 pluggy==1.6.0
     # via
@@ -234,9 +246,15 @@ pluggy==1.6.0
     #   pytest-cov
 pre-commit==4.6.2
     # via mkdocs-to-pdf
+properdocs==1.6.7
+    # via
+    #   mkdocs-to-pdf
+    #   properdocs-theme-mkdocs
+properdocs-theme-mkdocs==1.6.7
+    # via mkdocs-to-pdf
 ptyprocess==0.7.0
     # via pexpect
-pycparser==3.0 ; implementation_name != 'PyPy'
+pycparser==3.11 ; implementation_name != 'PyPy'
     # via cffi
 pydyf==0.12.1
     # via
@@ -247,12 +265,12 @@ pygments==2.21.0
     #   mkdocs-material
     #   pytest
     #   rich
-pymdown-extensions==12.1
+pymdown-extensions==12.2
     # via
     #   mkdocs-material
     #   mkdocs-to-pdf
     #   mkdocstrings
-pypdf==6.19.0
+pypdf==6.20.0
     # via mkdocs-to-pdf
 pyphen==0.18.1
     # via weasyprint
@@ -277,7 +295,7 @@ python-barcode==0.16.1
     # via mkdocs-to-pdf
 python-dateutil==2.9.0.post0
     # via ghp-import
-python-discovery==1.6.1
+python-discovery==1.6.2
     # via
     #   hatch
     #   virtualenv
@@ -288,10 +306,13 @@ pyyaml==6.0.3
     #   mkdocs
     #   mkdocs-get-deps
     #   pre-commit
+    #   properdocs
     #   pymdown-extensions
     #   pyyaml-env-tag
 pyyaml-env-tag==1.1
-    # via mkdocs
+    # via
+    #   mkdocs
+    #   properdocs
 qrcode==8.2
     # via mkdocs-to-pdf
 requests==2.34.2
@@ -316,7 +337,7 @@ tinycss2==1.5.1
     #   weasyprint
 tinyhtml5==2.1.0
     # via weasyprint
-tomli==2.4.1 ; python_full_version <= '3.11'
+tomli==2.5.0 ; python_full_version <= '3.11'
     # via coverage
 tomli-w==1.2.0
     # via hatch
@@ -342,16 +363,18 @@ urllib3==2.8.0
     # via requests
 userpath==1.9.2
     # via hatch
-uv==0.12.23
+uv==0.12.24
     # via
     #   hatch
     #   mkdocs-to-pdf
-virtualenv==21.14.5
+virtualenv==21.14.6
     # via
     #   hatch
     #   pre-commit
 watchdog==6.0.0
-    # via mkdocs
+    # via
+    #   mkdocs
+    #   properdocs
 weasyprint==70.0
     # via mkdocs-to-pdf
 webencodings==0.6.1

@@ -1,7 +1,17 @@
+import importlib
 import logging
+import os
 import shutil
 from pathlib import Path
 from types import SimpleNamespace
+
+# Opt in to exercising the suite against ProperDocs, a drop-in MkDocs fork.
+# `properdocs.replacement` installs an import hook that redirects every
+# `mkdocs.*` import to `properdocs.*`, so it must be imported before anything
+# (including this file) imports `mkdocs`. Imported dynamically so the optional
+# dependency is not required (or type-checked) for a normal run.
+if os.environ.get("MKDOCS_TO_PDF_USE_PROPERDOCS"):
+    importlib.import_module("properdocs.replacement")
 
 import pytest
 from _type_aliases import OptionsFactory, SoupFactory

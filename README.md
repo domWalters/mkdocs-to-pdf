@@ -6,7 +6,8 @@
 ---
 
 `mkdocs-to-pdf` is an [`mkdocs`][mkdocs] plugin to generate a PDF from an
-`MkDocs` repository.
+`MkDocs` repository. It also works with [`properdocs`][properdocs], a drop-in
+`MkDocs` fork.
 
 This repository is a fork of [`mkdocs-with-pdf`][mkdocs-with-pdf], which itself
 was inspired by [`mkdocs-pdf-export-plugin`][mkdocs-pdf-export-plugin].
@@ -39,6 +40,7 @@ their documentation.
 [mkdocs-with-pdf]: https://github.com/orzih/mkdocs-with-pdf
 [mkdocs]: https://www.mkdocs.org/
 [pymdown-extensions]: https://facelessuser.github.io/pymdown-extensions/
+[properdocs]: https://properdocs.org/
 [pypi]: https://pypi.org/project/mkdocs-to-pdf
 [readthedocs]: https://mkdocs-to-pdf.readthedocs.io/en/stable/
 [samples]: https://github.com/domWalters/mkdocs-to-pdf/tree/develop/samples

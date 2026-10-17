@@ -12,7 +12,8 @@ requires-python = ">=3.11"
 dependencies = [
     "beautifulsoup4 >= 4.9.3",
     "libsass >= 0.23.0",
-    "mkdocs >= 1.6.1",
+    "mkdocs <= 1.6.1",
+    "properdocs >= 1.6.5",
     "pydyf >= 0.12.1",
     "python-barcode >= 0.16.1",
     "qrcode >= 8.2",
@@ -50,6 +51,7 @@ dev = [
         "jaraco-context >= 6.1.2",  # forced to avoid CVE
     "mypy >= 2.4.0",
     "pre-commit >= 4.6.2",
+    "properdocs-theme-mkdocs >= 1.6.5",
     "pypdf >= 6.19.0",
     "pytest >= 9.1.1",
     "pytest-cov >= 7.1.0",

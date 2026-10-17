@@ -20,7 +20,7 @@ help:
 	@echo "  sync            : perform all setup and sync steps"
 	@echo "  sync-submodules : update all submodules"
 	@echo "  sync-venv       : fill / refresh the venv"
-	@echo "  tests           : run tests"
+	@echo "  tests           : run tests (MkDocs and ProperDocs)"
 
 venv := $(makefile_directory)/.venv
 activate := $(venv)/bin/activate
@@ -113,7 +113,7 @@ docs: sync
 	@echo "########"
 	$(at). $(activate) \
 		&& cd $(makefile_directory) \
-		&& mkdocs build
+		&& properdocs build -f mkdocs.yml
 	@echo ""
 
 .PHONY: samples
@@ -139,6 +139,9 @@ tests: sync
 	$(at). $(activate) \
 		&& cd $(makefile_directory) \
 		&& hatch test $(hatch_test_args)
+	$(at). $(activate) \
+		&& cd $(makefile_directory) \
+		&& MKDOCS_TO_PDF_USE_PROPERDOCS=1 hatch test $(hatch_test_args)
 	@echo ""
 
 .PHONY: all
