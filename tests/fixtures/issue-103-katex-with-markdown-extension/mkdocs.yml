@@ -1,0 +1,14 @@
+site_name: KaTeX via markdown-katex
+
+theme:
+  name: material
+
+plugins:
+  - to-pdf:
+      output_path: pdf/document.pdf
+      html_path: single.html
+
+markdown_extensions:
+  - markdown_katex:
+      no_inline_svg: true  # required for WeasyPrint
+      insert_fonts_css: true

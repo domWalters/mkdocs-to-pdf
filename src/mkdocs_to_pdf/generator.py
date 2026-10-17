@@ -152,11 +152,14 @@ class Generator:
 
         """
         if self._head is not None:
-            soup = BeautifulSoup("<html><body></body></html>", "html.parser")
+            soup = BeautifulSoup(
+                "<!DOCTYPE html><html><body></body></html>",
+                "html.parser",
+            )
             cast("Tag", soup.html).insert(0, self._head)
         else:
             soup = BeautifulSoup(
-                "<html><head></head><body></body></html>",
+                "<!DOCTYPE html><html><head></head><body></body></html>",
                 "html.parser",
             )
 

@@ -144,6 +144,7 @@ libsass==0.23.0
 markdown==3.11
     # via
     #   markdown-callouts
+    #   markdown-katex
     #   mdx-gh-links
     #   mkdocs
     #   mkdocs-autorefs
@@ -156,6 +157,8 @@ markdown-callouts==0.4.0
     # via mkdocs-to-pdf
 markdown-it-py==4.2.0
     # via rich
+markdown-katex==202406.1035
+    # via mkdocs-to-pdf
 markupsafe==3.0.4
     # via
     #   jinja2
@@ -323,6 +326,8 @@ ruff==0.16.10
     # via mkdocs-to-pdf
 secretstorage==3.5.0 ; sys_platform == 'linux'
     # via keyring
+setuptools==84.0.0
+    # via markdown-katex
 shellingham==1.5.4
     # via hatch
 six==1.17.0

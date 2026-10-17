@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Verify support for properdocs, and prefer it (#109)
+- Support extra variables in CSS styles (#121)
 
 ## [0.12.1] - 2026-10-12
 
