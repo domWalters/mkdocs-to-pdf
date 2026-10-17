@@ -26,7 +26,7 @@ from .toc import make_indexes
 from .utils.emoji_util import fix_twemoji
 from .utils.exclude_util import remove_elements
 from .utils.iframe_util import convert_iframe
-from .utils.image_util import fix_image_alignment
+from .utils.image_util import fix_image_alignment, unwrap_image_links
 from .utils.layout_util import convert_for_two_columns
 from .utils.linenums_util import convert_linenums_tables
 from .utils.metadata_util import prepend_producer, set_pdf_metadata
@@ -187,19 +187,7 @@ class Generator:
             if content is not None:
                 cast("Tag", soup.body).append(content)
 
-        make_indexes(soup, self._options)
-        make_cover(soup, self._options)
-
-        wrap_tabbed_set_content(soup, self._options.logger)
-        convert_linenums_tables(soup, self._options.logger)
-        fix_image_alignment(soup, self._options.logger)
-        convert_iframe(soup, self._options.convert_iframe, self._options.logger)
-        convert_for_two_columns(
-            soup,
-            self._options.two_columns_level,
-            self._options.logger,
-        )
-        self._prepare_for_render(soup)
+        self._post_process(soup)
 
         site_dir = pathlib.Path(config["site_dir"])
 
@@ -383,6 +371,29 @@ class Generator:
         except ImportError:
             self.logger.exception("Could not load theme handler %s", theme)
             return generic_theme
+
+    def _post_process(self, soup: BeautifulSoup) -> None:
+        """
+        Run the content fix-ups that prepare the combined document.
+
+        Args:
+            soup: The combined document.
+
+        """
+        make_indexes(soup, self._options)
+        make_cover(soup, self._options)
+
+        wrap_tabbed_set_content(soup, self._options.logger)
+        convert_linenums_tables(soup, self._options.logger)
+        unwrap_image_links(soup, self._options.logger)
+        fix_image_alignment(soup, self._options.logger)
+        convert_iframe(soup, self._options.convert_iframe, self._options.logger)
+        convert_for_two_columns(
+            soup,
+            self._options.two_columns_level,
+            self._options.logger,
+        )
+        self._prepare_for_render(soup)
 
     def _prepare_for_render(self, soup: BeautifulSoup) -> None:
         """

@@ -8,8 +8,13 @@ from weasyprint import urls
 
 from mkdocs_to_pdf.utils.soup_util import get_attribute
 
-from .links.transform import transform_href, transform_id
-from .links.util import get_body_id, rel_pdf_href, replace_asset_hrefs
+from .links.transform import is_asset_href, transform_href, transform_id
+from .links.util import (
+    abs_asset_href,
+    get_body_id,
+    rel_pdf_href,
+    replace_asset_hrefs,
+)
 
 
 def get_combined(  # ruff: ignore[non-empty-init-module]
@@ -35,6 +40,10 @@ def get_combined(  # ruff: ignore[non-empty-init-module]
     for a in soup.find_all("a", href=True):
         href = get_attribute(a, "href")
         if urls.url_is_absolute(href) or pathlib.PurePosixPath(href).is_absolute():
+            continue
+
+        if is_asset_href(href):
+            a["href"] = abs_asset_href(href, base_url)
             continue
 
         a["href"] = transform_href(href, rel_url)

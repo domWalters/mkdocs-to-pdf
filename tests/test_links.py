@@ -153,6 +153,12 @@ CASES: dict[str, list[tuple[str, str, str]]] = {
         ("../../../index.html", "path/sub.html", "#.:"),
         ("../../../index.html#hash", "path/sub.html", "#.:hash"),
     ],
+    "asset links pass through unchanged": [
+        ("image.png", "path/", "image.png"),
+        ("../img/a.jpg", "path/", "../img/a.jpg"),
+        ("photo.svg#icon", ".", "photo.svg#icon"),
+        ("manual.pdf", "path/sub/", "manual.pdf"),
+    ],
     "external links pass through unchanged": [
         ("//ex.com/test.html", "any/index.html", "//ex.com/test.html"),
         ("https://ex.com/test.html", "any/index.html", "https://ex.com/test.html"),

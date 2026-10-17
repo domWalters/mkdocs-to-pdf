@@ -1,0 +1,10 @@
+site_name: GLightbox Image Links
+
+theme:
+  name: mkdocs
+
+plugins:
+  - to-pdf:
+      output_path: pdf/document.pdf
+      html_path: single.html
+      cover: false

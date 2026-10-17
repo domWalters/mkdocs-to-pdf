@@ -5,6 +5,39 @@ import pathlib
 import re
 from urllib.parse import quote, urljoin, urlparse
 
+# Suffixes that identify links to rendered pages rather than to assets.
+_DOCUMENT_SUFFIXES = frozenset({".html", ".htm", ".md"})
+
+
+def is_asset_href(href: str) -> bool:
+    """
+    Return whether an href is a relative reference to a non-document asset.
+
+    Such hrefs (images, downloads, ...) are resolved against the page's base
+    URL by the preprocessor instead of being rewritten into an in-document
+    anchor.
+
+    Args:
+        href: The href to inspect.
+
+    Returns:
+        True if the href points at a relative, non-document asset.
+
+    """
+    if not href or href.startswith("#"):
+        return False
+
+    parsed = urlparse(href)
+    if parsed.scheme or parsed.netloc:
+        return False
+
+    path = pathlib.PurePosixPath(parsed.path)
+    if path.is_absolute():
+        return False
+
+    suffix = path.suffix.lower()
+    return bool(suffix) and suffix not in _DOCUMENT_SUFFIXES
+
 
 def transform_href(href: str, rel_url: str) -> str:
     """
@@ -34,7 +67,7 @@ def transform_href(href: str, rel_url: str) -> str:
         if target in {"/", ".", "index.html"}:
             return f"#.:{fragment}"
 
-        if target.endswith(".png"):
+        if is_asset_href(href):
             return href
         if target.endswith("index.html"):
             target = re.sub(r"index\.html$", "", target)

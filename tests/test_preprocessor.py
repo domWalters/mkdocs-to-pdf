@@ -1,6 +1,7 @@
 from _type_aliases import SoupFactory
 
 from mkdocs_to_pdf.preprocessor import get_combined
+from mkdocs_to_pdf.preprocessor.links.transform import is_asset_href
 from mkdocs_to_pdf.preprocessor.links.util import (
     abs_asset_href,
     get_body_id,
@@ -8,6 +9,20 @@ from mkdocs_to_pdf.preprocessor.links.util import (
     rel_pdf_href,
     replace_asset_hrefs,
 )
+
+
+def test_is_asset_href() -> None:
+    """Classify relative hrefs to non-document assets."""
+    assert is_asset_href("image.png") is True
+    assert is_asset_href("img/a.jpg") is True
+    assert is_asset_href("photo.svg#icon") is True
+    assert is_asset_href("manual.pdf") is True
+    assert is_asset_href("page.html") is False
+    assert is_asset_href("page.md") is False
+    assert is_asset_href("target") is False
+    assert is_asset_href("#anchor") is False
+    assert is_asset_href("/abs/image.png") is False
+    assert is_asset_href("https://example.com/image.png") is False
 
 
 def test_is_doc() -> None:
@@ -89,6 +104,25 @@ def test_get_combined_transforms_links_and_ids(make_soup: SoupFactory) -> None:
     assert body["id"] == "doc/:"
     assert link["href"] == "file:///site/doc/css/a.css"
     assert img["src"] == "file:///site/doc/img/a.png"
+
+
+def test_get_combined_absolutizes_asset_link_anchors(
+    make_soup: SoupFactory,
+) -> None:
+    """Make anchors that point at image assets absolute, not in-document."""
+    soup = make_soup(
+        '<a class="glightbox" href="./assets/image.svg">'
+        '<img alt="My Image" src="./assets/image.svg"></a>',
+    )
+
+    get_combined(soup, base_url="file:///site/doc/", rel_url="doc/")
+
+    anchor = soup.find("a")
+    img = soup.find("img")
+    assert anchor is not None
+    assert img is not None
+    assert anchor["href"] == "file:///site/doc/assets/image.svg"
+    assert img["src"] == "file:///site/doc/assets/image.svg"
 
 
 def test_get_combined_keeps_absolute_links(make_soup: SoupFactory) -> None:

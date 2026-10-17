@@ -7,6 +7,7 @@ from mkdocs_to_pdf.utils.image_util import (
     _parse_style,
     fix_image_alignment,
     images_size_to_half_in,
+    unwrap_image_links,
 )
 
 logger = logging.getLogger("mkdocs_to_pdf.test")
@@ -120,6 +121,49 @@ def test_images_size_to_half_in_bare_number(make_soup: SoupFactory) -> None:
     img = soup.img
     assert img is not None
     assert str(img["style"]) == "width: 50.0;"
+
+
+def test_unwrap_image_links_removes_lightbox_anchor(
+    make_soup: SoupFactory,
+) -> None:
+    """Drop an anchor whose only content is a linked image asset."""
+    soup = make_soup(
+        '<a class="glightbox" href="image.png"><img src="image.png"></a>',
+    )
+
+    unwrap_image_links(soup, logger)
+
+    assert soup.find("a") is None
+    assert soup.find("img") is not None
+
+
+def test_unwrap_image_links_keeps_anchor_with_text(make_soup: SoupFactory) -> None:
+    """Keep anchors that carry text alongside the image."""
+    soup = make_soup('<a href="image.png"><img src="image.png">caption</a>')
+
+    unwrap_image_links(soup, logger)
+
+    assert soup.find("a") is not None
+
+
+def test_unwrap_image_links_keeps_document_links(make_soup: SoupFactory) -> None:
+    """Keep anchors that link an image to another page."""
+    soup = make_soup('<a href="page.html"><img src="thumb.png"></a>')
+
+    unwrap_image_links(soup, logger)
+
+    assert soup.find("a") is not None
+
+
+def test_unwrap_image_links_ignores_multiple_images(make_soup: SoupFactory) -> None:
+    """Keep anchors that wrap more than one element."""
+    soup = make_soup(
+        '<a href="image.png"><img src="a.png"><img src="b.png"></a>',
+    )
+
+    unwrap_image_links(soup, logger)
+
+    assert soup.find("a") is not None
 
 
 def test_parse_style() -> None:

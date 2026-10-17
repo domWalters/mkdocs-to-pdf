@@ -1,10 +1,53 @@
 """Image attribute fix-ups for print output."""
 
+import pathlib
 from logging import Logger
+from urllib.parse import urlsplit
 
-from bs4 import BeautifulSoup, Tag
+from bs4 import BeautifulSoup, NavigableString, PageElement, Tag
 
 from .soup_util import get_attribute
+
+# Suffixes whose image links are dropped in favour of the image itself.
+_IMAGE_SUFFIXES = frozenset(
+    {".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp", ".bmp", ".avif", ".ico"},
+)
+
+
+def unwrap_image_links(soup: BeautifulSoup, logger: Logger | None = None) -> None:
+    """
+    Unwrap anchors that only wrap a single image asset.
+
+    Lightbox plugins such as ``mkdocs-glightbox`` wrap every image in an
+    ``<a>`` whose href points back at the image. A zoom link is meaningless in
+    print and its relative href cannot be resolved, so the anchor is removed
+    while the image is kept.
+
+    Args:
+        soup: DOM object of the page.
+        logger: Optional logger.
+
+    """
+    for anchor in soup.find_all("a", href=True):
+        href = get_attribute(anchor, "href")
+        suffix = pathlib.PurePosixPath(urlsplit(href).path).suffix.lower()
+        if suffix not in _IMAGE_SUFFIXES:
+            continue
+
+        children = [child for child in anchor.contents if not _is_blank(child)]
+        if len(children) != 1:
+            continue
+        child = children[0]
+        if not isinstance(child, Tag) or child.name != "img":
+            continue
+
+        if logger:
+            logger.debug("Unwrapping image link: %s", anchor)
+        anchor.unwrap()
+
+
+def _is_blank(node: PageElement) -> bool:
+    return isinstance(node, NavigableString) and not str(node).strip()
 
 
 def fix_image_alignment(  # ruff: ignore[complex-structure]
