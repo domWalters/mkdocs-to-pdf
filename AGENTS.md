@@ -73,7 +73,7 @@ As soon as you've finished reading this file, read the following skills:
 ├── dump-html                  - Prints the combined HTML generated for a tests/fixtures/<name>/ site
 ├── dump-pdf                   - Prints metadata, outline, destinations and links from a generated PDF
 ├── run-one-test               - Runs a single pytest test file or test case against the project venv
-├── run-tests                  - Runs the full test suite with hatch across all supported Python versions
+├── run-tests                  - Runs the test suite with hatch for the local Python or all supported versions
 └── use-python                 - Runs a Python command with mkdocs_to_pdf importable from the project venv
 ```
 <!-- END_SKILLS -->
@@ -120,8 +120,7 @@ nix-shell --run "<command>"
 - Run `pytest` manually; always use the `run-one-test` / `run-tests` skills
 - Run `make all`, `make publish` or `make distclean` unless explicitly asked
 - Destructive `git` actions
-- Commit generated artifacts (`site/`, `dist/`, `.venv`, `.coverage*`,
-  `.htmlcov/`, `.junit.xml`, `samples/*/gen/`)
+- Commit generated artifacts (`site/`, `dist/`, `.venv`, `samples/*/gen/`)
 - Edit the contents of the `samples/mkdocs/mkdocs` or
   `samples/mkdocs-material/mkdocs-material` submodules
 - Use the `Any` type, unless it is for `args` or `kwargs`

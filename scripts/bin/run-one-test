@@ -2,7 +2,7 @@
 
 # Run a single pytest test file or test case against the project venv.
 #
-# Runs in-process (`-n 0`) without coverage for fast iteration.
+# Runs in-process (`-n 0`) for fast iteration.
 
 set -e
 
@@ -24,4 +24,4 @@ if [ $# -eq 0 ]; then
     exit 1
 fi
 
-"$venv_pytest" -n 0 --no-cov "$@"
+"$venv_pytest" -n 0 "$@"

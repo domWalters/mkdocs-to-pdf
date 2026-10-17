@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Verify support for properdocs, and prefer it (#109)
 - Support extra variables in CSS styles (#121)
+- Implement #75 and add missing docs / tests for exclusions
 
 ### Documentation
 - Add page on various ways to render maths

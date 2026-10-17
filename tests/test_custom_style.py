@@ -1,7 +1,6 @@
 """End-to-end tests for customising the PDF style with `styles.scss`."""
 
 import textwrap
-from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
@@ -18,9 +17,10 @@ article h1 {
 """
 
 
-@pytest.fixture
-def built_custom_style(tmp_path: Path) -> SimpleNamespace:
+@pytest.fixture(scope="session")
+def built_custom_style(tmp_path_factory: pytest.TempPathFactory) -> SimpleNamespace:
     """Build a site whose `custom_template_path` provides `styles.scss`."""
+    tmp_path = tmp_path_factory.mktemp("custom-style")
     project = tmp_path / "project"
     docs = project / "docs"
     stylesheets = project / "stylesheets"

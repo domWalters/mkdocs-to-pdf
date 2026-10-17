@@ -20,10 +20,16 @@ help:
 	@echo "  sync            : perform all setup and sync steps"
 	@echo "  sync-submodules : update all submodules"
 	@echo "  sync-venv       : fill / refresh the venv"
-	@echo "  tests           : run tests (MkDocs and ProperDocs)"
+	@echo "  tests           : run tests for the local Python (MkDocs and ProperDocs, concurrently)"
+	@echo "  tests-all       : run tests across all supported Python versions"
 
 venv := $(makefile_directory)/.venv
 activate := $(venv)/bin/activate
+
+# Split the CPU budget across the two concurrently-run test backends so they
+# share the machine instead of each spawning one worker per core.
+cpus := $(shell nproc 2>/dev/null || echo 2)
+workers := $(shell expr \( $(cpus) + 1 \) / 2)
 
 $(activate):
 	@echo "########"
@@ -126,26 +132,34 @@ samples: sync
 	@echo ""
 
 ifeq ($(strip $(PY)),)
-hatch_test_args=--all
+hatch_test_args=
 else
 hatch_test_args=-i py=$(PY)
 endif
 
-.PHONY: tests
-tests: sync
+# `make tests` runs the local interpreter by default; `make tests-all` runs the
+# whole Python matrix. Both run MkDocs and ProperDocs concurrently.
+tests: hatch_test_args_run = $(hatch_test_args)
+tests-all: hatch_test_args_run = --all
+
+.PHONY: tests tests-all
+tests tests-all: sync
 	@echo "########"
 	@echo "# test #"
 	@echo "########"
-	$(at). $(activate) \
-		&& cd $(makefile_directory) \
-		&& hatch test $(hatch_test_args)
-	$(at). $(activate) \
-		&& cd $(makefile_directory) \
-		&& MKDOCS_TO_PDF_USE_PROPERDOCS=1 hatch test $(hatch_test_args)
+	$(at)set -e; \
+	    . $(activate); \
+	    cd $(makefile_directory); \
+	    PYTEST_XDIST_AUTO_NUM_WORKERS=$(workers) hatch test $(hatch_test_args_run) & mkdocs_pid=$$!; \
+	    PYTEST_XDIST_AUTO_NUM_WORKERS=$(workers) MKDOCS_TO_PDF_USE_PROPERDOCS=1 hatch test $(hatch_test_args_run) & properdocs_pid=$$!; \
+	    status=0; \
+	    wait $$mkdocs_pid || status=1; \
+	    wait $$properdocs_pid || status=1; \
+	    exit $$status
 	@echo ""
 
 .PHONY: all
-all: clean check docs samples tests build
+all: clean check docs samples tests-all build
 
 token_argument = $(shell \
 	if [ -f $(makefile_directory)/.token ]; then \
@@ -178,10 +192,6 @@ distclean: clean
 	$(at)rm -rf \
 		$(makefile_directory)/.aider* \
 		$(makefile_directory)/.cache \
-		$(makefile_directory)/.coverage \
-		$(makefile_directory)/.coverage.xml \
-		$(makefile_directory)/.htmlcov \
-		$(makefile_directory)/.junit.xml \
 		$(makefile_directory)/.opencode/node_modules \
 		$(makefile_directory)/.opencode/package*.json \
 		$(makefile_directory)/.pytest_cache \

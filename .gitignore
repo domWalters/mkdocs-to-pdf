@@ -1,6 +1,3 @@
-/.coverage*
-/.htmlcov/
-/.junit.xml
 /.opencode/node_modules/
 /.opencode/package*.json
 /.token

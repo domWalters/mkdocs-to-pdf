@@ -43,7 +43,6 @@ classifiers = [
 [project.optional-dependencies]
 dev = [
     "codespell >= 2.4.3",
-    "coverage >= 7.16.2",
     "git-cliff >= 2.13.1",
     "hatch >= 1.18.1",
         "cryptography >= 49.0.0",  # forced to avoid CVE
@@ -55,7 +54,6 @@ dev = [
     "properdocs-theme-mkdocs >= 1.6.5",
     "pypdf >= 6.19.0",
     "pytest >= 9.1.1",
-    "pytest-cov >= 7.1.0",
     "pytest-order >= 1.5.0",
     "pytest-sugar >= 1.1.1",
     "pytest-xdist >= 3.8.0",
@@ -91,21 +89,6 @@ Repository = "https://github.com/domWalters/mkdocs-to-pdf"
 [tool.codespell]
 # CHANGELOG.md quotes historical commit messages verbatim
 exclude-file = "CHANGELOG.md"
-
-[tool.coverage.html]
-directory = ".htmlcov"
-
-[tool.coverage.report]
-exclude_also = [
-    "@overload",
-    "if TYPE_CHECKING:",
-]
-
-[tool.coverage.run]
-branch = true
-
-[tool.coverage.xml]
-output = ".coverage.xml"
 
 [tool.hatch.build]
 include = [
@@ -153,7 +136,7 @@ module = [
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]
-addopts = "--capture=fd -n auto --dist loadgroup --strict-markers -m 'not samples and not slow' --cov=mkdocs_to_pdf --cov-report html --cov-report xml --verbose --junitxml=.junit.xml -o junit_family=legacy"
+addopts = "--capture=fd -n auto --dist loadscope --strict-markers -m 'not samples and not slow' --verbose"
 markers = [
     "samples: builds the bundled sample sites (slow; needs submodules + samples extra)",
     "slow: long-running end-to-end tests",
