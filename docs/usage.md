@@ -539,6 +539,9 @@ INFO    -  Documentation built in 8.29 seconds
 
 Set to true to see all WeasyPrint debug messages during build.
 
+WeasyPrint errors, such as an image that fails to load, are reported regardless
+of this setting.
+
 ``` yaml
 plugins:
   - to-pdf:

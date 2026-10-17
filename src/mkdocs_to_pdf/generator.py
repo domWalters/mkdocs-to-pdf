@@ -406,10 +406,8 @@ class Generator:
         remove_elements(soup, self._options.exclude_elements, self._options.logger)
         self._normalize_link_anchors(soup)
 
-    def _normalize_link_anchors(  # ruff: ignore[complex-structure]
-        self,
-        soup: BeautifulSoup,
-    ) -> None:
+    @staticmethod
+    def _normalize_anchor_chars(soup: BeautifulSoup) -> None:
         def normalize_anchor_chars(anchor: str) -> str:
             # Should PDF hashtag links contain percent encoding?
             # https://discussions.apple.com/thread/251041261
@@ -417,8 +415,16 @@ class Generator:
 
         for anchor in soup.find_all(id=True):
             anchor["id"] = normalize_anchor_chars(get_attribute(anchor, "id"))
+        for anchor in soup.find_all("a", attrs={"name": True}):
+            anchor["name"] = normalize_anchor_chars(get_attribute(anchor, "name"))
         for link in soup.find_all("a", href=True):
             link["href"] = normalize_anchor_chars(get_attribute(link, "href"))
+
+    def _normalize_link_anchors(  # ruff: ignore[complex-structure]
+        self,
+        soup: BeautifulSoup,
+    ) -> None:
+        self._normalize_anchor_chars(soup)
 
         if not (
             self._options.debug_html

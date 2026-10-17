@@ -5,6 +5,7 @@ import os
 import pathlib
 from collections.abc import Callable
 from timeit import default_timer as timer
+from typing import TextIO
 
 from mkdocs.config.base import Config
 from mkdocs.livereload import LiveReloadServer
@@ -21,6 +22,34 @@ from .options import Options
 logging.getLogger(__name__)
 
 _DISABLED_MSG = "without generate PDF(set environment variable %s to 1 to enable)"
+
+
+class _WeasyPrintLogHandler(logging.StreamHandler[TextIO]):
+    """
+    Console handler for WeasyPrint's logger.
+
+    WeasyPrint attaches a ``NullHandler`` to its logger and MkDocs never adds
+    one, so without this its records (for example images that fail to load)
+    are silently discarded.
+    """
+
+
+def _mkdocs_formatter() -> logging.Formatter:
+    """Return MkDocs' console formatter, or a plain fallback."""
+    for handler in logging.getLogger("mkdocs").handlers:
+        if handler.formatter is not None:
+            return handler.formatter
+    return logging.Formatter("%(levelname)-8s-  %(message)s")
+
+
+def _setup_weasyprint_logging() -> None:
+    """Route WeasyPrint's logs to the console, exactly once."""
+    if any(isinstance(handler, _WeasyPrintLogHandler) for handler in LOGGER.handlers):
+        return
+
+    handler = _WeasyPrintLogHandler()
+    handler.setFormatter(_mkdocs_formatter())
+    LOGGER.addHandler(handler)
 
 
 class _ErrorAndWarningCountFilter(logging.Filter):
@@ -138,6 +167,8 @@ class WithPdfPlugin(BasePlugin):  # type: ignore[type-arg,no-untyped-call]  # ty
             self.enabled = True
 
         self._options = Options(self.config, config, self._logger)
+
+        _setup_weasyprint_logging()
 
         if self._options.verbose:
             LOGGER.setLevel(logging.DEBUG)

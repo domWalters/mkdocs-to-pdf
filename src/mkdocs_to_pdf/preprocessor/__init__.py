@@ -37,6 +37,11 @@ def get_combined(  # ruff: ignore[non-empty-init-module]
     for element in soup.find_all(id=True):
         element["id"] = transform_id(get_attribute(element, "id"), rel_url)
 
+    # WeasyPrint reads `name` in preference to `id` on anchors, so keep them in
+    # sync or the prefixed `id` links will not resolve.
+    for anchor in soup.find_all("a", attrs={"name": True}):
+        anchor["name"] = transform_id(get_attribute(anchor, "name"), rel_url)
+
     for a in soup.find_all("a", href=True):
         href = get_attribute(a, "href")
         if urls.url_is_absolute(href) or pathlib.PurePosixPath(href).is_absolute():

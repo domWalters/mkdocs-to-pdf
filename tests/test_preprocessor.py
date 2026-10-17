@@ -106,6 +106,22 @@ def test_get_combined_transforms_links_and_ids(make_soup: SoupFactory) -> None:
     assert img["src"] == "file:///site/doc/img/a.png"
 
 
+def test_get_combined_keeps_anchor_name_in_sync(make_soup: SoupFactory) -> None:
+    """Prefix `name` like `id`, since WeasyPrint prefers it on anchors."""
+    soup = make_soup(
+        '<a id="__codelineno-0-1" name="__codelineno-0-1" '
+        'href="#__codelineno-0-1"></a>',
+    )
+
+    get_combined(soup, base_url="file:///site/doc/", rel_url="doc/")
+
+    anchor = soup.find("a")
+    assert anchor is not None
+    assert anchor["id"] == "doc/:__codelineno-0-1"
+    assert anchor["name"] == "doc/:__codelineno-0-1"
+    assert anchor["href"] == "#doc/:__codelineno-0-1"
+
+
 def test_get_combined_absolutizes_asset_link_anchors(
     make_soup: SoupFactory,
 ) -> None:
